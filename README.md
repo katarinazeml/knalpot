@@ -15,7 +15,7 @@ Each character will have a list of abilities that can be chosen before the game 
 * TowerFall
 <img src="https://steamcdn-a.akamaihd.net/steam/apps/337840/ss_fff4286e94a506a1584e998dcae2c5eea433760b.1920x1080.jpg?t=1447365886" width="500px">
 
-* Hyper Light Drifter
+* Hyper Light Drifter.
 <img src="https://cdn.akamai.steamstatic.com/steam/apps/257850/ss_37ad0b207c867078e87cf8a185fe3c66b0bdd490.1920x1080.jpg?t=1649868127" width="500px">
 
 ## Project plan
