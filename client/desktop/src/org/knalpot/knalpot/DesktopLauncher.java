@@ -2,7 +2,7 @@ package org.knalpot.knalpot;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import org.knalpot.knalpot.Game;
+import org.knalpot.knalpot.Knalpot;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -11,6 +11,6 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setTitle("Knalpot");
 		config.setWindowedMode(800, 480);
-		new Lwjgl3Application(new Game(), config);
+		new Lwjgl3Application(new Knalpot(), config);
 	}
 }
