@@ -19,10 +19,13 @@ public class Renderer {
     // OTHER STUFF PLEASE DON'T JUDGE ME //
     private SpriteBatch batch;
     private Texture playerTexture;
+    private Texture collisionTexture;
 
     private World world;
    	private WorldProcessor processor;
     private Player player;
+
+    private CollisionBlock block;
 
     public Renderer(World world) {
     	this.world = world;
@@ -35,6 +38,7 @@ public class Renderer {
         // Initialize spritebatch.
         batch = new SpriteBatch();
         player = world.getPlayer();
+        block = world.getCollisionBlocks();
 
         // Load other object textures.
         loadTextures();
@@ -51,19 +55,26 @@ public class Renderer {
     	batch.setProjectionMatrix(camera.combined);
     	batch.begin();
     	drawPlayer();
+        drawCollisionBlocks();
     	batch.end();
     }
 
     public void dispose() {
     	playerTexture.dispose();
+        collisionTexture.dispose();
     	batch.dispose();
     }
 
     private void loadTextures() {
     	playerTexture = new Texture("player.png");
+        collisionTexture = new Texture("collision.png");
     }
 
     private void drawPlayer() {
     	batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
+    }
+
+    private void drawCollisionBlocks() {
+        batch.draw(collisionTexture, block.getPosition().x, block.getPosition().y, block.getWidth(), block.getHeight());
     }
 }

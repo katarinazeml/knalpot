@@ -5,9 +5,12 @@ public class WorldProcessor {
 	private Player player;
 	private PlayerProcessor playerProcessor;
 
+	private CollisionBlock block;
+
 	public WorldProcessor(World world) {
 		this.world = world;
 		player = world.getPlayer();
+		block = world.getCollisionBlocks();
 		playerProcessor = new PlayerProcessor(world);
 	}
 
