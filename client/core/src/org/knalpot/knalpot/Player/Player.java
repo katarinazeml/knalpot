@@ -10,17 +10,17 @@ import com.badlogic.gdx.InputProcessor;
 
 public class Player {
     // PLAYER-RELATED //
-    private enum State {
+    public enum State {
         IDLE, MOVE, JUMP, FALL
     }
 
-    private State state;
-    private Rectangle hitbox;
+    public State state;
+    private Rectangle bounds;
 
     private static boolean isGrounded;
 
-    public static final int WIDTH = 16;
-    public static final int HEIGHT = 16;
+    private static final int WIDTH = 16;
+    private static final int HEIGHT = 16;
     
     // VECTOR //
     private Vector2 position;
@@ -35,11 +35,11 @@ public class Player {
         acceleration = new Vector2();
 
         // Creating necessary objects.
-        hitbox = new Rectangle();
-        hitbox.x = this.position.x;
-        hitbox.y = this.position.y;
-        hitbox.width = WIDTH;
-        hitbox.height = HEIGHT;
+        bounds = new Rectangle();
+        bounds.x = this.position.x;
+        bounds.y = this.position.y;
+        bounds.width = WIDTH;
+        bounds.height = HEIGHT;
 
         // Initializing necessary functions/setting up fundamentals.
         state = State.IDLE;
@@ -58,8 +58,8 @@ public class Player {
         return velocity;
     }
 
-    public Rectangle getHitbox() {
-        return hitbox;
+    public Rectangle getBounds() {
+        return bounds;
     }
 
     public State getState() {
@@ -76,7 +76,7 @@ public class Player {
 
     public void update(float dt) {
         position.add(velocity.cpy().scl(dt));
-        hitbox.x = position.x;
-        hitbox.y = position.y;
+        bounds.x = position.x;
+        bounds.y = position.y;
     }
 }

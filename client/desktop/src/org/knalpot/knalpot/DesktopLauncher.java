@@ -11,6 +11,7 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setTitle("Knalpot");
 		config.setWindowedMode(800, 480);
+		config.setResizable(false);
 		new Lwjgl3Application(new Knalpot(), config);
 	}
 }
