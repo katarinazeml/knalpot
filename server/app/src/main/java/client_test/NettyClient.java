@@ -32,7 +32,6 @@ public class NettyClient {
             });
 
             ChannelFuture f = b.connect(host, port).sync();
-
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();
