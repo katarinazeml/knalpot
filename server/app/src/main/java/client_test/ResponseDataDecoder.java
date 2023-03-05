@@ -17,8 +17,8 @@ public class ResponseDataDecoder
 
         ResponseData data = new ResponseData();
         data.setIntValue(in.readInt());
-        // int strLen = in.readInt();
-        // data.setStringValue(in.readCharSequence(strLen, Charset.defaultCharset()).toString());
+        int strLen = in.readInt();
+        data.setStringValue(in.readCharSequence(strLen, Charset.defaultCharset()).toString());
         out.add(data);
     }
 }
