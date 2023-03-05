@@ -16,8 +16,9 @@ public class ProcessingHandler
         ResponseData responseData = new ResponseData();
         // Let's assume that the server receives the request and returns the intValue multiplied by 2.
         responseData.setIntValue(requestData.getIntValue() * 2);
+        responseData.setStringValue(requestData.getStringValue().toUpperCase());
         ChannelFuture future = ctx.writeAndFlush(responseData);
         future.addListener(ChannelFutureListener.CLOSE);
-        System.out.println(requestData);
+        ctx.write(requestData);
     }
 }

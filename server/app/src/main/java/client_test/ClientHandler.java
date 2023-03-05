@@ -13,16 +13,20 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             throws Exception {
 
         RequestData msg = new RequestData();
-        msg.setIntValue(123);
-        msg.setStringValue(
-                "all work and no play makes jack a dull boy");
+        msg.setIntValue(210);
+        msg.setStringValue("time for a blunt rotation");
         ChannelFuture future = ctx.writeAndFlush(msg);
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg)
             throws Exception {
-        System.out.println((ResponseData)msg);
+        if (msg instanceof ResponseData) {
+            ResponseData responseData = (ResponseData) msg;
+            System.out.println("Received response: " + responseData.getIntValue() + " " + responseData.getStringValue());
+        } else {
+            System.out.println("Received unexpected message: " + msg);
+        }
         ctx.close();
     }
 }

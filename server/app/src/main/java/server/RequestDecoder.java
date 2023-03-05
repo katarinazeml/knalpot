@@ -25,8 +25,8 @@ public class RequestDecoder extends ReplayingDecoder<RequestData> {
         RequestData data = new RequestData();
         data.setIntValue(in.readInt());
         int strLen = in.readInt();
-        data.setStringValue(
-                in.readCharSequence(strLen, charset).toString());
+        CharSequence str = in.readCharSequence(strLen, charset);
+        data.setStringValue(str.toString());
         out.add(data);
     }
 }
