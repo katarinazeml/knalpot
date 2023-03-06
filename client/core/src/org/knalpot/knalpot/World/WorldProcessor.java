@@ -1,4 +1,8 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.World;
+
+import org.knalpot.knalpot.Interactive.CollisionBlock;
+import org.knalpot.knalpot.Player.Player;
+import org.knalpot.knalpot.Player.PlayerProcessor;
 
 public class WorldProcessor {
 	private World world;

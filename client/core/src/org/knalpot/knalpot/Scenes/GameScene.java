@@ -1,19 +1,19 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.Scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 
 public class GameScene implements Screen {
-	private World world;
-	private WorldProcessor processor;
-	private Renderer renderer;	
+	private org.knalpot.knalpot.World.World world;
+	private org.knalpot.knalpot.World.WorldProcessor processor;
+	private org.knalpot.knalpot.Addons.Renderer renderer;
 
 	@Override
 	public void show() {
-		world = new World();
-		processor = new WorldProcessor(world);
-		renderer = new Renderer(world);
+		world = new org.knalpot.knalpot.World.World();
+		processor = new org.knalpot.knalpot.World.WorldProcessor(world);
+		renderer = new org.knalpot.knalpot.Addons.Renderer(world);
 	}
 
 	@Override

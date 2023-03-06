@@ -1,4 +1,4 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.Player;
 
 import java.lang.System;
 

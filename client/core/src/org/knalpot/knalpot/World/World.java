@@ -1,6 +1,8 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.World;
 
 import com.badlogic.gdx.math.Vector2;
+import org.knalpot.knalpot.Interactive.CollisionBlock;
+import org.knalpot.knalpot.Player.Player;
 
 public class World {
 	private Player player;

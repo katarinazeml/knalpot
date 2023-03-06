@@ -1,11 +1,13 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.Addons;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
+import org.knalpot.knalpot.Interactive.CollisionBlock;
+import org.knalpot.knalpot.Player.Player;
+import org.knalpot.knalpot.World.World;
+import org.knalpot.knalpot.World.WorldProcessor;
 
 public class Renderer {
 	// CAMERA OBJECT //

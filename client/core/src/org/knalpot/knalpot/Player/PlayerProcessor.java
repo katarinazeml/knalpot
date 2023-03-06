@@ -1,10 +1,14 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.Player;
 
 import java.lang.Math;
 import java.lang.System;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import org.knalpot.knalpot.Interactive.CollisionBlock;
+import org.knalpot.knalpot.Addons.Constants;
+import org.knalpot.knalpot.Player.Player;
+import org.knalpot.knalpot.World.World;
 
 public class PlayerProcessor {
 	private World world;

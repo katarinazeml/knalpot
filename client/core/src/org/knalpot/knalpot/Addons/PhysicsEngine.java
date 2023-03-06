@@ -1,4 +1,6 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.Addons;
+
+import org.knalpot.knalpot.World.World;
 
 public class PhysicsEngine {
 	private PhysicsEngine() { }
