@@ -1,12 +1,17 @@
-package org.knalpot.knalpot.Player;
+<<<<<<< HEAD
+<<<<<<< HEAD:client/core/src/org/knalpot/knalpot/Player/Player.java
+package org.knalpot.knalpot.player;
 
 import java.lang.System;
+=======
+package org.knalpot.knalpot.actors;
+>>>>>>> c148d34 (Refactored a bit folders in project):client/core/src/org/knalpot/knalpot/actors/Player.java
+=======
+package org.knalpot.knalpot.actors;
+>>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 
 public class Player {
     // PLAYER-RELATED //
@@ -16,8 +21,6 @@ public class Player {
 
     public State state;
     private Rectangle bounds;
-
-    private static boolean isGrounded;
 
     private static final int WIDTH = 16;
     private static final int HEIGHT = 16;

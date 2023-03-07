@@ -1,4 +1,18 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
 package org.knalpot.knalpot.Addons;
+=======
+=======
+>>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
+package org.knalpot.knalpot.addons;
+
+import org.knalpot.knalpot.world.*;
+import org.knalpot.knalpot.actors.*;
+import org.knalpot.knalpot.interactive.*;
+<<<<<<< HEAD
+>>>>>>> c148d34 (Refactored a bit folders in project)
+=======
+>>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,7 +24,7 @@ import org.knalpot.knalpot.World.World;
 import org.knalpot.knalpot.World.WorldProcessor;
 
 public class Renderer {
-	// CAMERA OBJECT //
+	// CAMERA OBJECT. //
     private OrthographicCamera camera;
     private static int CAMERA_WIDTH = 400;
     private static int CAMERA_HEIGHT = 400;
@@ -24,7 +38,6 @@ public class Renderer {
     private Texture collisionTexture;
 
     private World world;
-   	private WorldProcessor processor;
     private Player player;
 
     private CollisionBlock block;
@@ -39,8 +52,8 @@ public class Renderer {
 
         // Initialize spritebatch.
         batch = new SpriteBatch();
-        player = world.getPlayer();
-        block = world.getCollisionBlocks();
+        player = this.world.getPlayer();
+        block = this.world.getCollisionBlocks();
 
         // Load other object textures.
         loadTextures();
