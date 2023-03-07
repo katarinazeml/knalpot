@@ -1,27 +1,14 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-package org.knalpot.knalpot.Addons;
-=======
-=======
->>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 package org.knalpot.knalpot.addons;
-
-import org.knalpot.knalpot.world.*;
-import org.knalpot.knalpot.actors.*;
-import org.knalpot.knalpot.interactive.*;
-<<<<<<< HEAD
->>>>>>> c148d34 (Refactored a bit folders in project)
-=======
->>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import org.knalpot.knalpot.actors.Player;
+import org.knalpot.knalpot.interactive.CollisionBlock;
+import org.knalpot.knalpot.world.World;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
-import org.knalpot.knalpot.Interactive.CollisionBlock;
-import org.knalpot.knalpot.Player.Player;
-import org.knalpot.knalpot.World.World;
-import org.knalpot.knalpot.World.WorldProcessor;
 
 public class Renderer {
 	// CAMERA OBJECT. //

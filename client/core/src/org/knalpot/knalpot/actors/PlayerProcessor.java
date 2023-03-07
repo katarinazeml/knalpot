@@ -1,41 +1,16 @@
-<<<<<<< HEAD
-<<<<<<< HEAD:client/core/src/org/knalpot/knalpot/Player/PlayerProcessor.java
-package org.knalpot.knalpot.Player;
-=======
-=======
->>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.addons.*;
 import org.knalpot.knalpot.world.*;
-<<<<<<< HEAD
->>>>>>> c148d34 (Refactored a bit folders in project):client/core/src/org/knalpot/knalpot/actors/PlayerProcessor.java
-=======
->>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 
 import java.lang.Math;
 
 import com.badlogic.gdx.Gdx;
-<<<<<<< HEAD
-<<<<<<< HEAD:client/core/src/org/knalpot/knalpot/Player/PlayerProcessor.java
-import com.badlogic.gdx.math.Rectangle;
-import org.knalpot.knalpot.Interactive.CollisionBlock;
-import org.knalpot.knalpot.Addons.Constants;
-import org.knalpot.knalpot.Player.Player;
-import org.knalpot.knalpot.World.World;
-=======
->>>>>>> c148d34 (Refactored a bit folders in project):client/core/src/org/knalpot/knalpot/actors/PlayerProcessor.java
-=======
->>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 
 public class PlayerProcessor {
 	private World world;
 	private Player player;
-<<<<<<< HEAD
-    //
-=======
 
->>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 	private final float SPEED = 120f;
     private final float JUMP_HEIGHT = 320f;
 
