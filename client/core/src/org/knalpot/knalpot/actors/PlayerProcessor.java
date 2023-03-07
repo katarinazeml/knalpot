@@ -1,20 +1,28 @@
+<<<<<<< HEAD:client/core/src/org/knalpot/knalpot/Player/PlayerProcessor.java
 package org.knalpot.knalpot.Player;
+=======
+package org.knalpot.knalpot.actors;
+
+import org.knalpot.knalpot.addons.*;
+import org.knalpot.knalpot.world.*;
+>>>>>>> c148d34 (Refactored a bit folders in project):client/core/src/org/knalpot/knalpot/actors/PlayerProcessor.java
 
 import java.lang.Math;
-import java.lang.System;
 
 import com.badlogic.gdx.Gdx;
+<<<<<<< HEAD:client/core/src/org/knalpot/knalpot/Player/PlayerProcessor.java
 import com.badlogic.gdx.math.Rectangle;
 import org.knalpot.knalpot.Interactive.CollisionBlock;
 import org.knalpot.knalpot.Addons.Constants;
 import org.knalpot.knalpot.Player.Player;
 import org.knalpot.knalpot.World.World;
+=======
+>>>>>>> c148d34 (Refactored a bit folders in project):client/core/src/org/knalpot/knalpot/actors/PlayerProcessor.java
 
 public class PlayerProcessor {
 	private World world;
 	private Player player;
-    private CollisionBlock collisionBlock;
-
+    //
 	private final float SPEED = 120f;
     private final float JUMP_HEIGHT = 320f;
 
@@ -26,16 +34,13 @@ public class PlayerProcessor {
 
     // Implementing jump mechanics
     private boolean canJump = true;
-    private float lastGroundedTime = 0f;
-    private float lastJumpTime = 0f;
 
-    // Gravity related
+    // Gravity related.
     private float gravityForce = Constants.GRAVITY_FORCE;
 
 	public PlayerProcessor(World world) {
 		this.world = world;
-		player = world.getPlayer();
-        collisionBlock = world.getCollisionBlocks();
+		player = this.world.getPlayer();
 	}
 
 	public void update(float dt) {
@@ -43,11 +48,9 @@ public class PlayerProcessor {
         windowCollision();
         horizontalMovement();
         verticalMovement();
-        //collide();
 
     	player.getAcceleration().scl(dt);
 		player.getVelocity().add(player.getAcceleration().x, player.getAcceleration().y);
-
 		player.update(dt);
 	}
 
@@ -72,9 +75,8 @@ public class PlayerProcessor {
         if ((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed)) {
             moveInput = 0;
             player.state = Player.State.IDLE;
-            move();
-        }
-
+            player.getVelocity().x = 0f;
+        }    
     }
 
 	private void verticalMovement() {
@@ -88,24 +90,14 @@ public class PlayerProcessor {
 	private void move() {
         // These variables are taken from YouTube tutorial on smooth platformer movements.
         float targetSpeed = moveInput * SPEED; // Direction of movement.
-        //System.out.println("target speed");
-        //System.out.println(targetSpeed);
         float speedDifference = targetSpeed - player.getVelocity().x; // Difference between current desired velocity.
-        //System.out.println("speed difference");
-        //System.out.println(speedDifference);
         float accelerationRate = (Math.abs(targetSpeed) > 0.01f) ? ACCELERATION : DECCELERATION;
-        //System.out.println("accel rate");
-        //System.out.println(accelerationRate);
         float movement = (float) Math.pow(Math.abs(speedDifference) * accelerationRate, VELOCITY_POWER) * Math.signum(speedDifference);
-        //System.out.println("movement speed");
-        //System.out.println((int) movement);
 
         player.getAcceleration().x = (int) movement;
     }
 
     private void jump() {
-    	lastGroundedTime = 0;
-    	lastJumpTime = 0;
         canJump = false;
         player.state = Player.State.JUMP;
     	player.getVelocity().y = JUMP_HEIGHT;
@@ -128,30 +120,4 @@ public class PlayerProcessor {
         }
         if (player.getBounds().y > 480 - player.getHeight()) player.getVelocity().y = 0;
     }
-
-    /*private void collide() {
-        float colLeft = collisionBlock.getBounds().x;
-        float colRight = collisionBlock.getBounds().x + collisionBlock.getWidth();
-        float actorLeft = player.getBounds().x;
-        float actorRight = player.getBounds().x + player.getWidth();
-
-        float colBottom = collisionBlock.getBounds().y;
-        float colRear = collisionBlock.getBounds().y + collisionBlock.getHeight();
-        float actorBottom = player.getBounds().y;
-        float actorRear = player.getBounds().y + player.getHeight();
-
-        if (colLeft < actorRight && colRight > actorLeft && colBottom < actorRear && colRear > actorBottom) {
-            if (player.getVelocity().x != 0) {
-                float overlap = player.getVelocity().x < 0 ? colRight - actorLeft : colLeft - actorRight;
-                player.getPosition().x += overlap;
-                player.getVelocity().x -= player.getVelocity().x;
-            }
-            //if (player.getVelocity().y != 0) {
-            //    float overlap = player.getVelocity().y < 0 ? colRear - actorBottom : colBottom - actorRear;
-            //    if (player.getVelocity().y < 0) canJump = true;
-            //    player.getPosition().y += overlap;
-            //    player.getVelocity().y -= player.getVelocity().y;
-            //}
-        }
-    }*/
 }

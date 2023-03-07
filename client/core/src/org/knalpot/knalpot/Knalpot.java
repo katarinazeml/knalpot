@@ -1,5 +1,7 @@
 package org.knalpot.knalpot;
 
+import org.knalpot.knalpot.scenes.GameScene;
+
 import com.badlogic.gdx.Game;
 
 public class Knalpot extends Game {

@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 package org.knalpot.knalpot.Interactive;
+=======
+package org.knalpot.knalpot.interactive;
+
+
+>>>>>>> c148d34 (Refactored a bit folders in project)
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;

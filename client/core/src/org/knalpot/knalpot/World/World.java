@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 package org.knalpot.knalpot.World;
+=======
+package org.knalpot.knalpot.world;
+
+import org.knalpot.knalpot.actors.Player;
+import org.knalpot.knalpot.interactive.CollisionBlock;
+>>>>>>> c148d34 (Refactored a bit folders in project)
 
 import com.badlogic.gdx.math.Vector2;
 import org.knalpot.knalpot.Interactive.CollisionBlock;
