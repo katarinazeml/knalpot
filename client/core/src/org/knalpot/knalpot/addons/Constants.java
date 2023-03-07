@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 package org.knalpot.knalpot.Addons;
+=======
+package org.knalpot.knalpot.addons;
+>>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Gdx;

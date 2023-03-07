@@ -1,11 +1,17 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 package org.knalpot.knalpot.World;
 =======
+=======
+>>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 package org.knalpot.knalpot.world;
 
 import org.knalpot.knalpot.actors.Player;
 import org.knalpot.knalpot.interactive.CollisionBlock;
+<<<<<<< HEAD
 >>>>>>> c148d34 (Refactored a bit folders in project)
+=======
+>>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 
 import com.badlogic.gdx.math.Vector2;
 import org.knalpot.knalpot.Interactive.CollisionBlock;

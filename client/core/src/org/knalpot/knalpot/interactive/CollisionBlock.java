@@ -1,10 +1,16 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 package org.knalpot.knalpot.Interactive;
 =======
 package org.knalpot.knalpot.interactive;
 
 
 >>>>>>> c148d34 (Refactored a bit folders in project)
+=======
+package org.knalpot.knalpot.interactive;
+
+
+>>>>>>> 0a8fd2cdaa7f133b1b996dd4f2c1c35e8f593c5c
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
