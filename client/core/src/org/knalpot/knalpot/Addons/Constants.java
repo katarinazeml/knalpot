@@ -1,4 +1,4 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.addons;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Gdx;

@@ -1,7 +1,9 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.scenes;
+
+import org.knalpot.knalpot.addons.*;
+import org.knalpot.knalpot.world.*;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 
 public class GameScene implements Screen {

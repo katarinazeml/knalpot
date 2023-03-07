@@ -1,10 +1,12 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.addons;
 
-import com.badlogic.gdx.math.Vector2;
+import org.knalpot.knalpot.world.*;
+import org.knalpot.knalpot.actors.*;
+import org.knalpot.knalpot.interactive.*;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Renderer {
@@ -22,7 +24,6 @@ public class Renderer {
     private Texture collisionTexture;
 
     private World world;
-   	private WorldProcessor processor;
     private Player player;
 
     private CollisionBlock block;
@@ -37,8 +38,8 @@ public class Renderer {
 
         // Initialize spritebatch.
         batch = new SpriteBatch();
-        player = world.getPlayer();
-        block = world.getCollisionBlocks();
+        player = this.world.getPlayer();
+        block = this.world.getCollisionBlocks();
 
         // Load other object textures.
         loadTextures();

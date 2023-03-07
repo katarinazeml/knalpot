@@ -1,4 +1,7 @@
-package org.knalpot.knalpot;
+package org.knalpot.knalpot.world;
+
+import org.knalpot.knalpot.actors.Player;
+import org.knalpot.knalpot.interactive.CollisionBlock;
 
 import com.badlogic.gdx.math.Vector2;
 

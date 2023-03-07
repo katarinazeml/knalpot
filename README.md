@@ -20,12 +20,12 @@ Each character will have a list of abilities that can be chosen before the game 
 
 ## Project plan
 ### Sprint I
-* [ ] Finalize game theme
-* [ ] Develop basic physics engine (includes gravity, character movement, collisions etc)
-* [ ] Create basic server-side prototype (two clients = two players and etc)
-* [ ] Synching two players' movements using server prototype
-* [ ] Get the basic stuff working :')
-* [ ] Divide roles between team members (server/client)
+* [x] Finalize game theme
+* [x] Develop basic physics engine (includes gravity, character movement, collisions etc)
+* [x] Create basic server-side prototype (two clients = two players and etc)
+* [x] Synching two players' movements using server prototype
+* [x] Get the basic stuff working :')
+* [x] Divide roles between team members (server/client)
 
 ### Sprint II
 * [ ] In-depth study of LibGDX
