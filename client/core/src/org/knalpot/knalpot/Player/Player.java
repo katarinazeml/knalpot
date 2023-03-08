@@ -1,14 +1,10 @@
 package org.knalpot.knalpot.Player;
 
-import java.lang.System;
-
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 
 public class Player {
+
     // PLAYER-RELATED //
     public enum State {
         IDLE, MOVE, JUMP, FALL
