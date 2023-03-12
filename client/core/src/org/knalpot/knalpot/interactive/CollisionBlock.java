@@ -10,6 +10,11 @@ public class CollisionBlock {
 	private int WIDTH = 16;
 	private int HEIGHT = 16;
 
+	public float Left;
+	public float Right;
+	public float Bottom;
+	public float Top;
+
 	public CollisionBlock(Vector2 position) {
 		this.position = position;
 
@@ -18,6 +23,11 @@ public class CollisionBlock {
 		bounds.y = this.position.y;
 		bounds.width = WIDTH;
 		bounds.height = HEIGHT;
+
+		Left = bounds.x;
+		Right = bounds.x + bounds.width;
+		Bottom = bounds.y;
+		Top = bounds.y + bounds.height;
 	}
 
 	public Vector2 getPosition() {
