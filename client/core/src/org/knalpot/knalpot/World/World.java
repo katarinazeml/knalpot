@@ -1,8 +1,13 @@
 package org.knalpot.knalpot.World;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.math.Vector2;
 import org.knalpot.knalpot.Interactive.CollisionBlock;
 import org.knalpot.knalpot.Player.Player;
+
+import java.io.DataOutputStream;
+import java.net.Socket;
 
 public class World {
 	private Player player;
@@ -21,7 +26,8 @@ public class World {
 	}
 
 	private void initializeWorld() {
-		player = new Player(new Vector2(400, 240));
+		player = new Player(new Vector2(350, 240));
 		block1 = new CollisionBlock(new Vector2(450, 20));
 	}
+
 }

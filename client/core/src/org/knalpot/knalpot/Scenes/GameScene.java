@@ -1,7 +1,6 @@
 package org.knalpot.knalpot.Scenes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 
 public class GameScene implements Screen {
