@@ -20,6 +20,12 @@ public class Player {
     private Vector2 acceleration;
     private Vector2 velocity;
 
+    // POSITION BOUNDS //
+    public int Left;
+    public int Right;
+    public int Top;
+    public int Bottom;
+
     // PLAYER CONSTRUCTOR //
     public Player(Vector2 position) {
         this.position = position;
@@ -33,6 +39,11 @@ public class Player {
         bounds.y = this.position.y;
         bounds.width = WIDTH;
         bounds.height = HEIGHT;
+
+        Left = (int) bounds.x;
+        Right = (int) (bounds.x + bounds.width);
+        Bottom = (int) bounds.y;
+        Top = (int) (bounds.y + bounds.height);
 
         // Initializing necessary functions/setting up fundamentals.
         state = State.IDLE;
@@ -49,6 +60,10 @@ public class Player {
 
     public Vector2 getVelocity() {
         return velocity;
+    }
+
+    public Vector2 getScalarVelocity(float dt) {
+        return velocity.cpy().scl(dt);
     }
 
     public Rectangle getBounds() {
@@ -69,7 +84,12 @@ public class Player {
 
     public void update(float dt) {
         position.add(velocity.cpy().scl(dt));
-        bounds.x = position.x;
-        bounds.y = position.y;
+        bounds.x = (int) position.x;
+        bounds.y = (int) position.y;
+
+        Left = (int) bounds.x;
+        Right = (int) bounds.x + WIDTH;
+        Bottom = (int) bounds.y;
+        Top = (int) bounds.y + HEIGHT;
     }
 }

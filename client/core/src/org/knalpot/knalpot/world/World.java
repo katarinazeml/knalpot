@@ -23,7 +23,7 @@ public class World {
 	}
 
 	private void initializeWorld() {
-		player = new Player(new Vector2(400, 240));
-		block1 = new CollisionBlock(new Vector2(450, 20));
+		player = new Player(new Vector2(350, 200));
+		block1 = new CollisionBlock(new Vector2(400, 25));
 	}
 }
