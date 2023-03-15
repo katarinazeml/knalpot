@@ -42,6 +42,7 @@ public class ProcessingHandler
         for (Channel channel : channels) {
             if (channel != incoming) {
                 channel.writeAndFlush(incoming.remoteAddress() + " coordinates: " + responseData);
+                System.out.println(incoming.remoteAddress() + " coordinates: " + responseData);
             }
         }
     }
