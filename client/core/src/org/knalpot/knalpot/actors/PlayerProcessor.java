@@ -20,7 +20,7 @@ public class PlayerProcessor {
 
     private float moveInput;
 
-    // Implementing jump mechanics
+    // Implementing jump mechanics.
     private boolean canJump = true;
 
     // Gravity related.
