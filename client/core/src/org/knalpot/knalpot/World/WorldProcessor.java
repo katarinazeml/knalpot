@@ -31,28 +31,8 @@ public class WorldProcessor {
 		}
 	}
 
-//	public void startServer() throws Exception {
-//		try {
-//			client = new NettyClient(player);
-//			System.out.println("server object is created");
-//			serverIsStarted = true;
-//			client.start();
-//			System.out.println("server start");
-//		} catch (Exception e) {
-//			serverIsStarted = false;
-//			System.out.println("there is no server");
-//		}
-//	}
-
 	public void update(float dt) {
 		playerProcessor.update(dt);
-//		if (!serverIsStarted) {
-//			try {
-//				startServer();
-//			} catch (Exception e) {
-//				System.out.println("cant start server");
-//			}
-//		}
 		try {
 			dOut.writeFloat(player.getPosition().x);
 			dOut.flush();
