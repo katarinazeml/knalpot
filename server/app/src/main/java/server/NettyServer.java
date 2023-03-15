@@ -39,7 +39,7 @@ public class NettyServer {
                                 throws Exception {
                             ch.pipeline().addLast(new RequestDecoder(),
                                     new ResponseDataEncoder(),
-                                    new ProcessingHandler());
+                                    new server.ProcessingHandler());
                         }
                     }).option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);

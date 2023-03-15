@@ -8,12 +8,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-// Throw an exception when there is not enough data in the buffer for the reading operation.
-
-// When the exception is caught the buffer is rewound to the beginning and the decoder waits
-// for a new portion of data.
-// Decoding stops when the out list is not empty after decode execution.
-
 public class RequestDecoder extends ReplayingDecoder<RequestData> {
 
     private final Charset charset = StandardCharsets.UTF_8;
@@ -23,10 +17,17 @@ public class RequestDecoder extends ReplayingDecoder<RequestData> {
                           ByteBuf in, List<Object> out) throws Exception {
 
         RequestData data = new RequestData();
-        data.setIntValue(in.readInt());
-        int strLen = in.readInt();
-        CharSequence str = in.readCharSequence(strLen, charset);
-        data.setStringValue(str.toString());
+        System.out.println("data on server");
+//        data.setIntValue(in.readInt());
+//        int strLen = in.readInt();
+//        System.out.println(strLen);
+//        // CharSequence str = in.readCharSequence(strLen, charset);
+//        System.out.println("might be a position");
+//        System.out.println(str);
+//        data.setStringValue(str.toString());
+//        System.out.println(data.getStringValue());
+        data.setFloatValue(in.readFloat());
+        System.out.println(data.getFloatValue());
         out.add(data);
     }
 }

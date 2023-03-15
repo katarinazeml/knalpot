@@ -1,8 +1,18 @@
 package server;
 
+
 public class RequestData {
     private int intValue;
     private String stringValue;
+    private float floatValue;
+
+    public void setFloatValue(float floatValue) {
+        this.floatValue = floatValue;
+    }
+
+    public float getFloatValue() {
+        return floatValue;
+    }
 
     public void setIntValue(int readInt) {
         this.intValue = readInt;

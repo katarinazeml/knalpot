@@ -16,9 +16,11 @@ public class ProcessingHandler
         ResponseData responseData = new ResponseData();
         // Let's assume that the server receives the request and returns the intValue multiplied by 2.
         responseData.setIntValue(requestData.getIntValue() * 2);
-        responseData.setStringValue(requestData.getStringValue().toUpperCase());
+//        responseData.setStringValue(requestData.getStringValue().toUpperCase());
+        responseData.setFloatValue(requestData.getFloatValue());
+        System.out.println("sent back response from server");
         ChannelFuture future = ctx.writeAndFlush(responseData);
-        future.addListener(ChannelFutureListener.CLOSE);
-        ctx.write(requestData);
+        //future.addListener(ChannelFutureListener.CLOSE);
+        //ctx.write(requestData);
     }
 }
