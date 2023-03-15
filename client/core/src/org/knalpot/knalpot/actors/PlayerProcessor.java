@@ -49,25 +49,42 @@ public class PlayerProcessor {
         // Stupid movement mechanic just for the sake of
         // changing velocity so I can quicker adapt it to
         // the normal mechanic.
-        if (Gdx.input.isKeyPressed(Constants.UP_KEY)) {
-            player.getVelocity().y = SPEED;
-        }
-        if (Gdx.input.isKeyPressed(Constants.DOWN_KEY)) {
-            player.getVelocity().y = -SPEED;
-        }
-        if (Gdx.input.isKeyPressed(Constants.RIGHT_KEY)) {
-            player.getVelocity().x = SPEED;
-        }
-        if (Gdx.input.isKeyPressed(Constants.LEFT_KEY)) {
-            player.getVelocity().x = -SPEED;
-        }
-        if (!Gdx.input.isKeyPressed(Constants.UP_KEY)
-            && !Gdx.input.isKeyPressed(Constants.DOWN_KEY)
-            && !Gdx.input.isKeyPressed(Constants.RIGHT_KEY)
-            && !Gdx.input.isKeyPressed(Constants.LEFT_KEY)) {
-            player.getVelocity().x = 0;
-            player.getVelocity().y = 0;
-        }
+        // if (Gdx.input.isKeyPressed(Constants.UP_KEY)) {
+        //     player.getVelocity().y = SPEED;
+        // }
+        // if (Gdx.input.isKeyPressed(Constants.DOWN_KEY)) {
+        //     player.getVelocity().y = -SPEED;
+        // }
+        // if (Gdx.input.isKeyPressed(Constants.RIGHT_KEY)) {
+        //     player.getVelocity().x = SPEED;
+        // }
+        // if (Gdx.input.isKeyPressed(Constants.LEFT_KEY)) {
+        //     player.getVelocity().x = -SPEED;
+        // }
+
+        // if (!Gdx.input.isKeyPressed(Constants.UP_KEY) && !Gdx.input.isKeyPressed(Constants.DOWN_KEY))
+        //     player.getVelocity().y = 0f;
+        // if (!Gdx.input.isKeyPressed(Constants.RIGHT_KEY) && !Gdx.input.isKeyPressed(Constants.LEFT_KEY))
+        //     player.getVelocity().x = 0f;
+
+        // player.update(dt);
+
+		gravity();
+        windowCollision(dt);
+        horizontalMovement();
+        verticalMovement();
+        // testCollide(dt);
+
+    	player.getAcceleration().scl(dt);
+        System.out.println("scalar Y accel:");
+        System.out.println(player.getAcceleration().y);
+		player.getVelocity().add(player.getAcceleration().x, player.getAcceleration().y);
+        System.out.println("position X:");
+        System.out.println(player.getPosition().x);
+        System.out.println("position Y:");
+        System.out.println(player.getPosition().y);
+        System.out.println("bounds");
+        System.out.println(player.getBounds().x);
 
         System.out.println("-----");
         System.out.println("Player X position");
@@ -81,40 +98,18 @@ public class PlayerProcessor {
         System.out.println("colblock position");
         System.out.println(collisionBlock.getPosition());
 
-        if (DynamicRectVsRect(player, collisionBlock, rayPoint, cn, t, dt)) {
+        System.out.println("Important stuff for collisions");
+        System.out.println(cn);
+        System.out.println(cp);
+        System.out.println(t);
+
+        if (resolveCollision(player, collisionBlock, dt)) {
             System.out.println("Colliding!");
-            player.getVelocity().x = 0f;
-            player.getVelocity().y = 0f;
+            if (player.getVelocity().y == 0f) canJump = true;
         }
 
         player.update(dt);
-
-		// gravity();
-        // windowCollision(dt);
-        // horizontalMovement();
-        // verticalMovement();
-        // testCollide(dt);
-
-    	// player.getAcceleration().scl(dt);
-        // System.out.println("scalar Y accel:");
-        // System.out.println(player.getAcceleration().y);
-		// player.getVelocity().add(player.getAcceleration().x, player.getAcceleration().y);
-        // System.out.println("position X:");
-        // System.out.println(player.getPosition().x);
-        // System.out.println("position Y:");
-        // System.out.println(player.getPosition().y);
-        // System.out.println("bounds");
-        // System.out.println(player.getBounds().x);
-        // player.update(dt);
 	}
-
-    //Pure AABB without responses.
-    private boolean RectvsRect(Player rect1, CollisionBlock rect2) {
-        return rect1.Left < rect2.Right
-            && rect1.Right > rect2.Left
-            && rect1.Bottom < rect2.Top
-            && rect1.Top > rect2.Bottom;
-    }
 
     private static float swap(float x, float f) {
         return x;
@@ -179,6 +174,11 @@ public class PlayerProcessor {
         System.out.println("contact normal");
         System.out.println(contactNormal);
 
+        System.out.println("Saving calculated variables into static ones");
+        cn = contactNormal;
+        cp = contactPoint;
+        t = timeHitNear;
+
         return true;
     }
 
@@ -209,73 +209,91 @@ public class PlayerProcessor {
         return false;
     }
 
+    private boolean resolveCollision(Player in, CollisionBlock block, float dt) {
+        cn = new Vector2();
+        cp = new Vector2();
+        float contactTime = 0f;
+        
+        if (DynamicRectVsRect(in, block, cp, cn, contactTime, dt)) {
+            System.out.println("checking velocity");
+            System.out.println(in.getVelocity().x + ":x before");
+            in.getVelocity().x -= cn.x * Math.abs(in.getVelocity().x) * (1 - contactTime);
+            System.out.println(in.getVelocity().x + ":x after");
+            System.out.println(in.getVelocity().y + ":y before");
+            in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
+            System.out.println(in.getVelocity().y + ":y after");
+            return true;
+        }
+        return false;
+    }
 
-	// private void gravity() {
-	// 	if (player.getVelocity().y < 0) gravityForce = Constants.GRAVITY_FORCE * Constants.GRAVITY_ACCEL;
-    //     player.getAcceleration().y = -gravityForce;
-	// }
 
-    // private void horizontalMovement() {
-    //     boolean isLeftPressed = Gdx.input.isKeyPressed(Constants.LEFT_KEY);
-    //     boolean isRightPressed = Gdx.input.isKeyPressed(Constants.RIGHT_KEY);
-    //     if (isLeftPressed) {
-    //         moveInput = -1;
-    //         player.state = Player.State.MOVE;
-    //         move();
-    //     }
-    //     if (isRightPressed) {
-    //         moveInput = 1;
-    //         player.state = Player.State.MOVE;
-    //         move();
-    //     }
-    //     if ((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed)) {
-    //         moveInput = 0;
-    //         player.state = Player.State.IDLE;
-    //         player.getVelocity().x = 0f;
-    //     }    
-    // }
+	private void gravity() {
+		if (player.getVelocity().y < 0) gravityForce = Constants.GRAVITY_FORCE * Constants.GRAVITY_ACCEL;
+        player.getAcceleration().y = -gravityForce;
+	}
 
-	// private void verticalMovement() {
-    //     boolean isSpacePressed = Gdx.input.isKeyJustPressed(Constants.SPACEBAR);
+    private void horizontalMovement() {
+        boolean isLeftPressed = Gdx.input.isKeyPressed(Constants.LEFT_KEY);
+        boolean isRightPressed = Gdx.input.isKeyPressed(Constants.RIGHT_KEY);
+        if (isLeftPressed) {
+            moveInput = -1;
+            player.state = Player.State.MOVE;
+            move();
+        }
+        if (isRightPressed) {
+            moveInput = 1;
+            player.state = Player.State.MOVE;
+            move();
+        }
+        if ((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed)) {
+            moveInput = 0;
+            player.state = Player.State.IDLE;
+            player.getVelocity().x = 0f;
+        }    
+    }
 
-    //     if (isSpacePressed && canJump) {
-    //     	jump();
-    //     }
-	// }
+	private void verticalMovement() {
+        boolean isSpacePressed = Gdx.input.isKeyJustPressed(Constants.SPACEBAR);
 
-	// private void move() {
-    //     // These variables are taken from YouTube tutorial on smooth platformer movements.
-    //     float targetSpeed = moveInput * SPEED; // Direction of movement.
-    //     float speedDifference = targetSpeed - player.getVelocity().x; // Difference between current desired velocity.
-    //     float accelerationRate = (Math.abs(targetSpeed) > 0.01f) ? ACCELERATION : DECCELERATION;
-    //     float movement = (float) Math.pow(Math.abs(speedDifference) * accelerationRate, VELOCITY_POWER) * Math.signum(speedDifference);
+        if (isSpacePressed && canJump) {
+        	jump();
+        }
+	}
 
-    //     player.getAcceleration().x = movement;
-    // }
+	private void move() {
+        // These variables are taken from YouTube tutorial on smooth platformer movements.
+        float targetSpeed = moveInput * SPEED; // Direction of movement.
+        float speedDifference = targetSpeed - player.getVelocity().x; // Difference between current desired velocity.
+        float accelerationRate = (Math.abs(targetSpeed) > 0.01f) ? ACCELERATION : DECCELERATION;
+        float movement = (float) Math.pow(Math.abs(speedDifference) * accelerationRate, VELOCITY_POWER) * Math.signum(speedDifference);
 
-    // private void jump() {
-    //     canJump = false;
-    //     player.state = Player.State.JUMP;
-    // 	player.getVelocity().y = JUMP_HEIGHT;
-    // }
+        player.getAcceleration().x = movement;
+    }
 
-    // private void windowCollision(float dt) {
-    //     if (player.Left + player.getScalarVelocity(dt).x <= 200) {
-    //         player.getPosition().x = 200f;
-    //         player.getVelocity().x -= player.getVelocity().x;
-    //     }
-    //     if (player.Right + player.getScalarVelocity(dt).x >= 600) {
-    //         player.getPosition().x = 600 - player.getWidth();
-    //         player.getVelocity().x -= player.getVelocity().x;
-    //     }
-    //     if (player.Bottom + player.getScalarVelocity(dt).y <= 0) {
-    //         canJump = true;
-    //         player.state = Player.State.IDLE;
-    //     	player.getPosition().y = 0f;
-    //         player.getVelocity().y -= player.getVelocity().y;
-    //     }
-    //     if (player.Top + player.getScalarVelocity(dt).y >= 480 - player.getHeight()) player.getVelocity().y -= player.getVelocity().y;
-    // // }
+    private void jump() {
+        canJump = false;
+        player.state = Player.State.JUMP;
+    	player.getVelocity().y = JUMP_HEIGHT;
+    }
+
+    private void windowCollision(float dt) {
+        if (player.Left + player.getScalarVelocity(dt).x <= 200) {
+            player.getPosition().x = 200f;
+            player.getVelocity().x -= player.getVelocity().x;
+        }
+        if (player.Right + player.getScalarVelocity(dt).x >= 600) {
+            player.getPosition().x = 600 - player.getWidth();
+            player.getVelocity().x -= player.getVelocity().x;
+        }
+        if (player.Bottom + player.getScalarVelocity(dt).y <= 0) {
+            canJump = true;
+            player.state = Player.State.IDLE;
+        	player.getPosition().y = 0f;
+            player.getVelocity().y -= player.getVelocity().y;
+        }
+        if (player.Top + player.getScalarVelocity(dt).y >= 480 - player.getHeight()) player.getVelocity().y -= player.getVelocity().y;
+    }
 
     // private void testCollide(float dt) {
     //     if (isTouchingLeft(dt)) {
