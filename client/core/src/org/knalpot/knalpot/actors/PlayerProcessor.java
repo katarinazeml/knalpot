@@ -7,6 +7,7 @@ import org.knalpot.knalpot.world.*;
 import java.lang.Math;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class PlayerProcessor {
@@ -17,6 +18,10 @@ public class PlayerProcessor {
     // test for collisions //
     private Vector2 cp;
     private Vector2 cn;
+    float t;
+    private Vector2 rayPoint = new Vector2(480f, 10f);
+    private Vector2 rayDirection = new Vector2();
+
 
     // ===== ALL COMMENTED OUT CODE IS TEMPORARY DISABLED ===== //
 	private final float SPEED = 120f;
@@ -41,11 +46,6 @@ public class PlayerProcessor {
 	}
 
 	public void update(float dt) {
-        System.out.println("Player X position");
-        System.out.println(player.getPosition().x);
-        System.out.println("Player Y pos");
-        System.out.println(player.getPosition().y);
-        
         // Stupid movement mechanic just for the sake of
         // changing velocity so I can quicker adapt it to
         // the normal mechanic.
@@ -69,20 +69,26 @@ public class PlayerProcessor {
             player.getVelocity().y = 0;
         }
 
-        player.update(dt);
+        System.out.println("-----");
+        System.out.println("Player X position");
+        System.out.println(player.getPosition().x);
+        System.out.println("Player Y pos");
+        System.out.println(player.getPosition().y);
 
-        Vector2 rayPoint = new Vector2(350f, 200f);
-        Vector2 rayDirection = new Vector2();
         rayDirection.x = player.getPosition().x - rayPoint.x;
         rayDirection.y = player.getPosition().y - rayPoint.y;
-        float t = 0f;
 
         System.out.println("colblock position");
         System.out.println(collisionBlock.getPosition());
 
-        if (RayvsRect(rayPoint.cpy(), rayDirection.cpy(), collisionBlock, cp, cn, t)) {
+        if (DynamicRectVsRect(player, collisionBlock, rayPoint, cn, t, dt)) {
             System.out.println("Colliding!");
+            player.getVelocity().x = 0f;
+            player.getVelocity().y = 0f;
         }
+
+        player.update(dt);
+
 		// gravity();
         // windowCollision(dt);
         // horizontalMovement();
@@ -114,7 +120,7 @@ public class PlayerProcessor {
         return x;
     }
 
-    private boolean RayvsRect(Vector2 rayOrigin, Vector2 rayDirection, CollisionBlock block, 
+    private boolean RayvsRect(Vector2 rayOrigin, Vector2 rayDirection, Rectangle block, 
         Vector2 contactPoint, Vector2 contactNormal, float timeHitNear) {
         
         contactPoint = new Vector2();
@@ -126,10 +132,10 @@ public class PlayerProcessor {
         
         Vector2 t_near = new Vector2();
         Vector2 t_far = new Vector2();
-        t_near.x = (block.getPosition().x - rayOrigin.x) / rayDirection.x;
-        t_near.y = (block.getPosition().y - rayOrigin.y) / rayDirection.y;
-        t_far.x = (block.getPosition().x + block.getWidth() - rayOrigin.x) / rayDirection.x;
-        t_far.y = (block.getPosition().y + block.getHeight() - rayOrigin.y) / rayDirection.y;
+        t_near.x = (block.getX() - rayOrigin.x) / rayDirection.x;
+        t_near.y = (block.getY() - rayOrigin.y) / rayDirection.y;
+        t_far.x = ((block.getX() + block.getWidth()) - rayOrigin.x) / rayDirection.x;
+        t_far.y = ((block.getY() + block.getHeight()) - rayOrigin.y) / rayDirection.y;
 
         System.out.println("-------");
         System.out.println("t near | t far");
@@ -153,6 +159,7 @@ public class PlayerProcessor {
         System.out.println(t_hit_far);
         System.out.println(" ");
 
+        if (timeHitNear > 1f) return false;
         if (t_hit_far < 0) return false;
 
         contactPoint.x = rayOrigin.x + (timeHitNear * rayDirection.x);
@@ -173,6 +180,33 @@ public class PlayerProcessor {
         System.out.println(contactNormal);
 
         return true;
+    }
+
+    public boolean DynamicRectVsRect(Player in, CollisionBlock target, Vector2 contactPoint, Vector2 contactNormal, float contactTime, float dt) {
+        if (in.getVelocity().x == 0 && in.getVelocity().y == 0) return false;
+        
+        Rectangle expandedTarget = new Rectangle();
+        expandedTarget.x = target.getPosition().x - (in.getWidth() / 2);
+        expandedTarget.y = target.getPosition().y - (in.getHeight() / 2);
+        expandedTarget.width = target.getWidth() + in.getWidth();
+        expandedTarget.height = target.getHeight() + in.getHeight();
+
+        Vector2 dynamicRectPos = new Vector2();
+        dynamicRectPos.x = in.getPosition().x + (in.getWidth() / 2);
+        dynamicRectPos.y = in.getPosition().y + (in.getHeight() / 2);
+
+        System.out.println("expanded target parameters");
+        System.out.println(expandedTarget.getX() + ":" + expandedTarget.getY());
+        System.out.println(expandedTarget.getWidth() + ":" + expandedTarget.getHeight());
+
+        System.out.println("Dynamic rectangle position");
+        System.out.println(dynamicRectPos.x);
+        System.out.println(dynamicRectPos.y);
+
+        if (RayvsRect(dynamicRectPos, in.getVelocity().cpy().scl(dt), expandedTarget, contactPoint, contactNormal, contactTime)) {
+            return true;
+        }
+        return false;
     }
 
 
