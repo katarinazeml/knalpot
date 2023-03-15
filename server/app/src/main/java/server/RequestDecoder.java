@@ -21,10 +21,10 @@ public class RequestDecoder extends ReplayingDecoder<RequestData> {
 //        data.setIntValue(in.readInt());
         int strLen = in.readInt();
 //        System.out.println(strLen);
-        CharSequence str = in.readCharSequence(strLen, charset);
+        // CharSequence str = in.readCharSequence(strLen, charset);
 //        System.out.println("might be a position");
 //        System.out.println(str);
-        data.setStringValue(str.toString());
+        // data.setStringValue(str.toString());
 //        System.out.println(data.getStringValue());
         data.setFloatValue(in.readFloat());
 //        System.out.println(data.getFloatValue());

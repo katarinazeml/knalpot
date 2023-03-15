@@ -34,7 +34,7 @@ public class ProcessingHandler
         responseData.setIntValue(requestData.getIntValue());
         responseData.setStringValue(requestData.getStringValue());
         responseData.setFloatValue(requestData.getFloatValue());
-        // System.out.println("sent back response from server");
+        System.out.println("sent back response from server");
         // ChannelFuture future = ctx.writeAndFlush(responseData);
         //future.addListener(ChannelFutureListener.CLOSE);
         //ctx.write(requestData);
@@ -42,7 +42,6 @@ public class ProcessingHandler
         for (Channel channel : channels) {
             if (channel != incoming) {
                 channel.writeAndFlush(incoming.remoteAddress() + " coordinates: " + responseData);
-                System.out.println(incoming.remoteAddress() + " coordinates: " + responseData);
             }
         }
     }
