@@ -7,11 +7,21 @@ import org.knalpot.knalpot.world.WorldProcessor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
+/**
+ * {@code GameScene} displays all game-related objects and textures.
+ * It is called when player starts either a single player or multiplayer game.
+ * @author Max Usmanov
+ * @version 0.1
+ */
 public class GameScene implements Screen {
+	//#region -- VARIABLES --
+	// ==== OBJECT VARIABLES ==== //
 	private World world;
 	private WorldProcessor processor;
-	private Renderer renderer;	
+	private Renderer renderer;
+	//#endregion	
 
+	//#region -- FUNCTIONS --
 	@Override
 	public void show() {
 		world = new World();
@@ -51,4 +61,5 @@ public class GameScene implements Screen {
 	public void dispose() {
 		renderer.dispose();
 	}
+	//#endregion
 }
