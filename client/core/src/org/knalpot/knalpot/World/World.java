@@ -6,8 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import org.knalpot.knalpot.Interactive.CollisionBlock;
 import org.knalpot.knalpot.Player.Player;
 
-import java.io.DataOutputStream;
-import java.net.Socket;
 
 public class World {
 	private Player player;
