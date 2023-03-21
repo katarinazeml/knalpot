@@ -11,7 +11,7 @@ public class Knalpot extends Game {
 	}
 
 	public void create() {
-		this.setScreen(new org.knalpot.knalpot.Scenes.GameScene());
+		this.setScreen(new org.knalpot.knalpot.scenes.GameScene());
 	}
 
 	public void render() {
