@@ -1,28 +1,9 @@
 package ServerPlayer;
 
-import java.io.Serializable;
+import com.esotericsoftware.kryonet.Connection;
 
-public class ServerPlayer implements Serializable {
-    private float x;
-    private float y;
+public class ServerPlayer {
 
-    public ServerPlayer() {}
-
-    public ServerPlayer(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
-    public void setX(float x){
-        this.x = x;
-    }
-    public void setY(float y){
-        this.y = y;
-    }
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
+    public float x, y;
+    public Connection c;
 }
