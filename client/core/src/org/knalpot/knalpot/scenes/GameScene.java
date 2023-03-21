@@ -1,6 +1,7 @@
 package org.knalpot.knalpot.scenes;
 
 import org.knalpot.knalpot.addons.Renderer;
+import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.world.World;
 import org.knalpot.knalpot.world.WorldProcessor;
 
@@ -31,14 +32,12 @@ public class GameScene implements Screen {
 
 	@Override
 	public void hide() {
-
 	}
 
 	@Override
 	public void resize(int w, int h) {
 		renderer.setCameraSize(400, 400);
 	}
-
 
 	@Override
 	public void resume() {
