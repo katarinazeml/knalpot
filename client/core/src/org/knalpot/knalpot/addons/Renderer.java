@@ -1,15 +1,17 @@
 package org.knalpot.knalpot.addons;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
+
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
 import org.knalpot.knalpot.world.Network;
 import org.knalpot.knalpot.world.World;
+
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 /**
  * {@code Renderer} class renders all textures in the specified location.
@@ -118,7 +120,7 @@ public class Renderer {
      * Draws a player.
      */
     private void drawPlayer() {
-        batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
+    	batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
         System.out.println(networking.getPlayers().values());
         System.out.println(networking.getPlayers().size());
         for (MPPlayer mpPlayer : networking.getPlayers().values()) {

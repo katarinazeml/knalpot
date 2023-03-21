@@ -1,7 +1,6 @@
 package org.knalpot.knalpot.scenes;
 
 import org.knalpot.knalpot.addons.Renderer;
-import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.world.World;
 import org.knalpot.knalpot.world.WorldProcessor;
 

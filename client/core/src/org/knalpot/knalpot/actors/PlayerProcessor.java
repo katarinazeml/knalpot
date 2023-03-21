@@ -2,7 +2,7 @@ package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.addons.*;
 import org.knalpot.knalpot.interactive.Static;
-import org.knalpot.knalpot.world.*;
+import org.knalpot.knalpot.world.World;
 
 import java.lang.Math;
 
