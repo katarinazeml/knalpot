@@ -14,8 +14,8 @@ import com.badlogic.gdx.Gdx;
  */
 public class Constants {
 	// ==== WINDOW PARAMETERS ==== //
-    public final static float WINDOW_WIDTH = Gdx.graphics.getWidth();
-    public final static float WINDOW_HEIGHT = Gdx.graphics.getHeight();
+    public final static int WINDOW_WIDTH = Gdx.graphics.getWidth();
+    public final static int WINDOW_HEIGHT = Gdx.graphics.getHeight();
 
     // ==== PHYSICS ==== //
 	public final static float GRAVITY_FORCE = 700f;
