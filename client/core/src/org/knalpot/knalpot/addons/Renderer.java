@@ -7,11 +7,12 @@ import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
-import org.knalpot.knalpot.world.Network;
 import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.Gdx;
+
 
 /**
  * {@code Renderer} class renders all textures in the specified location.
@@ -42,6 +43,7 @@ public class Renderer {
     private OrthographicCamera camera;
     private static int CAMERA_WIDTH = 400;
     private static int CAMERA_HEIGHT = 400;
+    private static final float CAMERA_SPEED = 5.0f;
 
     // ==== SHORTCUTS ==== //
     float WW = Constants.WINDOW_WIDTH;
@@ -59,7 +61,6 @@ public class Renderer {
 
         // Create and setup camera.
     	camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT * (WH / WW));
-        camera.position.set(WW / 2, 120, 0);
         camera.update();
 
         // Initialize spritebatch.
@@ -78,8 +79,11 @@ public class Renderer {
      * @param h
      */
     public void setCameraSize(int w, int h) {
-    	CAMERA_WIDTH = w;
-    	CAMERA_HEIGHT = h;
+    	// CAMERA_WIDTH = w;
+    	// CAMERA_HEIGHT = h;
+        camera.viewportWidth = w;
+        camera.viewportHeight = h;
+        camera.update();
     }
 
     /**
@@ -87,7 +91,19 @@ public class Renderer {
      */
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
+        
+        // Calculate the target position for the camera.
+        float targetX = player.getPosition().x + player.getWidth() / 2;
+        float targetY = player.getPosition().y + player.getHeight() / 2;
+
+        // Interpolate the camera's position towards the target position.
+        float dx = targetX - camera.position.x;
+        float dy = targetY - camera.position.y;
+        camera.position.x += dx * CAMERA_SPEED * Gdx.graphics.getDeltaTime();
+        camera.position.y += dy * CAMERA_SPEED * Gdx.graphics.getDeltaTime();
+
         camera.update();
+
     	batch.setProjectionMatrix(camera.combined);
     	batch.begin();
     	drawPlayer();
