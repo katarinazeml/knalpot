@@ -48,6 +48,11 @@ public class Renderer {
     // ==== SHORTCUTS ==== //
     float WW = Constants.WINDOW_WIDTH;
    	float WH = Constants.WINDOW_HEIGHT;
+
+     // ==== PARALLAX ==== //
+    private Texture background1;
+    private Texture background2;
+       
     //#endregion
 
     //#region -- FUNCTIONS --
@@ -106,6 +111,7 @@ public class Renderer {
 
     	batch.setProjectionMatrix(camera.combined);
     	batch.begin();
+        drawBackground();
     	drawPlayer();
         drawStatic();
     	batch.end();
@@ -119,6 +125,8 @@ public class Renderer {
         staticTexture.dispose();
         networking.dispose();
     	batch.dispose();
+        background1.dispose();
+        background2.dispose();
     }
 
     /**
@@ -129,6 +137,8 @@ public class Renderer {
     private void loadTextures() {
     	playerTexture = new Texture("player.png");
         staticTexture = new Texture("collision.png");
+        background1 = new Texture("CloudsGrassWallpaperCloud.png");
+        background2 = new Texture("CloudsGrassWallpaperSky.png");
     }
 
     // I hope Javadoc comments are not needed for functions below...
@@ -143,6 +153,35 @@ public class Renderer {
             batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth(), player.getHeight());
         }
     }
+
+    private void drawBackground() {
+        // Coefficients for parallax effect
+        float fraction1 = 0.5f;
+        float fraction2 = 0.25f;
+    
+        // Calculate the target position for the camera.
+        float targetX = player.getPosition().x + player.getWidth() / 2;
+        float targetY = player.getPosition().y + player.getHeight() / 2;
+    
+        // Interpolate the camera's position towards the target position.
+        float dx = targetX - camera.position.x;
+        float dy = targetY - camera.position.y;
+        camera.position.x += dx * CAMERA_SPEED * Gdx.graphics.getDeltaTime();
+        camera.position.y += dy * CAMERA_SPEED * Gdx.graphics.getDeltaTime();
+        camera.update();
+    
+        // Calculate the positions of the backgrounds
+        float bg1X = camera.position.x - camera.viewportWidth / 2;
+        float bg1Y = camera.position.y - camera.viewportHeight / 2;
+        float bg2X = bg1X * fraction2 + targetX * fraction1;
+        float bg2Y = bg1Y * fraction2 + targetY * fraction1;
+    
+        // Draw the backgrounds
+        batch.draw(background2, bg1X, bg1Y, camera.viewportWidth, camera.viewportHeight);
+        batch.draw(background1, bg2X, bg2Y, camera.viewportWidth, camera.viewportHeight);
+    }
+    
+    
 
     /**
      * Draws a {@code Static} objects.

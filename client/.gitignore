@@ -89,3 +89,9 @@ natives.zip
 .classpath
 .project
 .settings
+
+# Additional ignore for bullshit
+/core/caches
+/core/wrapper
+/core/native
+/core/daemon

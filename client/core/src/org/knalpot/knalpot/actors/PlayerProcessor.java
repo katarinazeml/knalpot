@@ -167,14 +167,14 @@ public class PlayerProcessor {
      * @param dt
      */
     private void windowCollision(float dt) {
-        if (player.Left + player.getScalarVelocity(dt).x <= 200) {
-            player.getPosition().x = 200f;
-            player.getVelocity().x -= player.getVelocity().x;
-        }
-        if (player.Right + player.getScalarVelocity(dt).x >= 600) {
-            player.getPosition().x = 600 - player.getWidth();
-            player.getVelocity().x -= player.getVelocity().x;
-        }
+        // if (player.Left + player.getScalarVelocity(dt).x <= 200) {
+        //     player.getPosition().x = 200f;
+        //     player.getVelocity().x -= player.getVelocity().x;
+        // }
+        // if (player.Right + player.getScalarVelocity(dt).x >= 600) {
+        //     player.getPosition().x = 600 - player.getWidth();
+        //     player.getVelocity().x -= player.getVelocity().x;
+        // }
         if (player.Bottom + player.getScalarVelocity(dt).y <= 0) {
             canJump = true;
         	player.getPosition().y = 0f;
