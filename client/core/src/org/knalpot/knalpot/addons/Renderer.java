@@ -52,6 +52,8 @@ public class Renderer {
      // ==== PARALLAX ==== //
     private Texture background1;
     private Texture background2;
+    private Texture darkGrass;
+    private Texture lightGrass;
        
     //#endregion
 
@@ -111,7 +113,7 @@ public class Renderer {
 
     	batch.setProjectionMatrix(camera.combined);
     	batch.begin();
-        drawBackground();
+        drawBackground(targetX);
     	drawPlayer();
         drawStatic();
     	batch.end();
@@ -127,6 +129,8 @@ public class Renderer {
     	batch.dispose();
         background1.dispose();
         background2.dispose();
+        darkGrass.dispose();
+        lightGrass.dispose();
     }
 
     /**
@@ -139,6 +143,8 @@ public class Renderer {
         staticTexture = new Texture("collision.png");
         background1 = new Texture("CloudsGrassWallpaperCloud.png");
         background2 = new Texture("CloudsGrassWallpaperSky.png");
+        darkGrass = new Texture("DarkGrass.png");
+        lightGrass = new Texture("LightGrass.png");
     }
 
     // I hope Javadoc comments are not needed for functions below...
@@ -154,33 +160,29 @@ public class Renderer {
         }
     }
 
-    private void drawBackground() {
+    private void drawBackground(float targetX) {
         // Coefficients for parallax effect
-        float fraction1 = 0.5f;
-        float fraction2 = 0.25f;
-    
-        // Calculate the target position for the camera.
-        float targetX = player.getPosition().x + player.getWidth() / 2;
-        float targetY = player.getPosition().y + player.getHeight() / 2;
-    
-        // Interpolate the camera's position towards the target position.
-        float dx = targetX - camera.position.x;
-        float dy = targetY - camera.position.y;
-        camera.position.x += dx * CAMERA_SPEED * Gdx.graphics.getDeltaTime();
-        camera.position.y += dy * CAMERA_SPEED * Gdx.graphics.getDeltaTime();
-        camera.update();
+        float fraction1 = 0.6f; //cloud
+        float fraction2 = 0.25f; //also cloud
+        float fraction3 = 0.4f; //darkGrass
+        float fraction4 = 0.2f; //lightGrass
     
         // Calculate the positions of the backgrounds
         float bg1X = camera.position.x - camera.viewportWidth / 2;
         float bg1Y = camera.position.y - camera.viewportHeight / 2;
         float bg2X = bg1X * fraction2 + targetX * fraction1;
-        float bg2Y = bg1Y * fraction2 + targetY * fraction1;
+        float bg2Y = bg1Y;
+        float darkGrassX = bg1X * fraction4 + targetX * fraction3;
+        float darkGrassY = bg1Y;
+        float lightGrassX = bg1X * fraction4 + targetX * fraction4;
+        float lightGrassY = bg1Y;
     
         // Draw the backgrounds
         batch.draw(background2, bg1X, bg1Y, camera.viewportWidth, camera.viewportHeight);
         batch.draw(background1, bg2X, bg2Y, camera.viewportWidth, camera.viewportHeight);
+        batch.draw(darkGrass, darkGrassX, darkGrassY, camera.viewportWidth, camera.viewportHeight);
+        batch.draw(lightGrass, lightGrassX, lightGrassY, camera.viewportWidth, camera.viewportHeight);
     }
-    
     
 
     /**
