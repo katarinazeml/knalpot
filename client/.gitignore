@@ -91,3 +91,10 @@ natives.zip
 .classpath
 .project
 .settings
+
+# Ignoring more useless folders
+/core/.tmp
+/core/caches
+/core/daemon
+/core/native/
+/core/wrapper

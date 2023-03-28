@@ -1,4 +1,4 @@
-package ServerPlayer;
+package org.knalpot.server.ServerPlayer;
 
 import com.esotericsoftware.kryonet.Connection;
 

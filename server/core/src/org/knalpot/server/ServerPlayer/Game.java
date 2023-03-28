@@ -1,6 +1,4 @@
-package ServerPlayer;
-
-import ServerPlayer.ServerPlayer;
+package org.knalpot.server.ServerPlayer;
 
 import java.util.HashMap;
 import java.util.Map;

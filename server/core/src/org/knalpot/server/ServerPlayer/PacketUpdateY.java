@@ -1,4 +1,4 @@
-package ServerPlayer;
+package org.knalpot.server.ServerPlayer;
 
 public class PacketUpdateY {
 

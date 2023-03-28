@@ -1,3 +1,5 @@
+package org.knalpot.server;
+
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -7,11 +9,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import ServerPlayer.ServerPlayer;
-import ServerPlayer.PacketUpdateX;
-import ServerPlayer.PacketUpdateY;
-import ServerPlayer.PacketAddPlayer;
-import ServerPlayer.PacketRemovePlayer;
+import org.knalpot.server.ServerPlayer.PacketAddPlayer;
+import org.knalpot.server.ServerPlayer.PacketRemovePlayer;
+import org.knalpot.server.ServerPlayer.PacketUpdateX;
+import org.knalpot.server.ServerPlayer.PacketUpdateY;
+import org.knalpot.server.ServerPlayer.ServerPlayer;
 
 public class ServerFoundation extends Listener {
     private static Server server;
