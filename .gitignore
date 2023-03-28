@@ -1,6 +1,7 @@
-.DS_Store
-.git
-.idea
-.vscode
-server/app/bin
 
+# Randomly generated files
+.DS_Store
+
+# Text editors
+.vscode
+.idea

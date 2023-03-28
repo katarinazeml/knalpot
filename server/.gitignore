@@ -1,5 +1,69 @@
-# Ignore Gradle project-specific cache directory
-.gradle
+# Temporary Files
+*~
+.*.swp
+.DS_STORE
+desktop.ini
+robovm-build/
+project.xcworkspace/
+xcuserdata/
+xcode/native/
+.gradle/
+build/
+bin/
+target/
+obj/
+out/
+classes/
+.gwt/
+gwt-unitCache/
+war/
+gen/
+gen-external-apklibs/
+armeabi-v7a/
+arm64-v8a/
+linux32/
+linux64/
+windows32/
+windows64/
+macosx32/
+ios32/
+Debug/
+Release/
+x64/
+x86/
+x86_64/
+ipch/
+/dist
+
+*.a
+*.a.tvos
+*.dll
+*.dll.mdb
+*.userprefs
+*.sdf
+*.class
+hs_err_pid*
+Thumbs.db
+
+*.iml
+/.idea/
+
+#directories created by fetch.xml
+/tests/gdx-tests-android/libs
+/tmp/
+
+#gradle wrapper
+/local.properties
+natives.zip
+
+#Eclipse metadata
+.metadata
+.classpath
+.project
+.settings
+
+# Internal builds
+/app/bin
 
 # Ignore Gradle build output directory
 build
