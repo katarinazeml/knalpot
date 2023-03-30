@@ -9,15 +9,24 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+<<<<<<< Updated upstream:server/core/src/org/knalpot/server/ServerFoundation.java
 import org.knalpot.server.ServerPlayer.PacketAddPlayer;
 import org.knalpot.server.ServerPlayer.PacketRemovePlayer;
 import org.knalpot.server.ServerPlayer.PacketUpdateX;
 import org.knalpot.server.ServerPlayer.PacketUpdateY;
 import org.knalpot.server.ServerPlayer.ServerPlayer;
+=======
+import ServerPlayer.ServerPlayer;
+import ServerPlayer.PacketUpdateX;
+import ServerPlayer.PacketUpdateY;
+import ServerPlayer.PacketAddPlayer;
+import ServerPlayer.PacketRemovePlayer;
+import ServerPlayer.PacketUpdateDirection;
+>>>>>>> Stashed changes:server/app/src/main/java/ServerFoundation.java
 
 public class ServerFoundation extends Listener {
     private static Server server;
-    private static final int port = 8082;
+    private static final int port = 8080;
     static Map<Integer, ServerPlayer> players = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
@@ -27,6 +36,7 @@ public class ServerFoundation extends Listener {
         server.getKryo().register(PacketUpdateY.class);
         server.getKryo().register(PacketAddPlayer.class);
         server.getKryo().register(PacketRemovePlayer.class);
+        server.getKryo().register(PacketUpdateDirection.class);
         try {
             server.bind(port, port);
             server.start();
@@ -74,6 +84,13 @@ public class ServerFoundation extends Listener {
             packet.id = c.getID();
             server.sendToAllExceptUDP(c.getID(), packet);
 
+        } else if (o instanceof PacketUpdateDirection) {
+            PacketUpdateDirection packet = (PacketUpdateDirection) o;
+            players.get(c.getID()).isFacingRight = packet.isFacingRight;
+
+            packet.id = c.getID();
+            server.sendToAllExceptUDP(c.getID(), packet);
+            System.out.println("direction uptadet");
         }
     }
     public void disconnected(Connection c) {

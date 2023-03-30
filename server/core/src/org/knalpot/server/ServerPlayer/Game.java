@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream:server/core/src/org/knalpot/server/ServerPlayer/Game.java
 package org.knalpot.server.ServerPlayer;
+=======
+package ServerPlayer;
+>>>>>>> Stashed changes:server/app/src/main/java/ServerPlayer/Game.java
 
 import java.util.HashMap;
 import java.util.Map;

@@ -44,6 +44,9 @@ public class PlayerProcessor {
     private Vector2 cp;
     private Vector2 cn;
     private float t;
+
+    public boolean idle = true;
+    private String lastKey = "";
     //#endregion
     
     //#region -- FUNCTIONS --
@@ -90,7 +93,7 @@ public class PlayerProcessor {
             // System.out.println("Colliding!");
             if (player.getVelocity().y == 0f) canJump = true;
         }
-
+        player.isFacingRight = moveInput == 1;
         player.update(dt);
         // System.out.println("-----");
 	}
@@ -113,18 +116,31 @@ public class PlayerProcessor {
         if (isLeftPressed) {
             moveInput = -1;
             // player.state = Player.State.MOVE;
+            //isFacingRight = false;
+            lastKey = "left";
             move();
         }
         if (isRightPressed) {
             moveInput = 1;
             // player.state = Player.State.MOVE;
+            //isFacingRight = true;
+            lastKey = "right";
             move();
         }
-        if ((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed)) {
-            moveInput = 0;
+        if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed)) && lastKey.equals("left")) {
+            moveInput = -1;
+            idle = true;
             // player.state = Player.State.IDLE;
             player.getVelocity().x = 0f;
-        }    
+            //isFacingRight = false;
+        }
+        if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed)) && lastKey.equals("right")) {
+            moveInput = 1;
+            idle = true;
+            // player.state = Player.State.IDLE;
+            player.getVelocity().x = 0f;
+            //isFacingRight = true;
+        }     
     }
 
 	/**

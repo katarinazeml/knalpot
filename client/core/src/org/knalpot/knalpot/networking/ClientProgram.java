@@ -15,8 +15,8 @@ public class ClientProgram extends ApplicationAdapter {
     public static Map<Integer, MPPlayer> players = new HashMap<Integer, MPPlayer>();
     private Client client;
 
-    public ClientProgram(Vector2 position) {
-        player = new PlayerModel(position);
+    public ClientProgram(Vector2 position, Boolean isFacingRight) {
+        player = new PlayerModel(position, isFacingRight);
         network = new Network();
         client = network.getClient();
     }
@@ -57,6 +57,14 @@ public class ClientProgram extends ApplicationAdapter {
             client.sendUDP(packet);
 
             player.networkPosition.y = player.position.y;
+        }
+        if (player.isFacingRight != player.isFacingRight) {
+            // Send the player's Y value
+            PacketUpdateDirection packet = new PacketUpdateDirection();
+            packet.isFacingRight = player.isFacingRight;
+            client.sendUDP(packet);
+
+            player.isFacingRight = player.isFacingRight;
         }
     }
 

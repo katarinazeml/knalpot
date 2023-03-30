@@ -10,7 +10,7 @@ import org.knalpot.knalpot.networking.*;
 
 public class Network extends Listener {
     String ip = "localhost";
-    public static int port = 8082;
+    public static int port = 8080;
     private Client client = new Client();
 
     public Client getClient() {
@@ -37,7 +37,9 @@ public class Network extends Listener {
         client.getKryo().register(PacketUpdateY.class);
         client.getKryo().register(PacketAddPlayer.class);
         client.getKryo().register(PacketRemovePlayer.class);
+        client.getKryo().register(PacketUpdateDirection.class);
     }
+    
 
     public void received(Connection c, Object o){
         if(o instanceof PacketAddPlayer){
@@ -57,7 +59,9 @@ public class Network extends Listener {
         }else if(o instanceof PacketUpdateY){
             PacketUpdateY packet = (PacketUpdateY) o;
             ClientProgram.players.get(packet.id).y = packet.y;
+        }else if(o instanceof PacketUpdateDirection){
+            PacketUpdateDirection packet = (PacketUpdateDirection) o;
+            ClientProgram.players.get(packet.id).isFacingRight = packet.isFacingRight;
         }
     }
 }
-
