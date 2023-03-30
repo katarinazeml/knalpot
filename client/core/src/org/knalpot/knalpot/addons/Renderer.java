@@ -3,7 +3,10 @@ package org.knalpot.knalpot.addons;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import javax.swing.text.PlainDocument;
+
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.PlayerProcessor;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
@@ -48,6 +51,18 @@ public class Renderer {
     // ==== SHORTCUTS ==== //
     float WW = Constants.WINDOW_WIDTH;
    	float WH = Constants.WINDOW_HEIGHT;
+<<<<<<< Updated upstream
+=======
+
+     // ==== PARALLAX ==== //
+    private Texture background1;
+    private Texture background2;
+    private Texture darkGrass;
+    private Texture lightGrass;
+
+    // ==== TURNS ==== //
+       
+>>>>>>> Stashed changes
     //#endregion
 
     //#region -- FUNCTIONS --
@@ -136,14 +151,54 @@ public class Renderer {
      * Draws a player.
      */
     private void drawPlayer() {
-    	batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
+        // put - in front of width to reverse player.
+        if (player.isFacingRight) {
+    	    batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
+        }
+        if (!player.isFacingRight) {
+    	    batch.draw(playerTexture, player.getPosition().x + player.getWidth(), player.getPosition().y, -player.getWidth(), player.getHeight());
+        }
         System.out.println(networking.getPlayers().values());
         System.out.println(networking.getPlayers().size());
         for (MPPlayer mpPlayer : networking.getPlayers().values()) {
-            batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth(), player.getHeight());
+            System.out.println(mpPlayer.isFacingRight);
+            if (!mpPlayer.isFacingRight) {
+            batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, -player.getWidth(), player.getHeight());
+            }
+            if (mpPlayer.isFacingRight) {
+                batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth(), player.getHeight());
+            }
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    private void drawBackground(float targetX) {
+        // Coefficients for parallax effect
+        float fraction1 = 0.6f; //cloud
+        float fraction2 = 0.25f; //also cloud
+        float fraction3 = 0.5f; //darkGrass
+        float fraction4 = 0.1f; //lightGrass
+    
+        // Calculate the positions of the backgrounds
+        float bg1X = camera.position.x - camera.viewportWidth / 2;
+        float bg1Y = camera.position.y - camera.viewportHeight / 2;
+        float bg2X = bg1X * fraction2 + targetX * fraction1;
+        float bg2Y = bg1Y;
+        float darkGrassX = bg1X * fraction4 + targetX * fraction3;
+        float darkGrassY = bg1Y;
+        float lightGrassX = bg1X * fraction4 + targetX * fraction4;
+        float lightGrassY = bg1Y;
+    
+        // Draw the backgrounds
+        batch.draw(background2, bg1X, bg1Y, camera.viewportWidth, camera.viewportHeight);
+        batch.draw(background1, bg2X, bg2Y, camera.viewportWidth, camera.viewportHeight);
+        batch.draw(darkGrass, darkGrassX, darkGrassY, camera.viewportWidth, camera.viewportHeight);
+        batch.draw(lightGrass, lightGrassX, lightGrassY, camera.viewportWidth, camera.viewportHeight);
+    }
+    
+
+>>>>>>> Stashed changes
     /**
      * Draws a {@code Static} objects.
      * <p>

@@ -1,7 +1,6 @@
 package org.knalpot.knalpot.networking;
 
-public class MPPlayer {
-    public float x, y;
+public class PacketUpdateDirection {
     public int id;
     public boolean isFacingRight;
 }

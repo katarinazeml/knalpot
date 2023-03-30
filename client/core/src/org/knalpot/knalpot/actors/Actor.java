@@ -37,6 +37,8 @@ public class Actor {
     private Vector2 cp; // contact point
     private Vector2 cn; // contact normal
     private float t; // time collision has happened
+    
+    public boolean isFacingRight;
 
     //#endregion
     //#region -- GETTERS --
@@ -86,6 +88,7 @@ public class Actor {
     /**
      * Updates {@code Actor}'s data like positions, velocity and etc.
      * @param dt
+     * @param i TODO
      */
     public void update(float dt) { }
 

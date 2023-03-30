@@ -6,4 +6,5 @@ public class ServerPlayer {
 
     public float x, y;
     public Connection c;
+    public Object isFacingRight;
 }
