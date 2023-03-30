@@ -48,6 +48,14 @@ public class Renderer {
     // ==== SHORTCUTS ==== //
     float WW = Constants.WINDOW_WIDTH;
    	float WH = Constants.WINDOW_HEIGHT;
+
+     // ==== PARALLAX ==== //
+    private Texture sky;
+
+    private ParallaxLayer cloud;
+    private ParallaxLayer darkGrass;
+    private ParallaxLayer lightGrass;
+       
     //#endregion
 
     //#region -- FUNCTIONS --
@@ -106,6 +114,7 @@ public class Renderer {
 
     	batch.setProjectionMatrix(camera.combined);
     	batch.begin();
+        drawBackground(targetX);
     	drawPlayer();
         drawStatic();
     	batch.end();
@@ -119,6 +128,7 @@ public class Renderer {
         staticTexture.dispose();
         networking.dispose();
     	batch.dispose();
+        sky.dispose();
     }
 
     /**
@@ -129,6 +139,15 @@ public class Renderer {
     private void loadTextures() {
     	playerTexture = new Texture("player.png");
         staticTexture = new Texture("collision.png");
+        sky = new Texture("CloudsGrassWallpaperSky.png");
+
+        Texture cloudTexture = new Texture("CloudsGrassWallpaperCloud.png");
+        Texture darkGrassTexture = new Texture("DarkGrass.png");
+        Texture lightGrassTexture = new Texture("LightGrass.png");
+
+        cloud = new ParallaxLayer(cloudTexture, camera, 0.7f, 0.25f);
+        darkGrass = new ParallaxLayer(darkGrassTexture, camera, 0.2f, 0.4f);
+        lightGrass = new ParallaxLayer(lightGrassTexture, camera, 0.2f, 0.2f);
     }
 
     // I hope Javadoc comments are not needed for functions below...
@@ -140,9 +159,22 @@ public class Renderer {
         System.out.println(networking.getPlayers().values());
         System.out.println(networking.getPlayers().size());
         for (MPPlayer mpPlayer : networking.getPlayers().values()) {
-            batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth(), player.getHeight());
+            batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth() / 100, player.getHeight() / 10);
         }
     }
+
+    private void drawBackground(float targetX) {
+        // Calculate the positions of the backgrounds
+        float cameraX = camera.position.x - camera.viewportWidth / 2;
+        float cameraY = camera.position.y - camera.viewportHeight / 2;
+
+        // Draw the backgrounds
+        batch.draw(sky, cameraX, cameraY, camera.viewportWidth, camera.viewportHeight);
+        cloud.render(batch, targetX, 0);
+        darkGrass.render(batch, targetX, 0);
+        lightGrass.render(batch, targetX, 0);
+    }
+    
 
     /**
      * Draws a {@code Static} objects.
