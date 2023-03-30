@@ -32,7 +32,7 @@ public class PlayerProcessor {
     private final float DECCELERATION = 16f;
     private final float VELOCITY_POWER = 0.9f;
 
-    private float moveInput;
+    private int moveInput = 1;
 
     // ==== JUMP MECHANICS ==== //
     private boolean canJump = true;
@@ -44,9 +44,6 @@ public class PlayerProcessor {
     private Vector2 cp;
     private Vector2 cn;
     private float t;
-
-    public boolean idle = true;
-    private String lastKey = "";
     //#endregion
     
     //#region -- FUNCTIONS --
@@ -93,7 +90,9 @@ public class PlayerProcessor {
             // System.out.println("Colliding!");
             if (player.getVelocity().y == 0f) canJump = true;
         }
-        player.isFacingRight = moveInput == 1;
+        
+        player.previousDirection = player.direction;
+        player.direction = moveInput;
         player.update(dt);
         // System.out.println("-----");
 	}
@@ -116,30 +115,20 @@ public class PlayerProcessor {
         if (isLeftPressed) {
             moveInput = -1;
             // player.state = Player.State.MOVE;
-            //isFacingRight = false;
-            lastKey = "left";
             move();
         }
         if (isRightPressed) {
             moveInput = 1;
             // player.state = Player.State.MOVE;
-            //isFacingRight = true;
-            lastKey = "right";
             move();
         }
-        if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed)) && lastKey.equals("left")) {
-            moveInput = -1;
-            idle = true;
+        if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed))) {
             // player.state = Player.State.IDLE;
             player.getVelocity().x = 0f;
-            //isFacingRight = false;
         }
-        if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed)) && lastKey.equals("right")) {
-            moveInput = 1;
-            idle = true;
+        if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed))) {
             // player.state = Player.State.IDLE;
             player.getVelocity().x = 0f;
-            //isFacingRight = true;
         }     
     }
 
@@ -183,14 +172,6 @@ public class PlayerProcessor {
      * @param dt
      */
     private void windowCollision(float dt) {
-        // if (player.Left + player.getScalarVelocity(dt).x <= 200) {
-        //     player.getPosition().x = 200f;
-        //     player.getVelocity().x -= player.getVelocity().x;
-        // }
-        // if (player.Right + player.getScalarVelocity(dt).x >= 600) {
-        //     player.getPosition().x = 600 - player.getWidth();
-        //     player.getVelocity().x -= player.getVelocity().x;
-        // }
         if (player.Bottom + player.getScalarVelocity(dt).y <= 0) {
             canJump = true;
         	player.getPosition().y = 0f;

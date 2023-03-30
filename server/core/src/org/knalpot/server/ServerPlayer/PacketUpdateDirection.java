@@ -1,4 +1,4 @@
-package org.knalpot.knalpot.networking;
+package org.knalpot.server.ServerPlayer;
 
 public class PacketUpdateDirection {
     public int id;

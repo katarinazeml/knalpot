@@ -24,6 +24,10 @@ public class Actor {
     public int Top;
     public int Bottom;
 
+    // ==== SPRITE RELATED VARIABLES ==== //
+    public int direction;
+    public int previousDirection;
+
     // ==== SIZE ==== //
     protected static int WIDTH;
     protected static int HEIGHT;
@@ -37,8 +41,6 @@ public class Actor {
     private Vector2 cp; // contact point
     private Vector2 cn; // contact normal
     private float t; // time collision has happened
-    
-    public boolean isFacingRight;
 
     //#endregion
     //#region -- GETTERS --

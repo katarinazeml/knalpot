@@ -1,22 +1,22 @@
 package org.knalpot.knalpot.networking;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Client;
 
+import org.knalpot.knalpot.actors.Player;
 import org.knalpot.knalpot.world.Network;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ClientProgram extends ApplicationAdapter {
-    static PlayerModel player;
+    Player player;
     static Network network;
     public static Map<Integer, MPPlayer> players = new HashMap<Integer, MPPlayer>();
     private Client client;
 
-    public ClientProgram(Vector2 position, Boolean isFacingRight) {
-        player = new PlayerModel(position, isFacingRight);
+    public ClientProgram(Player player) {
+        this.player = player;
         network = new Network();
         client = network.getClient();
     }
@@ -42,29 +42,24 @@ public class ClientProgram extends ApplicationAdapter {
 
     public void updateNetwork() {
         // Update position
-        if (player.networkPosition.x != player.position.x) {
+        if (player.getVelocity().x != 0) {
             // Send the player's X value
             PacketUpdateX packet = new PacketUpdateX();
-            packet.x = player.position.x;
+            packet.x = player.getPosition().x;
             client.sendUDP(packet);
-
-            player.networkPosition.x = player.position.x;
         }
-        if (player.networkPosition.y != player.position.y) {
+        if (player.getVelocity().y != 0) {
             // Send the player's Y value
             PacketUpdateY packet = new PacketUpdateY();
-            packet.y = player.position.y;
+            packet.y = player.getPosition().y;
             client.sendUDP(packet);
-
-            player.networkPosition.y = player.position.y;
         }
-        if (player.isFacingRight != player.isFacingRight) {
+        if (player.direction != player.previousDirection) {
             // Send the player's Y value
+            System.out.println("sent facing right");
             PacketUpdateDirection packet = new PacketUpdateDirection();
-            packet.isFacingRight = player.isFacingRight;
+            packet.direction = player.direction;
             client.sendUDP(packet);
-
-            player.isFacingRight = player.isFacingRight;
         }
     }
 

@@ -9,20 +9,12 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-<<<<<<< Updated upstream:server/core/src/org/knalpot/server/ServerFoundation.java
 import org.knalpot.server.ServerPlayer.PacketAddPlayer;
 import org.knalpot.server.ServerPlayer.PacketRemovePlayer;
 import org.knalpot.server.ServerPlayer.PacketUpdateX;
 import org.knalpot.server.ServerPlayer.PacketUpdateY;
 import org.knalpot.server.ServerPlayer.ServerPlayer;
-=======
-import ServerPlayer.ServerPlayer;
-import ServerPlayer.PacketUpdateX;
-import ServerPlayer.PacketUpdateY;
-import ServerPlayer.PacketAddPlayer;
-import ServerPlayer.PacketRemovePlayer;
-import ServerPlayer.PacketUpdateDirection;
->>>>>>> Stashed changes:server/app/src/main/java/ServerFoundation.java
+import org.knalpot.server.ServerPlayer.PacketUpdateDirection;
 
 public class ServerFoundation extends Listener {
     private static Server server;
@@ -86,7 +78,7 @@ public class ServerFoundation extends Listener {
 
         } else if (o instanceof PacketUpdateDirection) {
             PacketUpdateDirection packet = (PacketUpdateDirection) o;
-            players.get(c.getID()).isFacingRight = packet.isFacingRight;
+            players.get(c.getID()).direction = packet.direction;
 
             packet.id = c.getID();
             server.sendToAllExceptUDP(c.getID(), packet);

@@ -59,12 +59,12 @@ public class World {
 	 * Initializes all object needed for this 'world'.
 	 */
 	private void initializeWorld() {
-		player = new Player(new Vector2(350, 200),	true);
+		player = new Player(new Vector2(350, 200));
 		block1 = new Static(new Vector2(400, 0));
 	}
 
 	private void initializeNetwork() {
-		clientProgram = new ClientProgram(player.getPosition(), player.isFacingRight);
+		clientProgram = new ClientProgram(player);
 	}
 	//#endregion
 }

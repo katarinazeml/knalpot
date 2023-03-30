@@ -159,21 +159,19 @@ public class Renderer {
      */
     private void drawPlayer() {
         // put - in front of width to reverse player.
-        if (player.isFacingRight) {
+        if (player.direction == 1) {
     	    batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
         }
-        if (!player.isFacingRight) {
+        if (player.direction == -1) {
     	    batch.draw(playerTexture, player.getPosition().x + player.getWidth(), player.getPosition().y, -player.getWidth(), player.getHeight());
         }
-        System.out.println(networking.getPlayers().values());
-        System.out.println(networking.getPlayers().size());
+
         for (MPPlayer mpPlayer : networking.getPlayers().values()) {
-            System.out.println(mpPlayer.isFacingRight);
-            if (!mpPlayer.isFacingRight) {
-            batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, -player.getWidth(), player.getHeight());
+            if (mpPlayer.direction == -1) {
+            batch.draw(playerTexture, mpPlayer.x + player.getWidth(), mpPlayer.y, -player.getWidth(), player.getHeight());
             }
-            if (mpPlayer.isFacingRight) {
-                batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth() / 100, player.getHeight() / 10);
+            if (mpPlayer.direction == 1) {
+                batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth(), player.getHeight());
             }
         }
     }

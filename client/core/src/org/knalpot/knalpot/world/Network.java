@@ -61,7 +61,7 @@ public class Network extends Listener {
             ClientProgram.players.get(packet.id).y = packet.y;
         }else if(o instanceof PacketUpdateDirection){
             PacketUpdateDirection packet = (PacketUpdateDirection) o;
-            ClientProgram.players.get(packet.id).isFacingRight = packet.isFacingRight;
+            ClientProgram.players.get(packet.id).direction = packet.direction;
         }
     }
 }
