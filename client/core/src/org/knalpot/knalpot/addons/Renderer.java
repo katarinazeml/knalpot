@@ -50,10 +50,11 @@ public class Renderer {
    	float WH = Constants.WINDOW_HEIGHT;
 
      // ==== PARALLAX ==== //
-    private Texture background1;
-    private Texture background2;
-    private Texture darkGrass;
-    private Texture lightGrass;
+    private Texture sky;
+
+    private ParallaxLayer cloud;
+    private ParallaxLayer darkGrass;
+    private ParallaxLayer lightGrass;
        
     //#endregion
 
@@ -127,10 +128,7 @@ public class Renderer {
         staticTexture.dispose();
         networking.dispose();
     	batch.dispose();
-        background1.dispose();
-        background2.dispose();
-        darkGrass.dispose();
-        lightGrass.dispose();
+        sky.dispose();
     }
 
     /**
@@ -141,10 +139,15 @@ public class Renderer {
     private void loadTextures() {
     	playerTexture = new Texture("player.png");
         staticTexture = new Texture("collision.png");
-        background1 = new Texture("CloudsGrassWallpaperCloud.png");
-        background2 = new Texture("CloudsGrassWallpaperSky.png");
-        darkGrass = new Texture("DarkGrass.png");
-        lightGrass = new Texture("LightGrass.png");
+        sky = new Texture("CloudsGrassWallpaperSky.png");
+
+        Texture cloudTexture = new Texture("CloudsGrassWallpaperCloud.png");
+        Texture darkGrassTexture = new Texture("DarkGrass.png");
+        Texture lightGrassTexture = new Texture("LightGrass.png");
+
+        cloud = new ParallaxLayer(cloudTexture, camera, 0.7f, 0.25f);
+        darkGrass = new ParallaxLayer(darkGrassTexture, camera, 0.2f, 0.4f);
+        lightGrass = new ParallaxLayer(lightGrassTexture, camera, 0.2f, 0.2f);
     }
 
     // I hope Javadoc comments are not needed for functions below...
@@ -156,32 +159,20 @@ public class Renderer {
         System.out.println(networking.getPlayers().values());
         System.out.println(networking.getPlayers().size());
         for (MPPlayer mpPlayer : networking.getPlayers().values()) {
-            batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth(), player.getHeight());
+            batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth() / 100, player.getHeight() / 10);
         }
     }
 
     private void drawBackground(float targetX) {
-        // Coefficients for parallax effect
-        float fraction1 = 0.6f; //cloud
-        float fraction2 = 0.25f; //also cloud
-        float fraction3 = 0.4f; //darkGrass
-        float fraction4 = 0.2f; //lightGrass
-    
         // Calculate the positions of the backgrounds
-        float bg1X = camera.position.x - camera.viewportWidth / 2;
-        float bg1Y = camera.position.y - camera.viewportHeight / 2;
-        float bg2X = bg1X * fraction2 + targetX * fraction1;
-        float bg2Y = bg1Y;
-        float darkGrassX = bg1X * fraction4 + targetX * fraction3;
-        float darkGrassY = bg1Y;
-        float lightGrassX = bg1X * fraction4 + targetX * fraction4;
-        float lightGrassY = bg1Y;
-    
+        float cameraX = camera.position.x - camera.viewportWidth / 2;
+        float cameraY = camera.position.y - camera.viewportHeight / 2;
+
         // Draw the backgrounds
-        batch.draw(background2, bg1X, bg1Y, camera.viewportWidth, camera.viewportHeight);
-        batch.draw(background1, bg2X, bg2Y, camera.viewportWidth, camera.viewportHeight);
-        batch.draw(darkGrass, darkGrassX, darkGrassY, camera.viewportWidth, camera.viewportHeight);
-        batch.draw(lightGrass, lightGrassX, lightGrassY, camera.viewportWidth, camera.viewportHeight);
+        batch.draw(sky, cameraX, cameraY, camera.viewportWidth, camera.viewportHeight);
+        cloud.render(batch, targetX, 0);
+        darkGrass.render(batch, targetX, 0);
+        lightGrass.render(batch, targetX, 0);
     }
     
 
