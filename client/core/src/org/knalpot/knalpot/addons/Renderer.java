@@ -1,12 +1,11 @@
 package org.knalpot.knalpot.addons;
 
 import com.badlogic.gdx.graphics.Texture;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import javax.swing.text.PlainDocument;
-
 import org.knalpot.knalpot.actors.Actor;
-import org.knalpot.knalpot.actors.PlayerProcessor;
+import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
@@ -15,6 +14,8 @@ import org.knalpot.knalpot.world.World;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
+
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 /**
@@ -28,6 +29,16 @@ import com.badlogic.gdx.Gdx;
  */
 public class Renderer {
     //#region -- VARIABLES --
+
+    // Define variables for animation
+    private TextureRegion playerRegion;
+    private int frameWidth = 24; // The width of each frame in pixels
+    private int frameHeight = 24; // The height of each frame in pixels
+    private int numFrames = 8; // The number of frames in the sprite sheet
+    private float animationTime = 0; // The time elapsed since the animation started
+    private float frameDuration = 0.1f; // The duration of each frame in seconds
+    private boolean isPlayerMoving = false;
+
 
     // ==== OBJECTS ==== //
     private SpriteBatch batch;
@@ -148,6 +159,9 @@ public class Renderer {
         Texture darkGrassTexture = new Texture("DarkGrass.png");
         Texture lightGrassTexture = new Texture("LightGrass.png");
 
+        Texture spriteSheet = new Texture("animation.png");
+        playerRegion = new TextureRegion(spriteSheet, 0, 0, frameWidth, frameHeight);
+
         cloud = new ParallaxLayer(cloudTexture, camera, 0.7f, 0.25f);
         darkGrass = new ParallaxLayer(darkGrassTexture, camera, 0.2f, 0.4f);
         lightGrass = new ParallaxLayer(lightGrassTexture, camera, 0.2f, 0.2f);
@@ -159,16 +173,31 @@ public class Renderer {
      */
     private void drawPlayer() {
         // put - in front of width to reverse player.
-        if (player.direction == 1) {
-    	    batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
+        animationTime += Gdx.graphics.getDeltaTime();
+        int frameIndex = (int) (animationTime / frameDuration) % numFrames;
+        int offsetX = frameIndex * frameWidth;
+        Texture playerTextureRun = playerRegion.getTexture();
+        if (player.state != State.IDLE) {
+            if (player.direction == 1) {
+                batch.draw(playerTextureRun, player.getPosition().x, player.getPosition().y,
+                        player.getWidth(), player.getHeight(), offsetX, 0, frameWidth, frameHeight, false, false);
+                }
+            if (player.direction == -1) {
+                batch.draw(playerTextureRun, player.getPosition().x + player.getWidth(), player.getPosition().y,
+                        -player.getWidth(), player.getHeight(), offsetX, 0, frameWidth, frameHeight, false, false);
+                }
         }
-        if (player.direction == -1) {
-    	    batch.draw(playerTexture, player.getPosition().x + player.getWidth(), player.getPosition().y, -player.getWidth(), player.getHeight());
-        }
-
+        if (player.state == State.IDLE) {
+            if (player.direction == 1) {
+                batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
+                }
+            if (player.direction == -1) {
+                batch.draw(playerTexture, player.getPosition().x + player.getWidth(), player.getPosition().y, -player.getWidth(), player.getHeight());
+                }
+            }
         for (MPPlayer mpPlayer : networking.getPlayers().values()) {
             if (mpPlayer.direction == -1) {
-            batch.draw(playerTexture, mpPlayer.x + player.getWidth(), mpPlayer.y, -player.getWidth(), player.getHeight());
+                batch.draw(playerTexture, mpPlayer.x + player.getWidth(), mpPlayer.y, -player.getWidth(), player.getHeight());
             }
             if (mpPlayer.direction == 1) {
                 batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth(), player.getHeight());

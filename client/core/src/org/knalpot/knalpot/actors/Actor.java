@@ -1,5 +1,6 @@
 package org.knalpot.knalpot.actors;
 
+import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 
 import com.badlogic.gdx.math.Rectangle;
@@ -41,6 +42,7 @@ public class Actor {
     private Vector2 cp; // contact point
     private Vector2 cn; // contact normal
     private float t; // time collision has happened
+    public State state;
 
     //#endregion
     //#region -- GETTERS --

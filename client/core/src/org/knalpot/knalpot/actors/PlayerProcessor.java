@@ -3,6 +3,7 @@ package org.knalpot.knalpot.actors;
 import org.knalpot.knalpot.addons.*;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.world.World;
+import org.knalpot.knalpot.actors.Player;
 
 import java.lang.Math;
 
@@ -114,20 +115,20 @@ public class PlayerProcessor {
         boolean isRightPressed = Gdx.input.isKeyPressed(Constants.RIGHT_KEY);
         if (isLeftPressed) {
             moveInput = -1;
-            // player.state = Player.State.MOVE;
+            player.state = Player.State.MOVE;
             move();
         }
         if (isRightPressed) {
             moveInput = 1;
-            // player.state = Player.State.MOVE;
+            player.state = Player.State.MOVE;
             move();
         }
         if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed))) {
-            // player.state = Player.State.IDLE;
+            player.state = Player.State.IDLE;
             player.getVelocity().x = 0f;
         }
         if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed))) {
-            // player.state = Player.State.IDLE;
+            player.state = Player.State.IDLE;
             player.getVelocity().x = 0f;
         }     
     }
