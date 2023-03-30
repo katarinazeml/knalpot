@@ -19,7 +19,6 @@ public class Player extends Actor {
         IDLE, MOVE, JUMP, FALL
     }
     public State state;
-    public boolean isFacingRight = true;
 
     //#endregion
 
@@ -29,12 +28,11 @@ public class Player extends Actor {
      * @param position
      * @param direction 
      */
-    public Player(Vector2 position, Boolean isFacingRight) {
+    public Player(Vector2 position) {
         this.position = position;
-        this.isFacingRight = isFacingRight;
 
-        WIDTH = 30;
-        HEIGHT = 40;
+        WIDTH = 32;
+        HEIGHT = 48;
         
         velocity = new Vector2();
         acceleration = new Vector2();
@@ -64,13 +62,6 @@ public class Player extends Actor {
         Right = (int) bounds.x + WIDTH;
         Bottom = (int) bounds.y;
         Top = (int) bounds.y + HEIGHT;
-
-        //if (velocity.x > 0) {
-        //    isFacingRight = true;
-        //} else if (velocity.x < 0) {
-        //    isFacingRight = false;
-        //}
     }
-
     //#endregion
 }
