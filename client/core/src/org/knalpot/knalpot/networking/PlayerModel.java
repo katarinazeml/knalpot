@@ -14,4 +14,3 @@ public class PlayerModel {
         this.isFacingRight = isFacingRight;
     }
 }
-
