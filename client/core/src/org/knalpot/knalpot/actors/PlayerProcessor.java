@@ -3,7 +3,6 @@ package org.knalpot.knalpot.actors;
 import org.knalpot.knalpot.addons.*;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.world.World;
-import org.knalpot.knalpot.actors.Player;
 
 import java.lang.Math;
 
@@ -92,6 +91,7 @@ public class PlayerProcessor {
             if (player.getVelocity().y == 0f) canJump = true;
         }
         
+        player.previousState = player.state;
         player.previousDirection = player.direction;
         player.direction = moveInput;
         player.update(dt);

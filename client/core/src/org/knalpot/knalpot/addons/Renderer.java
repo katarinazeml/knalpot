@@ -37,7 +37,6 @@ public class Renderer {
     private int numFrames = 8; // The number of frames in the sprite sheet
     private float animationTime = 0; // The time elapsed since the animation started
     private float frameDuration = 0.1f; // The duration of each frame in seconds
-    private boolean isPlayerMoving = false;
 
 
     // ==== OBJECTS ==== //
@@ -192,18 +191,36 @@ public class Renderer {
                 batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
                 }
             if (player.direction == -1) {
-                batch.draw(playerTexture, player.getPosition().x + player.getWidth(), player.getPosition().y, -player.getWidth(), player.getHeight());
+                batch.draw(playerTexture, player.getPosition().x + player.getWidth(), player.getPosition().y,
+                -player.getWidth(), player.getHeight());
                 }
             }
         for (MPPlayer mpPlayer : networking.getPlayers().values()) {
+        if (mpPlayer.state.equals(State.IDLE)) {
+            System.out.println("players state is Idle");
             if (mpPlayer.direction == -1) {
                 batch.draw(playerTexture, mpPlayer.x + player.getWidth(), mpPlayer.y, -player.getWidth(), player.getHeight());
             }
             if (mpPlayer.direction == 1) {
                 batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth(), player.getHeight());
             }
+            }
+        if (!mpPlayer.state.equals(State.IDLE)) {
+            System.out.println("players state is not Idle");
+            if (mpPlayer.direction == -1) {
+                System.out.println("players state is not Idle and is facing left");
+                batch.draw(playerTextureRun, mpPlayer.x + player.getWidth(), mpPlayer.y,
+                -player.getWidth(), player.getHeight(), offsetX, 0, frameWidth, frameHeight, false, false);
+        }
+            }
+            if (mpPlayer.direction == 1) {
+                System.out.println("players state is not Idle and is facing right");
+                batch.draw(playerTextureRun, mpPlayer.x + player.getWidth(), mpPlayer.y,
+                player.getWidth(), player.getHeight(), offsetX, 0, frameWidth, frameHeight, false, false);
+            }
         }
     }
+    
 
     private void drawBackground(float targetX) {
         // Calculate the positions of the backgrounds
