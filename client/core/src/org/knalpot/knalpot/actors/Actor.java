@@ -35,7 +35,6 @@ public class Actor {
     // ==== SPRITE RELATED VARIABLES ==== //
     public int direction;
     public int previousDirection;
-    public State previouState;
 
     // ==== SIZE ==== //
     protected static int WIDTH;
@@ -50,6 +49,8 @@ public class Actor {
     private Vector2 cp; // contact point
     private Vector2 cn; // contact normal
     private float t; // time collision has happened
+
+    // ==== TEMPORARY STATE MACHINE ==== //
     public State state;
     public State previousState;
 

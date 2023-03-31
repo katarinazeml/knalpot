@@ -14,6 +14,7 @@ import org.knalpot.server.ServerPlayer.PacketRemovePlayer;
 import org.knalpot.server.ServerPlayer.PacketUpdateX;
 import org.knalpot.server.ServerPlayer.PacketUpdateY;
 import org.knalpot.server.ServerPlayer.ServerPlayer;
+import org.knalpot.server.ServerPlayer.State;
 import org.knalpot.server.ServerPlayer.PacketUpdateDirection;
 import org.knalpot.server.ServerPlayer.PacketUpdateState;
 
@@ -31,6 +32,7 @@ public class ServerFoundation extends Listener {
         server.getKryo().register(PacketRemovePlayer.class);
         server.getKryo().register(PacketUpdateDirection.class);
         server.getKryo().register(PacketUpdateState.class);
+        server.getKryo().register(State.class);
         try {
             server.bind(port, port);
             server.start();
@@ -86,8 +88,14 @@ public class ServerFoundation extends Listener {
             server.sendToAllExceptUDP(c.getID(), packet);
         } else if (o instanceof PacketUpdateState) {
             PacketUpdateState packet = (PacketUpdateState) o;
+            System.out.println("Packet state:");
+            System.out.println(packet.state);
+
             players.get(c.getID()).state = packet.state;
-            
+
+            System.out.println("Player c state:");
+            System.out.println(players.get(c.getID()).state);
+
             packet.id = c.getID();
             server.sendToAllExceptUDP(c.getID(), packet);
             System.out.println("state updated");

@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientProgram extends ApplicationAdapter {
-    Player player;
     static Network network;
     public static Map<Integer, MPPlayer> players = new HashMap<Integer, MPPlayer>();
     private Client client;
+    private Player player;
 
     public ClientProgram(Player player) {
         this.player = player;
@@ -61,10 +61,13 @@ public class ClientProgram extends ApplicationAdapter {
             packet.direction = player.direction;
             client.sendUDP(packet);
         }
-        if (player.state != player.previouState) {
+        if (player.state != player.previousState) {
+            System.out.println("Current and previous player state");
+            System.out.println(player.state);
+            System.out.println(player.previousState);
             // Send the player's state
             PacketUpdateState packet = new PacketUpdateState();
-            packet.state = packet.state;
+            packet.state = player.state;
             client.sendUDP(packet);
             System.out.println("sent state");
         }

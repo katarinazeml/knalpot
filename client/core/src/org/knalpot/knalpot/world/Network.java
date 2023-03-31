@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+
+import org.knalpot.knalpot.actors.Player;
 import org.knalpot.knalpot.networking.*;
 
 public class Network extends Listener {
@@ -38,30 +40,44 @@ public class Network extends Listener {
         client.getKryo().register(PacketAddPlayer.class);
         client.getKryo().register(PacketRemovePlayer.class);
         client.getKryo().register(PacketUpdateDirection.class);
+        client.getKryo().register(PacketUpdateState.class);
+        client.getKryo().register(Player.State.class);
     }
     
 
     public void received(Connection c, Object o){
-        if(o instanceof PacketAddPlayer){
+        if (o instanceof PacketAddPlayer) {
             PacketAddPlayer packet = (PacketAddPlayer) o;
             MPPlayer newPlayer = new MPPlayer();
             newPlayer.id = packet.id;
             ClientProgram.players.put(packet.id, newPlayer);
 
-        }else if(o instanceof PacketRemovePlayer){
+        }
+
+        if(o instanceof PacketRemovePlayer){
             PacketRemovePlayer packet = (PacketRemovePlayer) o;
             ClientProgram.players.remove(packet.id);
+        }
 
-        }else if(o instanceof PacketUpdateX){
+        if(o instanceof PacketUpdateX) {
             PacketUpdateX packet = (PacketUpdateX) o;
             ClientProgram.players.get(packet.id).x = packet.x;
 
-        }else if(o instanceof PacketUpdateY){
+        }
+
+        if(o instanceof PacketUpdateY) {
             PacketUpdateY packet = (PacketUpdateY) o;
             ClientProgram.players.get(packet.id).y = packet.y;
-        }else if(o instanceof PacketUpdateDirection){
+        }
+
+        if (o instanceof PacketUpdateDirection) {
             PacketUpdateDirection packet = (PacketUpdateDirection) o;
             ClientProgram.players.get(packet.id).direction = packet.direction;
+        }
+
+        if (o instanceof PacketUpdateState) {
+            PacketUpdateState packet = (PacketUpdateState) o;
+            ClientProgram.players.get(packet.id).state = packet.state;
         }
     }
 }

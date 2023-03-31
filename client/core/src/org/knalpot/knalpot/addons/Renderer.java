@@ -199,15 +199,16 @@ public class Renderer {
             float mpPositionX = 0;
             if (mpPlayer.direction == 1) mpPositionX = mpPlayer.x;
             if (mpPlayer.direction == -1) mpPositionX = mpPlayer.x + player.getWidth() / player.getScale();
-            System.out.println("MP Position X");
-            System.out.println(mpPositionX);
-            // if (mpPlayer.state != State.IDLE) {
-                // System.out.println("players state is not Idle");
-                // batch.draw(playerTextureRun, mpPositionX, mpPlayer.y,
-                    // Math.signum(player.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
-            // } else {
-            batch.draw(playerTexture, mpPositionX, mpPlayer.y, Math.signum(mpPlayer.direction) * player.getWidth(), player.getHeight());
-            // }
+
+            System.out.println("MPPlayer State:");
+            System.out.println(mpPlayer.state);
+
+            if (mpPlayer.state != State.IDLE) {
+                batch.draw(playerTextureRun, mpPositionX, mpPlayer.y,
+                    Math.signum(mpPlayer.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
+            } else {
+                batch.draw(playerTexture, mpPositionX, mpPlayer.y, Math.signum(mpPlayer.direction) * player.getWidth(), player.getHeight());
+            }
         }
     }
     

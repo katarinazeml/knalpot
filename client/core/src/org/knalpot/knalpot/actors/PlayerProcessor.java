@@ -90,8 +90,7 @@ public class PlayerProcessor {
             // System.out.println("Colliding!");
             if (player.getVelocity().y == 0f) canJump = true;
         }
-        
-        player.previousState = player.state;
+
         player.previousDirection = player.direction;
         player.direction = moveInput;
         player.update(dt);
@@ -106,6 +105,10 @@ public class PlayerProcessor {
         player.getAcceleration().y = -gravityForce;
 	}
 
+    private void updateState() {
+        player.previousState = player.state;
+    }
+
     //#region - MOVEMENT -
     /**
      * Moves {@code Player} horizontally using specified keys.
@@ -115,22 +118,21 @@ public class PlayerProcessor {
         boolean isRightPressed = Gdx.input.isKeyPressed(Constants.RIGHT_KEY);
         if (isLeftPressed) {
             moveInput = -1;
+            updateState();
             player.state = Player.State.MOVE;
             move();
         }
         if (isRightPressed) {
             moveInput = 1;
+            updateState();
             player.state = Player.State.MOVE;
             move();
         }
         if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed))) {
+            updateState();
             player.state = Player.State.IDLE;
             player.getVelocity().x = 0f;
         }
-        if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed))) {
-            player.state = Player.State.IDLE;
-            player.getVelocity().x = 0f;
-        }     
     }
 
 	/**
