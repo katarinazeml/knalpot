@@ -1,5 +1,8 @@
 package org.knalpot.knalpot.actors;
 
+import org.knalpot.knalpot.addons.BBGenerator;
+
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -31,8 +34,14 @@ public class Player extends Actor {
     public Player(Vector2 position) {
         this.position = position;
 
-        WIDTH = 32;
-        HEIGHT = 48;
+        // Temporary solution
+        texture = new Texture("player.png");
+        BBSize = BBGenerator.BBPixels(texture.getTextureData());
+        scaleSize = 2;
+        //
+
+        WIDTH = texture.getWidth() * scaleSize;
+        HEIGHT = texture.getHeight() * scaleSize;
         
         velocity = new Vector2();
         acceleration = new Vector2();
@@ -41,8 +50,8 @@ public class Player extends Actor {
         bounds = new Rectangle();
         bounds.x = this.position.x;
         bounds.y = this.position.y;
-        bounds.width = WIDTH;
-        bounds.height = HEIGHT;
+        bounds.width = BBSize[0] * scaleSize;
+        bounds.height = BBSize[1] * scaleSize;
 
         Left = (int) bounds.x;
         Right = (int) (bounds.x + bounds.width);
@@ -55,8 +64,8 @@ public class Player extends Actor {
 
     public void update(float dt) {
         position.add(velocity.cpy().scl(dt));
-        bounds.x = (int) position.x;
-        bounds.y = (int) position.y;
+        bounds.x = position.x;
+        bounds.y = position.y;
 
         Left = (int) bounds.x;
         Right = (int) bounds.x + WIDTH;

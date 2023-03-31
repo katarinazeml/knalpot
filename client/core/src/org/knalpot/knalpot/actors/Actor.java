@@ -2,6 +2,7 @@ package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.interactive.Static;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -16,8 +17,14 @@ import com.badlogic.gdx.math.Vector2;
 public class Actor {
     //#region -- VARIABLES --
 
+    // ==== TEXTYRES ==== //
+    protected Texture texture;
+    protected int[] BBSize;
+    protected int scaleSize;
+
     // ==== BOUNDS ==== //
     protected Rectangle bounds;
+
     // POSITION BOUNDS //
     public int Left;
     public int Right;
@@ -43,7 +50,7 @@ public class Actor {
     private float t; // time collision has happened
 
     //#endregion
-    //#region -- GETTERS --
+    //#region -- GET/SET --
     // ==== GETTERS ==== //
     public Vector2 getPosition() {
         return position;
@@ -73,6 +80,14 @@ public class Actor {
         return bounds;
     }
 
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public int getScale() {
+        return scaleSize;
+    }
+
     public int getWidth() {
         return WIDTH;
     }
@@ -84,13 +99,17 @@ public class Actor {
     public float getContactTime() {
         return t;
     }
+
+    // ==== SETTERS ==== //
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
     //#endregion
 
     //#region -- FUNCTIONALITY --
     /**
      * Updates {@code Actor}'s data like positions, velocity and etc.
      * @param dt
-     * @param i TODO
      */
     public void update(float dt) { }
 
@@ -202,14 +221,14 @@ public class Actor {
         if (in.getVelocity().x == 0 && in.getVelocity().y == 0) return false;
         
         Rectangle expandedTarget = new Rectangle();
-        expandedTarget.x = target.getPosition().x - (in.getWidth() / 2);
-        expandedTarget.y = target.getPosition().y - (in.getHeight() / 2);
-        expandedTarget.width = target.getWidth() + in.getWidth();
-        expandedTarget.height = target.getHeight() + in.getHeight();
+        expandedTarget.x = target.getPosition().x - (in.getBounds().width / 2);
+        expandedTarget.y = target.getPosition().y - (in.getBounds().height / 2);
+        expandedTarget.width = target.getWidth() + in.getBounds().width;
+        expandedTarget.height = target.getHeight() + in.getBounds().height;
 
         Vector2 dynamicRectPos = new Vector2();
-        dynamicRectPos.x = in.getPosition().x + (in.getWidth() / 2);
-        dynamicRectPos.y = in.getPosition().y + (in.getHeight() / 2);
+        dynamicRectPos.x = in.getBounds().x + (in.getBounds().width / 2);
+        dynamicRectPos.y = in.getBounds().y + (in.getBounds().height / 2);
 
         // System.out.println("expanded target parameters");
         // System.out.println(expandedTarget.getX() + ":" + expandedTarget.getY());

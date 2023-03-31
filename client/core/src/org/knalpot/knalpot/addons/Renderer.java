@@ -3,10 +3,7 @@ package org.knalpot.knalpot.addons;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import javax.swing.text.PlainDocument;
-
 import org.knalpot.knalpot.actors.Actor;
-import org.knalpot.knalpot.actors.PlayerProcessor;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
@@ -159,12 +156,15 @@ public class Renderer {
      */
     private void drawPlayer() {
         // put - in front of width to reverse player.
+        float positionX = 0;
         if (player.direction == 1) {
-    	    batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
+            positionX = player.getPosition().x;
         }
         if (player.direction == -1) {
-    	    batch.draw(playerTexture, player.getPosition().x + player.getWidth(), player.getPosition().y, -player.getWidth(), player.getHeight());
+            positionX = player.getPosition().x + player.getWidth() / player.getScale();
         }
+
+        batch.draw(playerTexture, positionX, player.getPosition().y, Math.signum(player.direction) * player.getWidth(), player.getHeight());
 
         for (MPPlayer mpPlayer : networking.getPlayers().values()) {
             if (mpPlayer.direction == -1) {
