@@ -158,7 +158,7 @@ public class Renderer {
         Texture darkGrassTexture = new Texture("DarkGrass.png");
         Texture lightGrassTexture = new Texture("LightGrass.png");
 
-        Texture spriteSheet = new Texture("animation.png");
+        Texture spriteSheet = new Texture("playeranimation.png");
         playerRegion = new TextureRegion(spriteSheet, 0, 0, frameWidth, frameHeight);
 
         cloud = new ParallaxLayer(cloudTexture, camera, 0.7f, 0.25f);
@@ -172,52 +172,42 @@ public class Renderer {
      */
     private void drawPlayer() {
         // put - in front of width to reverse player.
+        float positionX = 0;
+
+        // Animation.
         animationTime += Gdx.graphics.getDeltaTime();
         int frameIndex = (int) (animationTime / frameDuration) % numFrames;
         int offsetX = frameIndex * frameWidth;
         Texture playerTextureRun = playerRegion.getTexture();
+        
+        // General logic.
+        if (player.direction == 1) {
+            positionX = player.getPosition().x;
+        }
+        if (player.direction == -1) {
+            positionX = player.getPosition().x + player.getWidth() / player.getScale();
+        }
+
         if (player.state != State.IDLE) {
-            if (player.direction == 1) {
-                batch.draw(playerTextureRun, player.getPosition().x, player.getPosition().y,
-                        player.getWidth(), player.getHeight(), offsetX, 0, frameWidth, frameHeight, false, false);
-                }
-            if (player.direction == -1) {
-                batch.draw(playerTextureRun, player.getPosition().x + player.getWidth(), player.getPosition().y,
-                        -player.getWidth(), player.getHeight(), offsetX, 0, frameWidth, frameHeight, false, false);
-                }
+            batch.draw(playerTextureRun, positionX, player.getPosition().y,
+                Math.signum(player.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
+        } else {
+            batch.draw(playerTexture, positionX, player.getPosition().y, Math.signum(player.direction) * player.getWidth(), player.getHeight());
         }
-        if (player.state == State.IDLE) {
-            if (player.direction == 1) {
-                batch.draw(playerTexture, player.getPosition().x, player.getPosition().y, player.getWidth(), player.getHeight());
-                }
-            if (player.direction == -1) {
-                batch.draw(playerTexture, player.getPosition().x + player.getWidth(), player.getPosition().y,
-                -player.getWidth(), player.getHeight());
-                }
-            }
+
         for (MPPlayer mpPlayer : networking.getPlayers().values()) {
-        if (mpPlayer.state.equals(State.IDLE)) {
-            System.out.println("players state is Idle");
-            if (mpPlayer.direction == -1) {
-                batch.draw(playerTexture, mpPlayer.x + player.getWidth(), mpPlayer.y, -player.getWidth(), player.getHeight());
-            }
-            if (mpPlayer.direction == 1) {
-                batch.draw(playerTexture, mpPlayer.x, mpPlayer.y, player.getWidth(), player.getHeight());
-            }
-            }
-        if (!mpPlayer.state.equals(State.IDLE)) {
-            System.out.println("players state is not Idle");
-            if (mpPlayer.direction == -1) {
-                System.out.println("players state is not Idle and is facing left");
-                batch.draw(playerTextureRun, mpPlayer.x + player.getWidth(), mpPlayer.y,
-                -player.getWidth(), player.getHeight(), offsetX, 0, frameWidth, frameHeight, false, false);
-        }
-            }
-            if (mpPlayer.direction == 1) {
-                System.out.println("players state is not Idle and is facing right");
-                batch.draw(playerTextureRun, mpPlayer.x + player.getWidth(), mpPlayer.y,
-                player.getWidth(), player.getHeight(), offsetX, 0, frameWidth, frameHeight, false, false);
-            }
+            float mpPositionX = 0;
+            if (mpPlayer.direction == 1) mpPositionX = mpPlayer.x;
+            if (mpPlayer.direction == -1) mpPositionX = mpPlayer.x + player.getWidth() / player.getScale();
+            System.out.println("MP Position X");
+            System.out.println(mpPositionX);
+            // if (mpPlayer.state != State.IDLE) {
+                // System.out.println("players state is not Idle");
+                // batch.draw(playerTextureRun, mpPositionX, mpPlayer.y,
+                    // Math.signum(player.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
+            // } else {
+            batch.draw(playerTexture, mpPositionX, mpPlayer.y, Math.signum(mpPlayer.direction) * player.getWidth(), player.getHeight());
+            // }
         }
     }
     
