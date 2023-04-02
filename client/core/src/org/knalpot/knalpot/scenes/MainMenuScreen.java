@@ -42,7 +42,7 @@ public class MainMenuScreen implements Screen {
         style.downFontColor = Color.LIGHT_GRAY;
         style.up = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_up.png")), 0, 0, 0, 0));
         style.over = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_down.png")), 0, 0, 0, 0));
-        style.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_down.png")), 0, 0, 0, 0));
+        style.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_over.png")), 0, 0, 0, 0));
 
         float buttonWidth = Gdx.graphics.getWidth() / 4f;
         float buttonHeight = Gdx.graphics.getHeight() / 2f;
