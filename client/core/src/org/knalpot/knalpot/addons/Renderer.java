@@ -63,7 +63,6 @@ public class Renderer {
     private World world;
     private Actor player;
 
-    private Static block;
     private Teleport teleport;
 
     // ==== NETWORKING ==== //
@@ -104,7 +103,6 @@ public class Renderer {
         // Initialize spritebatch.
         batch = new SpriteBatch();
         player = this.world.getPlayer();
-        block = this.world.getCollisionBlocks();
         networking = this.world.getClientProgram();
 
         // Load other objects' textures.
@@ -158,7 +156,6 @@ public class Renderer {
         //batch.draw(teleportRegion, teleportX, teleportY);
 
     	drawPlayer();
-        drawStatic();
     	batch.end();
 
         tiledRender.setView(camera);
@@ -267,16 +264,6 @@ public class Renderer {
         cloud.render(batch, targetX, 0);
         darkGrass.render(batch, targetX, 0);
         lightGrass.render(batch, targetX, 0);
-    }
-    
-    
-    /**
-     * Draws a {@code Static} objects.
-     * <p>
-     * Currently used for debugging pursoses.
-     */
-    private void drawStatic() {
-        batch.draw(staticTexture, block.getPosition().x, block.getPosition().y, block.getWidth(), block.getHeight());
     }
     //#endregion
 }

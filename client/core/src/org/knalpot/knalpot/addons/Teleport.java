@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class Teleport {
     private static final int FRAME_COLS = 6;
     private static final int FRAME_ROWS = 1;
-    private static final float FRAME_DURATION = 0.1f;
+    private static final float FRAME_DURATION = 0.2f;
 
     private Animation<TextureRegion> animation;
     private float stateTime;

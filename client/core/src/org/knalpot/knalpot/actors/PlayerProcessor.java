@@ -7,7 +7,6 @@ import org.knalpot.knalpot.world.World;
 import java.lang.Math;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 
 // ===== ALL COMMENTED OUT CODE IS REQUIRED FOR DEBUGGING BUT USELESS AS FOR NOW. DON'T PAY ATTENTION TO IT ===== //
@@ -24,7 +23,6 @@ public class PlayerProcessor {
     // ==== OBJECT VARIABLES ==== //
 	private World world;
 	private Actor player;
-    private Static collisionBlock;
 
     // ==== MOVEMENT ==== //
 	private final float SPEED = 120f;
@@ -55,7 +53,6 @@ public class PlayerProcessor {
 	public PlayerProcessor(World world) {
 		this.world = world;
 		player = this.world.getPlayer();
-        collisionBlock = this.world.getCollisionBlocks();
 	}
 
 	/**
