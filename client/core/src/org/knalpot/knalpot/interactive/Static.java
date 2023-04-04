@@ -16,9 +16,6 @@ public class Static {
 	private Vector2 position;
 	private Rectangle bounds;
 
-	private int WIDTH = 16;
-	private int HEIGHT = 16;
-
 	public float Left;
 	public float Right;
 	public float Bottom;
@@ -30,14 +27,14 @@ public class Static {
 	 * {@code Static} constructor.
 	 * @param position
 	 */
-	public Static(Vector2 position) {
+	public Static(Vector2 position, int width, int height) {
 		this.position = position;
 
 		bounds = new Rectangle();
 		bounds.x = this.position.x;
 		bounds.y = this.position.y;
-		bounds.width = WIDTH;
-		bounds.height = HEIGHT;
+		bounds.width = width;
+		bounds.height = height;
 
 		Left = bounds.x;
 		Right = bounds.x + bounds.width;
@@ -66,7 +63,7 @@ public class Static {
 	 * @return {@code int} type width.
 	 */
 	public int getWidth() {
-		return WIDTH;
+		return (int) bounds.width;
 	}
 
 	/**
@@ -74,7 +71,7 @@ public class Static {
 	 * @return {@code int} type height.
 	 */
 	public int getHeight() {
-		return HEIGHT;
+		return (int) bounds.height;
 	}
 	//#endregion
 }

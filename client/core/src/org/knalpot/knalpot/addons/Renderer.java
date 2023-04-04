@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 
 /**
@@ -30,6 +33,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Renderer {
     //#region -- VARIABLES --
 
+    // Temporary
+    private String tiledSrc = "level1/untitled1.tmx";
+    private TiledMap tiledMap;
+    private OrthogonalTiledMapRenderer tiledRender;
+
     // Define variables for animation
     private TextureRegion playerRegion;
     private int frameWidth = 24; // The width of each frame in pixels
@@ -37,7 +45,6 @@ public class Renderer {
     private int numFrames = 8; // The number of frames in the sprite sheet
     private float animationTime = 0; // The time elapsed since the animation started
     private float frameDuration = 0.1f; // The duration of each frame in seconds
-
 
     // ==== OBJECTS ==== //
     private SpriteBatch batch;
@@ -92,6 +99,7 @@ public class Renderer {
 
         // Load other objects' textures.
         loadTextures();
+        loadTiledMap();
     }
 
     /**
@@ -131,6 +139,9 @@ public class Renderer {
     	drawPlayer();
         drawStatic();
     	batch.end();
+
+        tiledRender.setView(camera);
+        tiledRender.render();
     }
 
     /**
@@ -142,6 +153,14 @@ public class Renderer {
         networking.dispose();
     	batch.dispose();
         sky.dispose();
+    }
+
+    /**
+     * Loads tilemap.
+     */
+    private void loadTiledMap() {
+        tiledMap = new TmxMapLoader().load(tiledSrc);
+        tiledRender = new OrthogonalTiledMapRenderer(tiledMap, 2);
     }
 
     /**
