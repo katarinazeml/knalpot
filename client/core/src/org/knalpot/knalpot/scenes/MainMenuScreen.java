@@ -35,18 +35,19 @@ public class MainMenuScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-        style.font = font;
-        style.fontColor = Color.WHITE;
-        style.overFontColor = Color.GRAY;
-        style.downFontColor = Color.LIGHT_GRAY;
-        style.up = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_up.png")), 0, 0, 0, 0));
-        style.over = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_down.png")), 0, 0, 0, 0));
-        style.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_over.png")), 0, 0, 0, 0));
+        // create the game button
+        TextButton.TextButtonStyle playStyle = new TextButton.TextButtonStyle();
+        playStyle.font = font;
+        playStyle.fontColor = Color.WHITE;
+        playStyle.overFontColor = Color.GRAY;
+        playStyle.downFontColor = Color.LIGHT_GRAY;
+        playStyle.up = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_up.png")), 0, 0, 0, 0));
+        playStyle.over = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_over.png")), 0, 0, 0, 0));
+        playStyle.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("button_down.png")), 0, 0, 0, 0));
 
-        float buttonWidth = Gdx.graphics.getWidth() / 4f;
-        float buttonHeight = Gdx.graphics.getHeight() / 2f;
-        TextButton gameButton = new TextButton("", style);
+        float buttonWidth = Gdx.graphics.getWidth() / 2f;
+        float buttonHeight = Gdx.graphics.getHeight() / 4f;
+        TextButton gameButton = new TextButton("", playStyle);
         gameButton.setSize(buttonWidth, buttonHeight);
         gameButton.setPosition((Gdx.graphics.getWidth() - buttonWidth) / 2f, (Gdx.graphics.getHeight() - buttonHeight) / 2f);
         gameButton.addListener(new ClickListener() {
@@ -55,7 +56,30 @@ public class MainMenuScreen implements Screen {
                 game.setScreen(new GameScene());
             }
         });
+
+        // create the new button
+        TextButton.TextButtonStyle exitStyle = new TextButton.TextButtonStyle();
+        exitStyle.font = font;
+        exitStyle.fontColor = Color.WHITE;
+        exitStyle.overFontColor = Color.GRAY;
+        exitStyle.downFontColor = Color.LIGHT_GRAY;
+        exitStyle.up = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("exit_up.png")), 0, 0, 0, 0));
+        exitStyle.over = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("exit_over.png")), 0, 0, 0, 0));
+        exitStyle.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("exit_down.png")), 0, 0, 0, 0));
+
+        TextButton newButton = new TextButton("", exitStyle);
+        newButton.setSize(buttonWidth, buttonHeight);
+        newButton.setPosition((Gdx.graphics.getWidth() - buttonWidth) / 2f, (Gdx.graphics.getHeight() - buttonHeight) / 2f - buttonHeight - 10);
+        newButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+
+        // add both buttons to the stage
         stage.addActor(gameButton);
+        stage.addActor(newButton);
     }
 
 
@@ -69,10 +93,10 @@ public class MainMenuScreen implements Screen {
         //font.draw(batch, "Main Menu", Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
         batch.end();
 
-        if (Gdx.input.isTouched()) {
-            game.setScreen(new GameScene());
-            dispose();
-        }
+        //if (Gdx.input.isTouched()) {
+        //    game.setScreen(new GameScene());
+        //    dispose();
+        //}
 
         stage.act(delta);
         stage.draw();
