@@ -53,6 +53,7 @@ public class MainMenuScreen implements Screen {
         gameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.audio.newSound(Gdx.files.internal("start_sound.mp3")).play(1.0f);
                 game.setScreen(new GameScene());
             }
         });
