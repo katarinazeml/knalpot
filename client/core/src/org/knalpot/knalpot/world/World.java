@@ -25,7 +25,6 @@ public class World {
 	//#region -- VARIABLES --
 	// ==== OBJECT VARIABLES ==== //
 	private Player player;
-	private Static block1;
 
 	// ==== NETWORKING ==== //
 	private ClientProgram clientProgram;
@@ -67,8 +66,8 @@ public class World {
 	 * Returns all {@code Static} objects.
 	 * @return {@code Static} object
 	 */
-	public Static getCollisionBlocks() {
-		return block1;
+	public List<Static> getCollisionBlocks() {
+		return collisionBlocks;
 	}
 
 	/**
@@ -76,7 +75,6 @@ public class World {
 	 */
 	private void initializeWorld() {
 		player = new Player(new Vector2(0, 200));
-		block1 = new Static(new Vector2(300, 0), 16, 16);
 
 		for (MapObject obj : tiledMap.getLayers().get(1).getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;

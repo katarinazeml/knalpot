@@ -23,11 +23,10 @@ public class PlayerProcessor {
     // ==== OBJECT VARIABLES ==== //
 	private World world;
 	private Actor player;
-    private Static collisionBlock;
 
     // ==== MOVEMENT ==== //
 	private final float SPEED = 120f;
-    private final float JUMP_HEIGHT = 320f;
+    private final float JUMP_HEIGHT = 400f;
     private final float ACCELERATION = 12f;
     private final float DECCELERATION = 16f;
     private final float VELOCITY_POWER = 0.9f;
@@ -54,7 +53,6 @@ public class PlayerProcessor {
 	public PlayerProcessor(World world) {
 		this.world = world;
 		player = this.world.getPlayer();
-        collisionBlock = this.world.getCollisionBlocks();
 	}
 
 	/**
@@ -85,6 +83,7 @@ public class PlayerProcessor {
         // System.out.println(cn);
         // System.out.println(cp);
         // System.out.println(t);
+        
 
         for (Static obj : world.collisionBlocks) {
             if (resolveCollision(player, obj, dt)) {
@@ -92,7 +91,6 @@ public class PlayerProcessor {
                 if (player.getVelocity().y == 0f) canJump = true;
             }
         }
-
         player.previousDirection = player.direction;
         player.direction = moveInput;
         player.update(dt);
@@ -134,7 +132,7 @@ public class PlayerProcessor {
             updateState();
             player.state = Player.State.IDLE;
             player.getVelocity().x = 0f;
-        }
+        }        
     }
 
 	/**
