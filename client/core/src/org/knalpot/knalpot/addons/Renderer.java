@@ -110,7 +110,7 @@ public class Renderer {
         // Load other objects' textures.
         loadTextures();
         loadTiledMap();
-        teleport = new Teleport(20, 48, 20, 88, batch);
+        teleport = new Teleport(20, 48, 20, 112, batch);
     }
 
     /**

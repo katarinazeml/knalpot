@@ -67,8 +67,8 @@ public class Teleport {
         }
     
         // Render the current frame
-        float frameWidth = currentFrame.getRegionWidth() * (width / currentFrame.getRegionWidth());
-        float frameHeight = currentFrame.getRegionHeight() * (height / currentFrame.getRegionHeight());
+        float frameWidth = currentFrame.getRegionWidth() * (2f * width / currentFrame.getRegionWidth());
+        float frameHeight = currentFrame.getRegionHeight() * (2f * height / currentFrame.getRegionHeight());        
         float frameX = x - (frameWidth / 2f);
         float frameY = y - (frameHeight / 2f);
         batch.draw(currentFrame, frameX, frameY, frameWidth, frameHeight);
