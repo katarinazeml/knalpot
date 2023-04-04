@@ -160,7 +160,7 @@ public class Renderer {
      */
     private void loadTiledMap() {
         tiledMap = new TmxMapLoader().load(tiledSrc);
-        tiledRender = new OrthogonalTiledMapRenderer(tiledMap);
+        tiledRender = new OrthogonalTiledMapRenderer(tiledMap, 2);
     }
 
     /**

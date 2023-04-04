@@ -10,7 +10,7 @@
 </data>
  </layer>
  <objectgroup id="2" name="Object Layer 1">
-  <object id="1" x="63.6922" y="0.265753" width="16.3881" height="31.536"/>
-  <object id="3" x="0.223606" y="32.0724" width="64.1683" height="9.23095" rotation="0.141644"/>
+  <object id="1" x="0" y="32" width="64" height="9"/>
+  <object id="2" x="64" y="0" width="16" height="32"/>
  </objectgroup>
 </map>

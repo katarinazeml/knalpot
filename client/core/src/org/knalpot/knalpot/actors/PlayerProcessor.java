@@ -86,9 +86,11 @@ public class PlayerProcessor {
         // System.out.println(cp);
         // System.out.println(t);
 
-        if (resolveCollision(player, collisionBlock, dt)) {
-            // System.out.println("Colliding!");
-            if (player.getVelocity().y == 0f) canJump = true;
+        for (Static obj : world.collisionBlocks) {
+            if (resolveCollision(player, obj, dt)) {
+                // System.out.println("Colliding!");
+                if (player.getVelocity().y == 0f) canJump = true;
+            }
         }
 
         player.previousDirection = player.direction;
