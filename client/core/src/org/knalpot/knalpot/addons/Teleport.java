@@ -1,6 +1,7 @@
 package org.knalpot.knalpot.addons;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,12 +25,16 @@ public class Teleport {
     private boolean isEKeyPressed;
     private boolean isAnimationPlayed;
 
+    public Sound swooshSound;
+
     public Teleport(float width, float height, float x, float y, SpriteBatch batch) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
         this.batch = batch;
+
+        swooshSound = Gdx.audio.newSound(Gdx.files.internal("swoosh.mp3"));
 
         isEKeyPressed = false;
         isAnimationPlayed = false;
@@ -77,6 +82,7 @@ public class Teleport {
             if (!isEKeyPressed) {
                 isEKeyPressed = true;
                 stateTime = 0f;
+                swooshSound.play();
             }
         }
     }

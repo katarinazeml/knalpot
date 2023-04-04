@@ -174,6 +174,7 @@ public class Renderer {
         networking.dispose();
     	batch.dispose();
         sky.dispose();
+        teleport.swooshSound.dispose();
     }
 
     /**
