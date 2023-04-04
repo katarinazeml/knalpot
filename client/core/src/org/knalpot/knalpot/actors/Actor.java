@@ -1,5 +1,6 @@
 package org.knalpot.knalpot.actors;
 
+import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -48,6 +49,10 @@ public class Actor {
     private Vector2 cp; // contact point
     private Vector2 cn; // contact normal
     private float t; // time collision has happened
+
+    // ==== TEMPORARY STATE MACHINE ==== //
+    public State state;
+    public State previousState;
 
     //#endregion
     //#region -- GET/SET --

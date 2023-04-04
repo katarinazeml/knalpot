@@ -6,14 +6,15 @@ import com.esotericsoftware.kryonet.Client;
 import org.knalpot.knalpot.actors.Player;
 import org.knalpot.knalpot.world.Network;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ClientProgram extends ApplicationAdapter {
-    Player player;
     static Network network;
     public static Map<Integer, MPPlayer> players = new HashMap<Integer, MPPlayer>();
     private Client client;
+    private Player player;
 
     public ClientProgram(Player player) {
         this.player = player;
@@ -55,11 +56,20 @@ public class ClientProgram extends ApplicationAdapter {
             client.sendUDP(packet);
         }
         if (player.direction != player.previousDirection) {
-            // Send the player's Y value
-            System.out.println("sent facing right");
+            // Send the player's direction
             PacketUpdateDirection packet = new PacketUpdateDirection();
             packet.direction = player.direction;
             client.sendUDP(packet);
+        }
+        if (player.state != player.previousState) {
+            System.out.println("Current and previous player state");
+            System.out.println(player.state);
+            System.out.println(player.previousState);
+            // Send the player's state
+            PacketUpdateState packet = new PacketUpdateState();
+            packet.state = player.state;
+            client.sendUDP(packet);
+            System.out.println("sent state");
         }
     }
 

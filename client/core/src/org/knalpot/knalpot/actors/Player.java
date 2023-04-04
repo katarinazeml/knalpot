@@ -21,7 +21,6 @@ public class Player extends Actor {
     public enum State {
         IDLE, MOVE, JUMP, FALL
     }
-    public State state;
 
     //#endregion
 
@@ -57,9 +56,6 @@ public class Player extends Actor {
         Right = (int) (bounds.x + bounds.width);
         Bottom = (int) bounds.y;
         Top = (int) (bounds.y + bounds.height);
- 
-        // Initializing necessary functions/setting up fundamentals.
-        state = State.IDLE;
     }
 
     public void update(float dt) {
