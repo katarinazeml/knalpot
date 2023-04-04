@@ -22,6 +22,7 @@ public class Teleport {
     private float y;
 
     private boolean isEKeyPressed;
+    private boolean isAnimationPlayed;
 
     public Teleport(float width, float height, float x, float y, SpriteBatch batch) {
         this.width = width;
@@ -31,6 +32,7 @@ public class Teleport {
         this.batch = batch;
 
         isEKeyPressed = false;
+        isAnimationPlayed = false;
 
         // Load the spritesheet
         Texture texture = new Texture("teleportanimation.png");
@@ -50,14 +52,16 @@ public class Teleport {
 
     public void render() {
         TextureRegion currentFrame;
-        if (isEKeyPressed) {
+        if (!isEKeyPressed) {
+            currentFrame = animation.getKeyFrames()[0];
+        } else if (!isAnimationPlayed) {
             stateTime += Gdx.graphics.getDeltaTime();
             currentFrame = animation.getKeyFrame(stateTime, true);
-            if (animation.getKeyFrameIndex(stateTime) == 5) { // the index of the 6th frame is 5
-                isEKeyPressed = false; // freeze the animation
+            if (animation.isAnimationFinished(stateTime)) {
+                isAnimationPlayed = true;
             }
         } else {
-            currentFrame = animation.getKeyFrames()[0];
+            currentFrame = animation.getKeyFrames()[5];
         }
 
         // Render the current frame
@@ -67,8 +71,9 @@ public class Teleport {
         float frameY = y - (frameHeight / 2f);
         batch.draw(currentFrame, frameX, frameY, frameWidth, frameHeight);
 
-        if (Gdx.input.isKeyPressed(Keys.E)) {
+        if (Gdx.input.isKeyJustPressed(Keys.E)) {
             isEKeyPressed = true;
         }
     }
 }
+

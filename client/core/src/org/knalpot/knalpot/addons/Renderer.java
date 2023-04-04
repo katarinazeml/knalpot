@@ -1,7 +1,6 @@
 package org.knalpot.knalpot.addons;
 
 import com.badlogic.gdx.graphics.Texture;
-import org.knalpot.knalpot.addons.Teleport;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
