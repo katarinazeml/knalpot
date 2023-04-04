@@ -54,26 +54,30 @@ public class Teleport {
         TextureRegion currentFrame;
         if (!isEKeyPressed) {
             currentFrame = animation.getKeyFrames()[0];
-        } else if (!isAnimationPlayed) {
-            stateTime += Gdx.graphics.getDeltaTime();
-            currentFrame = animation.getKeyFrame(stateTime, true);
-            if (animation.isAnimationFinished(stateTime)) {
-                isAnimationPlayed = true;
-            }
         } else {
-            currentFrame = animation.getKeyFrames()[5];
+            if (!isAnimationPlayed) {
+                stateTime += Gdx.graphics.getDeltaTime();
+                currentFrame = animation.getKeyFrame(stateTime, false);
+                if (animation.isAnimationFinished(stateTime)) {
+                    isAnimationPlayed = true;
+                }
+            } else {
+                currentFrame = animation.getKeyFrames()[5];
+            }
         }
-
+    
         // Render the current frame
         float frameWidth = currentFrame.getRegionWidth() * (width / currentFrame.getRegionWidth());
         float frameHeight = currentFrame.getRegionHeight() * (height / currentFrame.getRegionHeight());
         float frameX = x - (frameWidth / 2f);
         float frameY = y - (frameHeight / 2f);
         batch.draw(currentFrame, frameX, frameY, frameWidth, frameHeight);
-
+    
         if (Gdx.input.isKeyJustPressed(Keys.E)) {
-            isEKeyPressed = true;
+            if (!isEKeyPressed) {
+                isEKeyPressed = true;
+                stateTime = 0f;
+            }
         }
     }
 }
-
