@@ -1,6 +1,7 @@
 package org.knalpot.knalpot.addons;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.knalpot.knalpot.addons.Teleport;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -38,13 +39,22 @@ public class Renderer {
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer tiledRender;
 
-    // Define variables for animation
+    // Define variables for player animation
     private TextureRegion playerRegion;
     private int frameWidth = 24; // The width of each frame in pixels
     private int frameHeight = 24; // The height of each frame in pixels
     private int numFrames = 8; // The number of frames in the sprite sheet
     private float animationTime = 0; // The time elapsed since the animation started
     private float frameDuration = 0.1f; // The duration of each frame in seconds
+
+    // Define variables for teleport animation
+    //private TextureRegion teleportRegion;
+    //private int teleportFrameWidth = 20; // The width of each frame in pixels
+    //private int teleportFrameHeight = 48; // The height of each frame in pixels
+    //private int teleportNumFrames = 6; // The number of frames in the sprite sheet
+    //private float teleportAnimationTime = 0; // The time elapsed since the animation started
+    //private float teleportFrameDuration = 0.1f; // The duration of each frame in seconds
+
 
     // ==== OBJECTS ==== //
     private SpriteBatch batch;
@@ -55,6 +65,7 @@ public class Renderer {
     private Actor player;
 
     private Static block;
+    private Teleport teleport;
 
     // ==== NETWORKING ==== //
     private ClientProgram networking;
@@ -100,6 +111,7 @@ public class Renderer {
         // Load other objects' textures.
         loadTextures();
         loadTiledMap();
+        teleport = new Teleport(20, 48, 20, 88, batch);
     }
 
     /**
@@ -136,6 +148,16 @@ public class Renderer {
     	batch.setProjectionMatrix(camera.combined);
     	batch.begin();
         drawBackground(targetX);
+
+        // Draw teleport animation
+        teleport.render();
+        //teleportAnimationTime += Gdx.graphics.getDeltaTime();
+        //int teleportFrameIndex = (int) (teleportAnimationTime / teleportFrameDuration) % teleportNumFrames;
+        //int teleportX = 0;
+        //int teleportY = 64;
+        //teleportRegion.setRegion(teleportFrameIndex * teleportFrameWidth, 0, teleportFrameWidth, teleportFrameHeight);
+        //batch.draw(teleportRegion, teleportX, teleportY);
+
     	drawPlayer();
         drawStatic();
     	batch.end();
@@ -179,6 +201,9 @@ public class Renderer {
 
         Texture spriteSheet = new Texture("playeranimation.png");
         playerRegion = new TextureRegion(spriteSheet, 0, 0, frameWidth, frameHeight);
+
+        //Texture spriteSheet1 = new Texture("teleportanimation.png");
+        //teleportRegion = new TextureRegion(spriteSheet1);
 
         cloud = new ParallaxLayer(cloudTexture, camera, 0.7f, 0.25f);
         darkGrass = new ParallaxLayer(darkGrassTexture, camera, 0.2f, 0.4f);

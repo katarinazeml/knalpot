@@ -1,0 +1,74 @@
+package org.knalpot.knalpot.addons;
+
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+
+public class Teleport {
+    private static final int FRAME_COLS = 6;
+    private static final int FRAME_ROWS = 1;
+    private static final float FRAME_DURATION = 0.1f;
+
+    private Animation<TextureRegion> animation;
+    private float stateTime;
+    private SpriteBatch batch;
+
+    private float width;
+    private float height;
+    private float x;
+    private float y;
+
+    private boolean isEKeyPressed;
+
+    public Teleport(float width, float height, float x, float y, SpriteBatch batch) {
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+        this.batch = batch;
+
+        isEKeyPressed = false;
+
+        // Load the spritesheet
+        Texture texture = new Texture("teleportanimation.png");
+        TextureRegion[][] regions = TextureRegion.split(texture, 20, 48);
+
+        // Create the animation
+        TextureRegion[] frames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+        int index = 0;
+        for (int i = 0; i < FRAME_ROWS; i++) {
+            for (int j = 0; j < FRAME_COLS; j++) {
+                frames[index++] = regions[i][j];
+            }
+        }
+        animation = new Animation<>(FRAME_DURATION, frames);
+        stateTime = 0f;
+    }
+
+    public void render() {
+        TextureRegion currentFrame;
+        if (isEKeyPressed) {
+            stateTime += Gdx.graphics.getDeltaTime();
+            currentFrame = animation.getKeyFrame(stateTime, true);
+            if (animation.getKeyFrameIndex(stateTime) == 5) { // the index of the 6th frame is 5
+                isEKeyPressed = false; // freeze the animation
+            }
+        } else {
+            currentFrame = animation.getKeyFrames()[0];
+        }
+
+        // Render the current frame
+        float frameWidth = currentFrame.getRegionWidth() * (width / currentFrame.getRegionWidth());
+        float frameHeight = currentFrame.getRegionHeight() * (height / currentFrame.getRegionHeight());
+        float frameX = x - (frameWidth / 2f);
+        float frameY = y - (frameHeight / 2f);
+        batch.draw(currentFrame, frameX, frameY, frameWidth, frameHeight);
+
+        if (Gdx.input.isKeyPressed(Keys.E)) {
+            isEKeyPressed = true;
+        }
+    }
+}

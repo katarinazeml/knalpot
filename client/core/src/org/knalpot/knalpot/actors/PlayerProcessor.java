@@ -7,6 +7,7 @@ import org.knalpot.knalpot.world.World;
 import java.lang.Math;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 
 // ===== ALL COMMENTED OUT CODE IS REQUIRED FOR DEBUGGING BUT USELESS AS FOR NOW. DON'T PAY ATTENTION TO IT ===== //
@@ -85,6 +86,7 @@ public class PlayerProcessor {
         // System.out.println(cn);
         // System.out.println(cp);
         // System.out.println(t);
+        
 
         for (Static obj : world.collisionBlocks) {
             if (resolveCollision(player, obj, dt)) {
@@ -92,7 +94,6 @@ public class PlayerProcessor {
                 if (player.getVelocity().y == 0f) canJump = true;
             }
         }
-
         player.previousDirection = player.direction;
         player.direction = moveInput;
         player.update(dt);
@@ -134,7 +135,7 @@ public class PlayerProcessor {
             updateState();
             player.state = Player.State.IDLE;
             player.getVelocity().x = 0f;
-        }
+        }        
     }
 
 	/**
