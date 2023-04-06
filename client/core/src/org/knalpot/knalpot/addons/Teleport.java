@@ -35,7 +35,7 @@ public class Teleport {
         this.y = y;
         this.batch = batch;
 
-        swooshSound = Gdx.audio.newSound(Gdx.files.internal("swoosh.mp3"));
+        swooshSound = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
 
         isEKeyPressed = false;
         isAnimationPlayed = false;
