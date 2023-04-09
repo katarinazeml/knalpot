@@ -100,10 +100,21 @@ void drawCanvas(Canvas *canvas) {
     DrawRectangleLines(canvas->x, canvas->y, canvas->width, canvas->height, WHITE);
 }
 
-void writeMapData(FILE *f) {
-    fprintf(f, "<map width=\"%d\" height=\"%d\" tilewidth=\"%d\" tileheight=\"%d\">\n", MATRIX_WIDTH, MATRIX_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+
+void writeMatrixData(FILE *f) {
+    fprintf(f, "<layer id=\"%d\" name=\"Tile Layer 1\" width=\"%d\" height=\"%d\">\n", 1, MATRIX_WIDTH, MATRIX_HEIGHT);
+        fprintf(f, "<data encoding=\"csv\">\n");
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            int col = i % MATRIX_WIDTH;
+            int row = i / MATRIX_WIDTH;
     
-    fprintf(f, "</map>\n");
+            fprintf(f, "%d,", tilemap[row][col]);
+            if (i != 0 && (i + 1) % MATRIX_WIDTH == 0) {
+                fprintf(f, "\n");
+            }
+        }
+        fprintf(f, "</data>\n");
+    fprintf(f, "</layer>\n");
 }
 
 void writeTilesetData(FILE *f) {
@@ -112,22 +123,16 @@ void writeTilesetData(FILE *f) {
     fprintf(f, "</tileset>\n");
 }
 
+void writeMapData(FILE *f) {
+    fprintf(f, "<map width=\"%d\" height=\"%d\" tilewidth=\"%d\" tileheight=\"%d\">\n", MATRIX_WIDTH, MATRIX_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
+    writeTilesetData(f);
+    writeMatrixData(f);
+    fprintf(f, "</map>\n");
+}
+
 void writeDataToXML(FILE *f) {
     fprintf(f, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-
-        fprintf(f, "<layer id=\"%d\" name=\"Tile Layer 1\" width=\"%d\" height=\"%d\">\n", 1, MATRIX_WIDTH, MATRIX_HEIGHT);
-            fprintf(f, "<data encoding=\"csv\">\n");
-            for (int i = 0; i < MATRIX_SIZE; i++) {
-                int col = i % MATRIX_WIDTH;
-                int row = i / MATRIX_WIDTH;
-                
-                fprintf(f, "%d,", tilemap[row][col]);
-                if (i != 0 && col == 0) {
-                    fprintf(f, "\n");
-                }
-            }
-            fprintf(f, "</data>\n");
-        fprintf(f, "</layer>\n");
+    writeMapData(f);
 }
 
 int main(int argv, char *argc[]) {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map width="7" height="5" tilewidth="16" tileheight="16">
+<tileset tilewidth="16" tileheight="16" tilecount="10" columns="7">
+<image source="grass.png" width="80" height="32"/>
+</tileset>
+<layer id="1" name="Tile Layer 1" width="7" height="5">
+<data encoding="csv">
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+</data>
+</layer>
+</map>
