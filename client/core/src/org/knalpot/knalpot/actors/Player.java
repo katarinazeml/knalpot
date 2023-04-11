@@ -63,6 +63,10 @@ public class Player extends Actor {
         bounds.x = position.x;
         bounds.y = position.y;
 
+        System.out.println("Player Size");
+        System.out.println(getWidth());
+        System.out.println(getHeight());
+
         Left = (int) bounds.x;
         Right = (int) bounds.x + WIDTH;
         Bottom = (int) bounds.y;

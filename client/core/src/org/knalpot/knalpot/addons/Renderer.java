@@ -53,6 +53,7 @@ public class Renderer {
 
     private World world;
     private Actor player;
+    private Actor orb;
 
     private Teleport teleport;
 
@@ -95,6 +96,7 @@ public class Renderer {
         // Initialize spritebatch.
         batch = new SpriteBatch();
         player = this.world.getPlayer();
+        orb = this.world.getOrb();
         networking = this.world.getClientProgram();
 
         // Load other objects' textures.
@@ -146,6 +148,7 @@ public class Renderer {
 
         // Draw teleport animation
         teleport.render();
+        orb.render(batch);
 
     	drawPlayer();
     	batch.end();
