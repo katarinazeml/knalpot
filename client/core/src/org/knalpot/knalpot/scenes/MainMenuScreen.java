@@ -48,10 +48,6 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // update and render particle effect
-        batch.begin();
-        batch.end();
-
         stage.act(delta);
         stage.draw();
     }
