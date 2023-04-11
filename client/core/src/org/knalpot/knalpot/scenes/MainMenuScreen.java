@@ -1,5 +1,8 @@
 package org.knalpot.knalpot.scenes;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import org.knalpot.knalpot.Knalpot;
 
 import com.badlogic.gdx.Gdx;
