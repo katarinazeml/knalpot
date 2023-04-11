@@ -1,14 +1,13 @@
 package org.knalpot.knalpot.networking;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.esotericsoftware.kryonet.Client;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.knalpot.knalpot.actors.Player;
 import org.knalpot.knalpot.world.Network;
 
-
-import java.util.HashMap;
-import java.util.Map;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.esotericsoftware.kryonet.Client;
 
 public class ClientProgram extends ApplicationAdapter {
     static Network network;

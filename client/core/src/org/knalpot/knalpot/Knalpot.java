@@ -1,5 +1,7 @@
 package org.knalpot.knalpot;
 
+import org.knalpot.knalpot.scenes.MainMenuScreen;
+
 import com.badlogic.gdx.Game;
 
 public class Knalpot extends Game {
@@ -11,7 +13,8 @@ public class Knalpot extends Game {
 	}
 
 	public void create() {
-		this.setScreen(new org.knalpot.knalpot.scenes.GameScene());
+		this.setScreen(new MainMenuScreen(this));
+		//this.setScreen(new org.knalpot.knalpot.scenes.GameScene());
 	}
 
 	public void render() {
