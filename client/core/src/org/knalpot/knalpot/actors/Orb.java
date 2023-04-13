@@ -1,12 +1,12 @@
 package org.knalpot.knalpot.actors;
 
+import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.addons.BBGenerator;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.TimeUtils;
 
 public class Orb extends Actor {
     // Owner of the orb
@@ -21,8 +21,9 @@ public class Orb extends Actor {
 
     // Levitation variables
     private float levitationTimer;
-    private float offset;
     private float range;
+
+    private boolean mustFloat;
 
     public Orb(Actor owner) {
         this.owner = owner;
@@ -48,8 +49,7 @@ public class Orb extends Actor {
 
         // Initialize levitation variables
         levitationTimer = 0;
-        offset = 20;
-        range = 10;
+        range = 3f;
     }
 
     public Actor getOwner() {
@@ -63,28 +63,36 @@ public class Orb extends Actor {
     @Override
     public void update(float dt) {
         // Calculate the target position for the camera.
-        float targetX = owner.getPosition().x - owner.getWidth();
+        float targetX = owner.getPosition().x - owner.getWidth() * owner.direction;
         float targetY = owner.getPosition().y + owner.getHeight() / 2;
 
         // Interpolate the camera's position towards the target position.
         float dx = targetX - position.x;
         float dy = targetY - position.y;
 
-        if (Math.abs((int) dx) == Math.abs((int) dy)) {
-            // Update levitation timer
-            levitationTimer += dt;
+        System.out.println("Owner state");
+        System.out.println(owner.state);
 
-            // Calculate new y position based on levitation timer
-            float levitationOffset = offset + range * (float) Math.sin(levitationTimer * 2 * Math.PI);
-            position.y = targetY + levitationOffset;
+        if (Math.abs((int) dx) == Math.abs((int) dy) && owner.state == State.IDLE) {
+            mustFloat = true;
         } else {
-            // Reset levitation timer
-            levitationTimer = 0;
-
-            position.x += dx * speed * dt;
             position.y += dy * speed * dt;
         }
+        
+        if ((int) dy != 0 && owner.state != State.IDLE) {
+            mustFloat = false;
+        }
 
+        if (mustFloat == true) {
+            // Update levitation timer
+            levitationTimer += dt;
+    
+            // Calculate new y position based on levitation timer
+            float levitationOffset = range * (float) Math.sin(levitationTimer * 2 * Math.PI);
+            position.y = targetY + levitationOffset;
+        }
+
+        position.x += dx * speed * dt;
         bounds.setPosition(position.x, position.y);
     }
 
