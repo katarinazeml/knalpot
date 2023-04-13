@@ -17,10 +17,6 @@ void writeMatrixData(FILE *f, int *mat_w, int *mat_h, int *tilemap) {
 
 // Writing object data to the XML file (for collisions)
 void writeObjectData(FILE *f, Rectangle *rectangles, int *size) {
-// <objectgroup id="2" name="Object Layer 1">
-//   <object id="1" x="0" y="32" width="96" height="2"/>
-//   <object id="2" x="96" y="0" width="16" height="16"/>
-//  </objectgroup>
     fprintf(f, "<objectgroup id=\"1\" name=\"%s\">\n", "collisions");
     for (int i = 0; i < *size; i++) {
         fprintf(f, "<object id=\"%d\" x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" />\n", 
