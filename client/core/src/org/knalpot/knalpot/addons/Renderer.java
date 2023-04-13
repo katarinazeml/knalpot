@@ -224,10 +224,11 @@ public class Renderer {
             positionX = player.getPosition().x + player.getWidth() / player.getScale();
         }
 
-        if (player.state != State.IDLE && (player.state != State.JUMP || player.state != State.FALL)) {
+        if (player.state == State.MOVE) {
             batch.draw(playerTextureRun, positionX, player.getPosition().y,
                 Math.signum(player.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
-        } else {
+        }
+        if (player.state != State.MOVE) {
             batch.draw(playerTexture, positionX, player.getPosition().y, Math.signum(player.direction) * player.getWidth(), player.getHeight());
         }
 
