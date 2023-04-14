@@ -3,8 +3,10 @@ package org.knalpot.knalpot.actors;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.addons.BBGenerator;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,16 +14,12 @@ public class Orb extends Actor {
     // Owner of the orb
     private Actor owner;
 
-    // Texture for the orb
-    private Texture texture;
-
-    // Orb-related variables
-    private Vector2 position;
     private float speed = 5f;
 
     // Levitation variables
     private float levitationTimer;
     private float range;
+    private float rotation;
 
     private boolean mustFloat;
 
@@ -33,8 +31,10 @@ public class Orb extends Actor {
         texture = new Texture("orb.png");
         BBSize = BBGenerator.BBPixels(texture.getTextureData());
         
-        WIDTH = texture.getWidth() * scaleSize;
-        HEIGHT = texture.getHeight() * scaleSize;
+        WIDTH = texture.getWidth();
+        HEIGHT = texture.getHeight();
+        
+        region = new TextureRegion(texture, 0, 0, WIDTH, HEIGHT);
 
         Vector2 ownerPosition = this.owner.getPosition().cpy();
         position = new Vector2();
@@ -70,8 +70,19 @@ public class Orb extends Actor {
         float dx = targetX - position.x;
         float dy = targetY - position.y;
 
-        System.out.println("Owner state");
-        System.out.println(owner.state);
+        // Does not work because orb position must be calculated
+        // according to viewport, not world.
+
+        // float tillMouseX = Gdx.input.getX() - position.x;
+        // float tillMouseY = (720 - Gdx.input.getY()) - position.y;
+        // double distance = Math.sqrt(Math.pow(tillMouseX, 2) + Math.pow(tillMouseY, 2));
+        // float rotation = (float) Math.asin(tillMouseY / distance);
+        // System.out.println("Calculating rotation");
+        // System.out.println(tillMouseX);
+        // System.out.println(tillMouseY);
+        // System.out.println(distance);
+        // System.out.println(rotation);
+        // System.out.println(Math.acos(Math.cos(tillMouseX / distance)));
 
         if (Math.abs((int) dx) == Math.abs((int) dy) && owner.state == State.IDLE) {
             mustFloat = true;
@@ -97,6 +108,6 @@ public class Orb extends Actor {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, position.x, position.y, getWidth(), getHeight());
+        batch.draw(region, position.x, position.y, getWidth() / 2, getHeight() / 2, getWidth(), getHeight(), scaleSize, scaleSize, 0, false);
     }
 }
