@@ -1,8 +1,20 @@
+/*
+    NB! THIS PROGRAM CODE IS ABSOLUTELY HORRIBLE.
+    I CANNOT UNDERSTAND HOW I COULD HAVE WRITTEN IT (ALTHOUGH I DO
+    UNDERSTAND WHAT EXACTLY IT DOES AND CAN EVEN EXPLAIN IT).
+
+    THIS CODE MUST BE REFACTORED LATER BECAUSE IT HAS BECOME
+    SPAGHETTI-LIKE MESS. PLEASE DON'T JUDGE ME BY IT.
+
+    btw, program works almost perfectly lol
+*/
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <raylib.h>
 #include <raymath.h>
+#include <string.h>
 
 #include "lib.h"
 #include "save.h"
@@ -65,6 +77,20 @@ int collidingCellCoordinates(Cell *cells) {
     return 0;
 }
 
+// Adds layer to the list of names (for displaying current layer name)
+// and to the layers list. I hope it will work because I don't quite
+// understand how it's saved in terms of memory addresses.
+// It had worked previously, therefore I suppose address location
+// is a constant which is later saved to the list and can be
+// freely accessed.
+void addLayer(char *name, char namesList[MAX_LAYERS][MAX_INPUT_CHARS], int index, Rectangle **layers) {
+    printf("previous layer name: %s\n", namesList[index - 1]);
+    printf("pointer to name variable: %p\n", name);
+    strcpy(namesList[index], name);
+    Rectangle *newLayer = malloc(sizeof *newLayer * MATRIX_SIZE);
+    layers[index] = newLayer;
+}
+
 // Canvas data.
 void writeCellsCoordinates(Canvas *canvas, Cell *cells) {
     for (int i = 0; i < MATRIX_SIZE; i++) {
@@ -119,6 +145,13 @@ void drawCanvas(Canvas *canvas) {
     DrawRectangleLines(canvas->x, canvas->y, canvas->width, canvas->height, WHITE);
 }
 
+// Draws textbox
+void drawTextbox(Rectangle *textbox, char *name) {
+    DrawRectangleRec(*textbox, LIGHTGRAY);
+    DrawRectangleLines((int) textbox->x, (int) textbox->y, (int) textbox->width, (int) textbox->height, DARKGRAY);
+    DrawText(name, (int) textbox->x + 5, (int) textbox->y + 8, 40, MAROON);
+}
+
 int run() {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Homemade Food");
     SetTargetFPS(60);
@@ -128,6 +161,20 @@ int run() {
     bool isA;
     bool isD;
 
+    bool isALTTAB;
+    
+    // Text field
+    bool isCTRLN;
+    bool isBackspace;
+    bool isEnter;
+    bool toAddLayer = false;
+
+    char name[MAX_INPUT_CHARS + 1] = "\0";
+    int letterCount = 0;
+
+    Rectangle textBox = { SCREEN_WIDTH / 2.0f - 100, SCREEN_HEIGHT / 2.0f - 25, 225, 50 };
+
+    // Movement
     float moveX = 0;
     float moveY = 0;
 
@@ -147,7 +194,6 @@ int run() {
     Tile *tiles = malloc(sizeof *tiles * MATRIX_SIZE);
 
     // Collisions deserve a separate stuff.
-    Rectangle *collisions = malloc(sizeof *collisions * MATRIX_SIZE);
     int collisionsIndex = 0;
     int timesMousePressed = 0;
     int rectWidth;
@@ -155,6 +201,35 @@ int run() {
     float startX;
     float startY;
 
+    // Temporary layer stuff.
+    int maxLayers = 4;
+    int currentLayer = 0;
+    int savedLayers = 0;
+
+    char names[MAX_LAYERS][MAX_INPUT_CHARS]; // saving names for each layer.
+    strcpy(names[0], "collisions");
+    strcpy(names[1], "");
+    strcpy(names[2], "");
+    strcpy(names[3], "");
+
+    int collisionsIndexList[4];
+    collisionsIndexList[0] = 0;
+    collisionsIndexList[1] = 0;
+    collisionsIndexList[2] = 0;
+    collisionsIndexList[3] = 0;
+
+    int objCountInLayer[5];
+    objCountInLayer[0] = maxLayers; // max amount of layers
+
+    Rectangle **layers = malloc(sizeof **layers * objCountInLayer[0]);
+    Rectangle *collisions = malloc(sizeof *collisions * MATRIX_SIZE);
+
+    layers[0] = collisions;
+    layers[1] = NULL;
+    layers[2] = NULL;
+    layers[3] = NULL;
+
+    // Global camera
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
 
@@ -169,10 +244,15 @@ int run() {
     writeCellsCoordinates(&canvas, cells);
 
     while (!WindowShouldClose()) {
+        // Checking keyboard clicks.
         isW = IsKeyPressed(KEY_W);
         isS = IsKeyPressed(KEY_S);
         isA = IsKeyPressed(KEY_A);
         isD = IsKeyPressed(KEY_D);
+        isALTTAB = IsKeyDown(KEY_LEFT_ALT) && IsKeyPressed(KEY_TAB);
+        isCTRLN = IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_N);
+        isBackspace = IsKeyPressed(KEY_BACKSPACE);
+        isEnter = IsKeyPressed(KEY_ENTER);
 
         if (isA) moveX += -1;
         if (isD) moveX += 1;
@@ -182,10 +262,51 @@ int run() {
         currentTile.x = moveX * TILE_WIDTH;
         currentTile.y = moveY * TILE_HEIGHT;
 
+        if (isALTTAB) {
+            printf("previous layer: %s\n", names[currentLayer]);
+            currentLayer++;
+            currentLayer = currentLayer % maxLayers;
+            printf("current layer index: %d\n", currentLayer);
+            printf("current layer: %s\n", names[currentLayer]);
+        }
+
         if (IsKeyPressed(KEY_TAB)) {
             printf("State before: %d\n", state);
             state = (state + 1) % toolsAmount;
             printf("State after: %d\n", state);
+        }
+
+        if (isCTRLN) {
+            printf("CTRL-N is pressed");
+            toAddLayer = true;
+        }
+
+        if (toAddLayer) {
+            int key = GetCharPressed();
+
+            while (key > 0) {
+                if ((key > 32) && (key < 125) && letterCount < MAX_INPUT_CHARS) {
+                    name[letterCount] = (char) key;
+                    name[letterCount + 1] = '\0';
+                    letterCount++;
+                }
+
+                key = GetCharPressed();
+            }
+
+            if (isBackspace) {
+                letterCount--;
+                if (letterCount < 0) letterCount = 0;
+                name[letterCount] = '\0';
+            }
+
+            if (isEnter) {
+                if (savedLayers + 1 < MAX_LAYERS && name[0] != '\0') {
+                    addLayer(name, names, savedLayers + 1, layers);
+                    savedLayers++;
+                }
+                toAddLayer = false;
+            }
         }
 
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && state == 1) {
@@ -216,9 +337,14 @@ int run() {
         DrawTexture(*pTileset, 0, 0, WHITE);
         DrawRectangleLines(currentTile.x, currentTile.y, TILE_WIDTH, TILE_HEIGHT, GRAY);
 
+        if (toAddLayer) {
+            drawTextbox(&textBox, name);
+        }
+
         BeginMode2D(camera);
 
         drawSavedTiles(tiles, &savedTilesIndex);
+
 
         if (state == 0) {
             DrawTextureRec(*pTileset, currentTile,
@@ -261,12 +387,13 @@ int run() {
 
             // Saving collisions block.
             if (timesMousePressed % 3 == 2) {
+                collisionsIndex = collisionsIndexList[currentLayer];
                 printf("index: %d\n", collisionsIndex);
-                collisions[collisionsIndex].x = startX;
-                collisions[collisionsIndex].y = startY;
-                collisions[collisionsIndex].width = rectWidth;
-                collisions[collisionsIndex].height = rectHeight;
-                collisionsIndex++;
+                layers[currentLayer][collisionsIndex].x = startX;
+                layers[currentLayer][collisionsIndex].y = startY;
+                layers[currentLayer][collisionsIndex].width = rectWidth;
+                layers[currentLayer][collisionsIndex].height = rectHeight;
+                collisionsIndexList[currentLayer] += 1;
                 timesMousePressed += 1;
             }
         }
@@ -276,6 +403,11 @@ int run() {
         EndMode2D();
         EndDrawing();
     }
+
+    objCountInLayer[1] = collisionsIndexList[0];
+    objCountInLayer[2] = collisionsIndexList[1];
+    objCountInLayer[3] = collisionsIndexList[2];
+    objCountInLayer[4] = collisionsIndexList[3];
 
     UnloadTexture(*pTileset);
 
@@ -288,10 +420,11 @@ int run() {
     }
     printf("\n");
 
-    writeDataToXML(MATRIX_WIDTH, MATRIX_HEIGHT, (int*) tilemap, collisions, &collisionsIndex, TILE_WIDTH, TILE_HEIGHT);
+    writeDataToXML(MATRIX_WIDTH, MATRIX_HEIGHT, (int*) tilemap, layers, objCountInLayer, names, TILE_WIDTH, TILE_HEIGHT);
 
     free(cells);
     free(tiles);
+    free(layers);
     free(collisions);
 
     CloseWindow();

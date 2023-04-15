@@ -3,6 +3,6 @@
 
 #include "raylib.h"
 
-void writeDataToXML(int mat_w, int mat_h, int *tilemap, Rectangle *rectangles, int *sizeRect, int tile_w, int tile_h);
+void writeDataToXML(int mat_w, int mat_h, int *tilemap, Rectangle **layers, int *sizeRect, char names[4][11], int tile_w, int tile_h);
 
 #endif
