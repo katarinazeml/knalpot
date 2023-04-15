@@ -23,9 +23,10 @@
     Global State variable.
     0 - draw
     1 - move
-    2 - put collision blocks.
+    2 - put collision blocks
+    3 - eraser
 */
-int toolsAmount = 3;
+int toolsAmount = 4;
 int state = 0;
 
 // Ordinary matrix tilemap
@@ -129,6 +130,24 @@ void saveTileOnClick(Canvas *canvas, Tile *tiles, int *index, float *x, float *y
     tiles[*index].cam_relat_y = canvas->cam_relat_y;
     tiles[*index].tileset_x = *tile_x;
     tiles[*index].tileset_y = *tile_y;
+}
+
+// Deletes tile from the matrix.
+void deleteTile(Tile *tiles, int *tilesAmount,  float *x, float *y, int *cellIndex, int *tileIndex) {
+    // Resetting matrix
+    int col = *cellIndex % MATRIX_WIDTH;
+    int row = *cellIndex / MATRIX_WIDTH;
+    tCell = &tilemap[row][col];
+    if (*tCell != 0) {
+        *tCell = 0;
+    }
+
+    // Removing tile from tiles matrix
+    for (int i = 0; i < *tilesAmount; i++) {
+        if (tiles[i].x == *x && tiles[i].y == *y) {
+            tiles[i] = tiles[*tilesAmount];
+        }
+    }
 }
 
 // Draws all saved tiles
@@ -388,13 +407,25 @@ int run() {
             // Saving collisions block.
             if (timesMousePressed % 3 == 2) {
                 collisionsIndex = collisionsIndexList[currentLayer];
-                printf("index: %d\n", collisionsIndex);
+
                 layers[currentLayer][collisionsIndex].x = startX;
                 layers[currentLayer][collisionsIndex].y = startY;
                 layers[currentLayer][collisionsIndex].width = rectWidth;
                 layers[currentLayer][collisionsIndex].height = rectHeight;
+
                 collisionsIndexList[currentLayer] += 1;
                 timesMousePressed += 1;
+            }
+        }
+
+        if (state == 3) {
+            bool mousePressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+
+            DrawRectangleLines(cells[collidingCell].x, cells[collidingCell].y, TILE_WIDTH, TILE_HEIGHT, GRAY);
+
+            if (mousePressed) {
+                int tileIndex = (currentTile.x / TILE_WIDTH) + (5 * (currentTile.y) / 16) + 1;
+                deleteTile(tiles, &savedTilesIndex, &cells[collidingCell].x, &cells[collidingCell].y, &collidingCell, &tileIndex);
             }
         }
 
