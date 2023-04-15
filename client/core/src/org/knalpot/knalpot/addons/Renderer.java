@@ -54,6 +54,7 @@ public class Renderer {
     private World world;
     private Actor player;
     private Actor orb;
+    private Actor bullet;
 
     private Teleport teleport;
 
@@ -61,7 +62,7 @@ public class Renderer {
     private ClientProgram networking;
 
 	// ==== CAMERA ==== //
-    private OrthographicCamera camera;
+    public static OrthographicCamera camera;
     private static int CAMERA_WIDTH = 400;
     private static int CAMERA_HEIGHT = 400;
     private static final float CAMERA_SPEED = 5.0f;
@@ -149,6 +150,7 @@ public class Renderer {
         // Draw teleport animation
         teleport.render();
         orb.render(batch);
+        bullet.render(batch);
 
     	drawPlayer();
     	batch.end();

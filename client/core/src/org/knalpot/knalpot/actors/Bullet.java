@@ -12,6 +12,10 @@ public class Bullet extends Actor {
 
     private Orb orb;
 
+    private Vector2 targetPosition;
+    private float speed = 500;
+
+
     public Bullet(Orb orb){
         this.orb = orb;
         scaleSize = 2;
@@ -42,12 +46,29 @@ public class Bullet extends Actor {
         this.orb = orb;
     }
 
+
     @Override
     public void update(float dt) {
+        // Move the bullet towards the target position
+        Vector2 direction = targetPosition.cpy().sub(position).nor();
+        position.add(direction.scl(speed * dt));
+
+        // Check if the bullet has reached its target
+        if (position.dst(targetPosition) < 10) {
+            this.texture.dispose(); // Dispose of the bullet when it reaches its target
+        }
     }
 
     public void render(SpriteBatch batch) {
         batch.draw(texture, position.x, position.y);
+    }
+
+    public void setTargetPosition(float x, float y) {
+        targetPosition = new Vector2(x, y);
+    }
+
+    public boolean hasReachedTarget() {
+        return false;
     }
 }
 

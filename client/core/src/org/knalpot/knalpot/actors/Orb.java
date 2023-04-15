@@ -2,14 +2,18 @@ package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.addons.BBGenerator;
+import org.knalpot.knalpot.addons.Renderer;
+import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 
 public class Orb extends Actor {
@@ -28,6 +32,8 @@ public class Orb extends Actor {
     private float rotation;
 
     private boolean mustFloat;
+
+    private boolean isShooting;
 
     public Orb(Actor owner) {
         this.owner = owner;
@@ -56,9 +62,6 @@ public class Orb extends Actor {
         // Initialize levitation variables
         levitationTimer = 0;
         range = 3f;
-
-        // create the Bullet instance
-        bullet = new Bullet(this);
     }
 
     public Actor getOwner() {
@@ -71,11 +74,11 @@ public class Orb extends Actor {
 
     @Override
     public void update(float dt) {
-        // Calculate the target position for the camera.
+        // Calculate the target position for the orb.
         float targetX = owner.getPosition().x - owner.getWidth() * owner.direction;
         float targetY = owner.getPosition().y + owner.getHeight() / 2;
     
-        // Interpolate the camera's position towards the target position.
+        // Interpolate orb's position towards the target position.
         float dx = targetX - position.x;
         float dy = targetY - position.y;
     
@@ -104,16 +107,23 @@ public class Orb extends Actor {
             float levitationOffset = range * (float) Math.sin(levitationTimer * 2 * Math.PI);
             position.y = targetY + levitationOffset;
         }
-        // Check if B key is pressed
-        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            // Move the orb back for a short duration
+        // Bullet stuff
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             position.x -= 10f;
+            isShooting = true;
+            shoot(dt);
         }
-
         position.x += dx * speed * dt;
         bounds.setPosition(position.x, position.y);
     }
-    
+
+    public void shoot(float dt) {
+        // Set the target position of the bullet to the mouse click coordinates
+        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        Renderer.camera.unproject(mousePos);
+        bullet.setTargetPosition(mousePos.x, mousePos.y);
+        bullet.update(dt);
+    }
 
     public void render(SpriteBatch batch) {
         batch.draw(region, position.x, position.y, getWidth() / 2, getHeight() / 2, getWidth(), getHeight(), scaleSize, scaleSize, rotation, false);
