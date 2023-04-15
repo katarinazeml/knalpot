@@ -4,17 +4,23 @@ import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.addons.BBGenerator;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+
 public class Orb extends Actor {
+
     // Owner of the orb
     private Actor owner;
 
     private float speed = 5f;
+
+    // Bullet instance
+    private Bullet bullet;
 
     // Levitation variables
     private float levitationTimer;
@@ -50,6 +56,9 @@ public class Orb extends Actor {
         // Initialize levitation variables
         levitationTimer = 0;
         range = 3f;
+
+        // create the Bullet instance
+        bullet = new Bullet(this);
     }
 
     public Actor getOwner() {
@@ -65,25 +74,18 @@ public class Orb extends Actor {
         // Calculate the target position for the camera.
         float targetX = owner.getPosition().x - owner.getWidth() * owner.direction;
         float targetY = owner.getPosition().y + owner.getHeight() / 2;
-
+    
         // Interpolate the camera's position towards the target position.
         float dx = targetX - position.x;
         float dy = targetY - position.y;
-
-        // Does not work because orb position must be calculated
-        // according to viewport, not world.
-
-        // float tillMouseX = Gdx.input.getX() - position.x;
-        // float tillMouseY = (720 - Gdx.input.getY()) - position.y;
-        // double distance = Math.sqrt(Math.pow(tillMouseX, 2) + Math.pow(tillMouseY, 2));
-        // float rotation = (float) Math.asin(tillMouseY / distance);
-        // System.out.println("Calculating rotation");
-        // System.out.println(tillMouseX);
-        // System.out.println(tillMouseY);
-        // System.out.println(distance);
-        // System.out.println(rotation);
-        // System.out.println(Math.acos(Math.cos(tillMouseX / distance)));
-
+    
+        // Calculate the angle between the cursor position and the orb's position
+        float angle = (float) Math.atan2(Gdx.graphics.getHeight() - Gdx.input.getY() - position.y,
+                                         Gdx.input.getX() - position.x);
+    
+        // Convert the angle to degrees and subtract 90 degrees to account for the orientation of the orb's sprite
+        rotation = (float) Math.toDegrees(angle) - 90;
+    
         if (Math.abs((int) dx) == Math.abs((int) dy) && owner.state == State.IDLE) {
             mustFloat = true;
         } else {
@@ -93,7 +95,7 @@ public class Orb extends Actor {
         if ((int) dy != 0 && owner.state != State.IDLE) {
             mustFloat = false;
         }
-
+    
         if (mustFloat == true) {
             // Update levitation timer
             levitationTimer += dt;
@@ -102,12 +104,18 @@ public class Orb extends Actor {
             float levitationOffset = range * (float) Math.sin(levitationTimer * 2 * Math.PI);
             position.y = targetY + levitationOffset;
         }
+        // Check if B key is pressed
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            // Move the orb back for a short duration
+            position.x -= 10f;
+        }
 
         position.x += dx * speed * dt;
         bounds.setPosition(position.x, position.y);
     }
+    
 
     public void render(SpriteBatch batch) {
-        batch.draw(region, position.x, position.y, getWidth() / 2, getHeight() / 2, getWidth(), getHeight(), scaleSize, scaleSize, 0, false);
+        batch.draw(region, position.x, position.y, getWidth() / 2, getHeight() / 2, getWidth(), getHeight(), scaleSize, scaleSize, rotation, false);
     }
 }
