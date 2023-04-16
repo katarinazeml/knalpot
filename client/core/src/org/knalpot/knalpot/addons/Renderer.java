@@ -141,17 +141,23 @@ public class Renderer {
         camera.update();
 
     	batch.setProjectionMatrix(camera.combined);
+        // Draw background
     	batch.begin();
         drawBackground(targetX);
-
-        // Draw teleport animation
-        teleport.render();
-
-    	drawPlayer();
     	batch.end();
+        
+        // Draw teleport animation
+        batch.begin();
+        teleport.render();
+        batch.end();
 
         tiledRender.setView(camera);
         tiledRender.render();
+
+        // Draw player
+        batch.begin();
+    	drawPlayer();
+        batch.end();
     }
 
     /**

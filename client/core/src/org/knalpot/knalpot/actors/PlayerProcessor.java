@@ -91,6 +91,13 @@ public class PlayerProcessor {
                 if (player.getVelocity().y == 0f) canJump = true;
             }
         }
+
+        for (Static obj : world.platforms) {
+            if (resolvePlatformCollision(player, obj, dt)) {
+                if (player.getVelocity().y == 0f) canJump = true;
+            }
+        }
+
         player.previousDirection = player.direction;
         player.direction = moveInput;
         player.update(dt);
@@ -205,6 +212,23 @@ public class PlayerProcessor {
             // System.out.println(in.getVelocity().y + ":y before");
             in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
             // System.out.println(in.getVelocity().y + ":y after");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean resolvePlatformCollision(Actor in, Static platform, float dt) {
+        cn = new Vector2();
+        cp = new Vector2();
+        float contactTime = 0f;
+        if (player.DynamicAABB(in, platform, cp, cn, contactTime, dt)) {
+            cn = player.getContactNormal();
+            cp = player.getContactPoint();
+            t = player.getContactTime();
+
+            if (in.getVelocity().y < 0f) {
+                in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
+            }
             return true;
         }
         return false;
