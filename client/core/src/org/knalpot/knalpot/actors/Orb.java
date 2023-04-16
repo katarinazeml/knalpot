@@ -3,11 +3,9 @@ package org.knalpot.knalpot.actors;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.addons.BBGenerator;
 import org.knalpot.knalpot.addons.Renderer;
-import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,7 +21,6 @@ public class Orb extends Actor {
 
     private float speed = 5f;
 
-    // Bullet instance
     private Bullet bullet;
 
     // Levitation variables
@@ -62,6 +59,8 @@ public class Orb extends Actor {
         // Initialize levitation variables
         levitationTimer = 0;
         range = 3f;
+
+        bullet = new Bullet(this);
     }
 
     public Actor getOwner() {
@@ -107,10 +106,14 @@ public class Orb extends Actor {
             float levitationOffset = range * (float) Math.sin(levitationTimer * 2 * Math.PI);
             position.y = targetY + levitationOffset;
         }
-        // Bullet stuff
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+        //Bullet stuff
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             position.x -= 10f;
             isShooting = true;
+        } else {
+            isShooting = false;
+        }
+        if (isShooting) {
             shoot(dt);
         }
         position.x += dx * speed * dt;
@@ -118,11 +121,13 @@ public class Orb extends Actor {
     }
 
     public void shoot(float dt) {
-        // Set the target position of the bullet to the mouse click coordinates
-        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-        Renderer.camera.unproject(mousePos);
-        bullet.setTargetPosition(mousePos.x, mousePos.y);
-        bullet.update(dt);
+        if (bullet != null) {
+            // Set the target position of the bullet to the mouse click coordinates
+            Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            Renderer.camera.unproject(mousePos);
+            bullet.setTargetPosition(mousePos.x, mousePos.y);
+            bullet.update(dt);
+        }
     }
 
     public void render(SpriteBatch batch) {

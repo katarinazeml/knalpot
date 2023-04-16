@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Bullet;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
@@ -54,7 +55,7 @@ public class Renderer {
     private World world;
     private Actor player;
     private Actor orb;
-    private Actor bullet;
+    private Bullet bullet;
 
     private Teleport teleport;
 
@@ -169,6 +170,9 @@ public class Renderer {
     	batch.dispose();
         sky.dispose();
         teleport.swooshSound.dispose();
+        if (bullet.isDisposed) {
+            bullet.texture.dispose();
+        }
     }
 
     /**
