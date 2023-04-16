@@ -203,7 +203,7 @@ int run() {
     Vector2 globalPos = { 0 };
 
     // Drawing current tile.
-    *pImage = LoadImage("../grass.png");
+    *pImage = LoadImage("../atlas.png");
     *pTileset = LoadTextureFromImage(*pImage);
     UnloadImage(*pImage);
     Rectangle currentTile = { moveX, moveY, TILE_WIDTH, TILE_HEIGHT };

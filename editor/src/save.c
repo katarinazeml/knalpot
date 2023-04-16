@@ -39,7 +39,7 @@ void writeObjectData(FILE *f, Rectangle **layers, int *size, char names[4][11]) 
 // Writing tileset data (basically linking atlas.
 void writeTilesetData(FILE *f, int *mat_w, int *tile_w, int *tile_h) {
     fprintf(f, "<tileset tilewidth=\"%d\" tileheight=\"%d\" tilecount=\"%d\" columns=\"%d\">\n", *tile_w, *tile_h, 10, *mat_w);
-    fprintf(f, "<image source=\"%s\" width=\"%d\" height=\"%d\"/>\n", "grass.png", 80, 32);
+    fprintf(f, "<image source=\"%s\" width=\"%d\" height=\"%d\"/>\n", "atlas.png", 256, 256);
     fprintf(f, "</tileset>\n");
 }
 
