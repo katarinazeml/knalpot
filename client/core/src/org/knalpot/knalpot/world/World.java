@@ -35,6 +35,7 @@ public class World {
 	public TiledMap tiledMap;
 
 	public List<Static> collisionBlocks;
+	public List<Static> platforms;
 
 	//#region -- FUNCTIONS --
 	/**
@@ -43,6 +44,7 @@ public class World {
 	public World() {
 		tiledMap = new TmxMapLoader().load(tiledSrc);
 		collisionBlocks = new ArrayList<>();
+		platforms = new ArrayList<>();
 		initializeWorld();
 		initializeNetwork();
 	}
@@ -76,10 +78,16 @@ public class World {
 	private void initializeWorld() {
 		player = new Player(new Vector2(0, 200));
 
-		for (MapObject obj : tiledMap.getLayers().get(1).getObjects()) {
+		for (MapObject obj : tiledMap.getLayers().get("Collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
 			collisionBlocks.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
+		}
+
+		for (MapObject obj : tiledMap.getLayers().get("Platforms").getObjects()) {
+			RectangleMapObject rectObj = (RectangleMapObject) obj;
+			Rectangle rect = rectObj.getRectangle();
+			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
 		}
 	}
 

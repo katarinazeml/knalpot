@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Player.State;
-import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
 import org.knalpot.knalpot.world.World;
@@ -46,14 +45,6 @@ public class Renderer {
     private float animationTime = 0; // The time elapsed since the animation started
     private float frameDuration = 0.1f; // The duration of each frame in seconds
 
-    // Define variables for teleport animation
-    //private TextureRegion teleportRegion;
-    //private int teleportFrameWidth = 20; // The width of each frame in pixels
-    //private int teleportFrameHeight = 48; // The height of each frame in pixels
-    //private int teleportNumFrames = 6; // The number of frames in the sprite sheet
-    //private float teleportAnimationTime = 0; // The time elapsed since the animation started
-    //private float teleportFrameDuration = 0.1f; // The duration of each frame in seconds
-
 
     // ==== OBJECTS ==== //
     private SpriteBatch batch;
@@ -73,6 +64,7 @@ public class Renderer {
     private static int CAMERA_WIDTH = 400;
     private static int CAMERA_HEIGHT = 400;
     private static final float CAMERA_SPEED = 5.0f;
+
 
     // ==== SHORTCUTS ==== //
     float WW = Constants.WINDOW_WIDTH;
@@ -140,26 +132,32 @@ public class Renderer {
         camera.position.x += dx * CAMERA_SPEED * Gdx.graphics.getDeltaTime();
         camera.position.y += dy * CAMERA_SPEED * Gdx.graphics.getDeltaTime();
 
+        // Adjust the camera's position to place the lowest point of the screen at (0,0) coordinate
+        float minX = camera.viewportWidth / 2;
+        float minY = camera.viewportHeight / 2;
+        camera.position.x = Math.max(camera.position.x, minX);
+        camera.position.y = Math.max(camera.position.y, minY);
+
         camera.update();
 
     	batch.setProjectionMatrix(camera.combined);
+        // Draw background
     	batch.begin();
         drawBackground(targetX);
-
-        // Draw teleport animation
-        teleport.render();
-        //teleportAnimationTime += Gdx.graphics.getDeltaTime();
-        //int teleportFrameIndex = (int) (teleportAnimationTime / teleportFrameDuration) % teleportNumFrames;
-        //int teleportX = 0;
-        //int teleportY = 64;
-        //teleportRegion.setRegion(teleportFrameIndex * teleportFrameWidth, 0, teleportFrameWidth, teleportFrameHeight);
-        //batch.draw(teleportRegion, teleportX, teleportY);
-
-    	drawPlayer();
     	batch.end();
+        
+        // Draw teleport animation
+        batch.begin();
+        teleport.render();
+        batch.end();
 
         tiledRender.setView(camera);
         tiledRender.render();
+
+        // Draw player
+        batch.begin();
+    	drawPlayer();
+        batch.end();
     }
 
     /**
