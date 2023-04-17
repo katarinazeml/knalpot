@@ -2,17 +2,20 @@
 #include <raylib.h>
 
 // Saving customized matrix to XML file.
-void writeMatrixData(FILE *f, int *mat_w, int *mat_h, int *tilemap) {
-    fprintf(f, "<layer id=\"%d\" name=\"Tile Layer 1\" width=\"%d\" height=\"%d\">\n", 1, *mat_w, *mat_h);
+void writeMatrixData(FILE *f, int *mat_w, int *mat_h, int *matrixArray[], int *matrixArraySize) {
+    for (int i = 0; i < *matrixArraySize; i++) {
+        fprintf(f, "<layer id=\"%d\" name=\"Tile Layer 1\" width=\"%d\" height=\"%d\">\n", i, *mat_w, *mat_h);
         fprintf(f, "<data encoding=\"csv\">\n");
-        for (int i = 0; i < (*mat_w * *mat_h); i++) {    
-            fprintf(f, "%d,", tilemap[i]);
-            if (i != 0 && (i + 1) % *mat_w == 0) {
+        int *array = matrixArray[i];
+        for (int n = 0; n < (*mat_w * *mat_h); n++) {    
+            fprintf(f, "%d,", array[n]);
+            if (n != 0 && (n + 1) % *mat_w == 0) {
                 fprintf(f, "\n");
             }
         }
         fprintf(f, "</data>\n");
-    fprintf(f, "</layer>\n");
+        fprintf(f, "</layer>\n");
+    }
 }
 
 // Writing object data to the XML file (for collisions)
@@ -44,21 +47,21 @@ void writeTilesetData(FILE *f, int *mat_w, int *tile_w, int *tile_h) {
 }
 
 // General function for saving map data.
-void writeMapData(FILE *f, int *mat_w, int *mat_h, int *tilemap, Rectangle **layers, int *sizeRect, char names[4][11], int *tile_w, int *tile_h) {
+void writeMapData(FILE *f, int *mat_w, int *mat_h, int *matrixArray[], int *matrixArraySize, Rectangle **layers, int *sizeRect, char names[4][11], int *tile_w, int *tile_h) {
     fprintf(f, "<map width=\"%d\" height=\"%d\" tilewidth=\"%d\" tileheight=\"%d\">\n", *mat_w, *mat_h, *tile_w, *tile_h);
     writeTilesetData(f, mat_w, tile_w, tile_h);
-    writeMatrixData(f, mat_w, mat_h, tilemap);
+    writeMatrixData(f, mat_w, mat_h, matrixArray, matrixArraySize);
     writeObjectData(f, layers, sizeRect, names);
     fprintf(f, "</map>\n");
 }
 
 // Saving stuff to the XML file.
-void writeDataToXML(int mat_w, int mat_h, int *tilemap, Rectangle **layers, int *sizeRect, char names[4][11], int tile_w, int tile_h) {
+void writeDataToXML(int mat_w, int mat_h, int *matrixArray[], int *matrixArraySize, Rectangle **layers, int *sizeRect, char names[4][11], int tile_w, int tile_h) {
     FILE *f;
     f = fopen("../tilemap.xml", "w");
     fprintf(f, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 
-    writeMapData(f, &mat_w, &mat_h, tilemap, layers, sizeRect, names, &tile_w, &tile_h);
+    writeMapData(f, &mat_w, &mat_h, matrixArray, matrixArraySize, layers, sizeRect, names, &tile_w, &tile_h);
     
     fclose(f);
 }

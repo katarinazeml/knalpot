@@ -30,7 +30,13 @@ int toolsAmount = 4;
 int state = 0;
 
 // Ordinary matrix tilemap
-int tilemap[MATRIX_HEIGHT][MATRIX_WIDTH] = { 0 };
+int temp1[MATRIX_SIZE] = { 0 };
+int temp2[MATRIX_SIZE] = { 0 };
+int temp3[MATRIX_SIZE] = { 0 };
+int temp4[MATRIX_SIZE] = { 0 };
+
+// Array of matrixes for future use. Limited to 4 layers (currently).
+int *matrixArray[4];
 int *tCell;
 
 // Global scale value.
@@ -51,8 +57,6 @@ int *pTileIndex = &tileIndex;
 bool AABB(float *x, float *y, int *width, int *height) {
     if ((int) *x <= GetMouseX() && (int) *x + *width >= GetMouseX()
         && (int) *y <= GetMouseY() && (int) *y + *height >= GetMouseY()) {
-        // printf("Collision X:Y %f:%f\n", *x, *y);
-        // printf("Mouse X:Y %d:%d\n", GetMouseX(), GetMouseY());
         return true;
     }
     return false;
@@ -111,10 +115,9 @@ void writeCellsCoordinates(Canvas *canvas, Cell *cells) {
 }
 
 // Updates locally-generated matrix.
-bool updateMatrix(int *cellIndex, int *tilesetIndex) {
-    int col = *cellIndex % MATRIX_WIDTH;
-    int row = *cellIndex / MATRIX_WIDTH;
-    tCell = &tilemap[row][col];
+bool updateMatrix(int *cellIndex, int *tilesetIndex, int *currentMatrixLayer) {
+    printf("Colliding cell index: %d\n", *cellIndex);
+    tCell = &matrixArray[*currentMatrixLayer][*cellIndex];
     if (*tCell != *tilesetIndex) {
         *tCell = *tilesetIndex;
         return true;
@@ -133,11 +136,9 @@ void saveTileOnClick(Canvas *canvas, Tile *tiles, int *index, float *x, float *y
 }
 
 // Deletes tile from the matrix.
-void deleteTile(Tile *tiles, int *tilesAmount,  float *x, float *y, int *cellIndex, int *tileIndex) {
+void deleteTile(Tile *tiles, int *tilesAmount,  float *x, float *y, int *cellIndex, int *tileIndex, int *currentMatrixLayer) {
     // Resetting matrix
-    int col = *cellIndex % MATRIX_WIDTH;
-    int row = *cellIndex / MATRIX_WIDTH;
-    tCell = &tilemap[row][col];
+    tCell = &matrixArray[*currentMatrixLayer][*cellIndex];
     if (*tCell != 0) {
         *tCell = 0;
     }
@@ -179,8 +180,8 @@ int run() {
     bool isS;
     bool isA;
     bool isD;
-
     bool isALTTAB;
+    bool isNUM;
     
     // Text field
     bool isCTRLN;
@@ -248,6 +249,18 @@ int run() {
     layers[2] = NULL;
     layers[3] = NULL;
 
+    // Save matrices
+    int matrixArraySize = 4;
+    int currentMatrixLayer = 0;
+
+    // YES IT IS A BAD PRACTICE, I KNOW
+    // BUT I CANNOT HANDLE IT ANYMORE
+    // IT'LL BE HERE TILL I PORT THIS SHIT TO RUST
+    matrixArray[0] = temp1;
+    matrixArray[1] = temp2;
+    matrixArray[2] = temp3;
+    matrixArray[3] = temp4;
+
     // Global camera
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
@@ -272,6 +285,8 @@ int run() {
         isCTRLN = IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_N);
         isBackspace = IsKeyPressed(KEY_BACKSPACE);
         isEnter = IsKeyPressed(KEY_ENTER);
+        isNUM = IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_TWO) ||
+            IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_FOUR);
 
         if (isA) moveX += -1;
         if (isD) moveX += 1;
@@ -281,6 +296,15 @@ int run() {
         currentTile.x = moveX * TILE_WIDTH;
         currentTile.y = moveY * TILE_HEIGHT;
 
+        if (isNUM) {
+            printf("previous matrix layer: %d\n", currentMatrixLayer);
+            if (IsKeyPressed(KEY_ONE)) currentMatrixLayer = 0;
+            if (IsKeyPressed(KEY_TWO)) currentMatrixLayer = 1;
+            if (IsKeyPressed(KEY_THREE)) currentMatrixLayer = 2;
+            if (IsKeyPressed(KEY_FOUR)) currentMatrixLayer = 3;
+            printf("current matrix layer: %d\n", currentMatrixLayer);
+        }
+
         if (isALTTAB) {
             printf("previous layer: %s\n", names[currentLayer]);
             currentLayer++;
@@ -289,7 +313,7 @@ int run() {
             printf("current layer: %s\n", names[currentLayer]);
         }
 
-        if (IsKeyPressed(KEY_TAB)) {
+        if (IsKeyPressed(KEY_TAB) && !IsKeyDown(KEY_LEFT_ALT)) {
             printf("State before: %d\n", state);
             state = (state + 1) % toolsAmount;
             printf("State after: %d\n", state);
@@ -369,8 +393,9 @@ int run() {
             DrawTextureRec(*pTileset, currentTile,
                 (Vector2) { cells[collidingCell].x, cells[collidingCell].y }, WHITE);
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-                int tileIndex = (currentTile.x / TILE_WIDTH) + (5 * (currentTile.y) / 16) + 1;
-                bool notFilledCell = updateMatrix(&collidingCell, &tileIndex);
+                int tileIndex = (currentTile.x / TILE_WIDTH) + (MAX_ALTAS_TILES_AMOUNT * (currentTile.y) / 16) + 1;
+                printf("Current tile index: %d\n", tileIndex);
+                bool notFilledCell = updateMatrix(&collidingCell, &tileIndex, &currentMatrixLayer);
                 printf("Is this cell empty? %s\n", notFilledCell ? "true" : "false");
                 if (notFilledCell) {
                     saveTileOnClick(&canvas, tiles, &savedTilesIndex,
@@ -425,7 +450,7 @@ int run() {
 
             if (mousePressed) {
                 int tileIndex = (currentTile.x / TILE_WIDTH) + (5 * (currentTile.y) / 16) + 1;
-                deleteTile(tiles, &savedTilesIndex, &cells[collidingCell].x, &cells[collidingCell].y, &collidingCell, &tileIndex);
+                deleteTile(tiles, &savedTilesIndex, &cells[collidingCell].x, &cells[collidingCell].y, &collidingCell, &tileIndex, &currentMatrixLayer);
             }
         }
 
@@ -442,16 +467,18 @@ int run() {
 
     UnloadTexture(*pTileset);
 
-    /* Display the matrix */
-    for (int i = 0; i < MATRIX_HEIGHT; i++) {
-        for (int j = 0; j < MATRIX_WIDTH; j++) {
-            printf ("%d ", tilemap[i][j]);
+    for (int i = 0; i < matrixArraySize; i++) {
+        int *array = matrixArray[i];
+        for (int n = 0; n < MATRIX_SIZE; n++) {    
+            printf("%d,", array[n]);
+            if (n != 0 && (n + 1) % MATRIX_WIDTH == 0) {
+                printf("\n");
+            }
         }
-        printf ("\n");
+        printf("\n");
     }
-    printf("\n");
 
-    writeDataToXML(MATRIX_WIDTH, MATRIX_HEIGHT, (int*) tilemap, layers, objCountInLayer, names, TILE_WIDTH, TILE_HEIGHT);
+    writeDataToXML(MATRIX_WIDTH, MATRIX_HEIGHT, matrixArray, &matrixArraySize, layers, objCountInLayer, names, TILE_WIDTH, TILE_HEIGHT);
 
     free(cells);
     free(tiles);
