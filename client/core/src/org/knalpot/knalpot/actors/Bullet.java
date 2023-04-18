@@ -4,7 +4,6 @@ import org.knalpot.knalpot.addons.BBGenerator;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bullet extends Actor {

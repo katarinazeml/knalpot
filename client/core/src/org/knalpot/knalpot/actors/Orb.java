@@ -119,12 +119,7 @@ public class Orb extends Actor {
         }
 
         //Bullet stuff
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-
-            isShooting = true;
-        } else {
-            isShooting = false;
-        }
+        isShooting = Gdx.input.isButtonJustPressed(Input.Buttons.LEFT);
 
         if (isShooting) {
             shoot(dt, rotation);
@@ -139,6 +134,9 @@ public class Orb extends Actor {
     }
 
     public void shoot(float dt, float angle) {
+        float sine = (float) -Math.sin(Math.toRadians(angle));
+        float cosine = (float) Math.cos(Math.toRadians(angle));
+        position.add(-sine * 10f, -cosine * 10f);
         bullets.add(new Bullet(this, angle));
         isShooting = false;
     }
