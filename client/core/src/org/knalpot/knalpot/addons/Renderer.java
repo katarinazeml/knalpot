@@ -125,6 +125,8 @@ public class Renderer {
      */
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
+
+        bullet.bulletPosition.add(bullet.bulletVelocity);
         
         // Calculate the target position for the camera.
         float targetX = player.getPosition().x + player.getWidth() / 2;

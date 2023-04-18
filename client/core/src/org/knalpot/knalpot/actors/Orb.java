@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -114,20 +115,26 @@ public class Orb extends Actor {
             isShooting = false;
         }
         if (isShooting) {
-            shoot(dt);
+            shoot(angle);
+            bullet.update(dt);
+            isShooting = false;
         }
         position.x += dx * speed * dt;
         bounds.setPosition(position.x, position.y);
     }
 
-    public void shoot(float dt) {
-        if (bullet != null) {
-            // Set the target position of the bullet to the mouse click coordinates
-            Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-            Renderer.camera.unproject(mousePos);
-            bullet.setTargetPosition(mousePos.x, mousePos.y);
-            bullet.update(dt);
-        }
+    //public void shoot(float dt) {
+    //    if (bullet != null) {
+    //        // Set the target position of the bullet to the mouse click coordinates
+    //        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+    //        Renderer.camera.unproject(mousePos);
+    //        bullet.setTargetPosition(mousePos.x, mousePos.y);
+    //        bullet.update(dt);
+    //    }
+    //}
+    public void shoot(float angle) {
+        bullet.position.set(position.x + WIDTH / 2, position.y + HEIGHT * 7 / 20);
+        bullet.bulletVelocity.set(angle * 12, MathUtils.sin(angle) * 12);
     }
 
     public void render(SpriteBatch batch) {
