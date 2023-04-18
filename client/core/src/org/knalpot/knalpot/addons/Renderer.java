@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Orb;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
@@ -18,6 +19,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 
 /**
@@ -54,8 +57,10 @@ public class Renderer {
     private World world;
     private Actor player;
     private Actor orb;
-
     private Teleport teleport;
+
+    // ==== MOUSE MANIPULATION ==== //
+    private Vector3 mousePos;
 
     // ==== NETWORKING ==== //
     private ClientProgram networking;
@@ -89,8 +94,12 @@ public class Renderer {
     public Renderer(World world) {
     	this.world = world;
 
+        // Initializing Vector2 with mouse coordinates
+        mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+
         // Create and setup camera.
     	camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT * (WH / WW));
+        camera.unproject(mousePos);
         camera.update();
 
         // Initialize spritebatch.
@@ -98,6 +107,8 @@ public class Renderer {
         player = this.world.getPlayer();
         orb = this.world.getOrb();
         networking = this.world.getClientProgram();
+
+        ((Orb) orb).setMousePos(mousePos);
 
         // Load other objects' textures.
         loadTextures();
@@ -123,7 +134,7 @@ public class Renderer {
      */
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
-        
+
         // Calculate the target position for the camera.
         float targetX = player.getPosition().x + player.getWidth() / 2;
         float targetY = player.getPosition().y + player.getHeight() / 2;
@@ -141,6 +152,11 @@ public class Renderer {
         camera.position.y = Math.max(camera.position.y, minY);
 
         camera.update();
+
+        mousePos.x = Gdx.input.getX();
+        mousePos.y =  Gdx.input.getY();
+
+        camera.unproject(mousePos);
 
     	batch.setProjectionMatrix(camera.combined);
     	batch.begin();

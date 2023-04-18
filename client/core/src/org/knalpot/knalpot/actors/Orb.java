@@ -13,11 +13,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class Orb extends Actor {
 
     // Owner of the orb
     private Actor owner;
+
+    private Vector3 mousePos;
 
     private float speed = 5f;
 
@@ -27,7 +30,6 @@ public class Orb extends Actor {
     private float rotation;
 
     private boolean mustFloat;
-
     private boolean isShooting;
 
     private List<Bullet>  bullets;
@@ -71,8 +73,16 @@ public class Orb extends Actor {
         this.owner = owner;
     }
 
+    public void setMousePos(Vector3 mousePos) {
+        this.mousePos = mousePos;
+    }
+
     @Override
     public void update(float dt) {
+        System.out.println("Mouse position:");
+        System.out.println(mousePos.x);
+        System.out.println(mousePos.y);
+
         // Calculate the target position for the orb.
         float targetX = owner.getPosition().x - owner.getWidth() * owner.direction;
         float targetY = owner.getPosition().y + owner.getHeight() / 2;
@@ -129,8 +139,8 @@ public class Orb extends Actor {
         bounds.setPosition(position.x, position.y);
     }
 
-    public void shoot(float dt, float angle) {
-        bullets.add(new Bullet(this, angle));
+    public void shoot(float dt, float rotation) {
+        bullets.add(new Bullet(this, rotation));
         isShooting = false;
     }
 

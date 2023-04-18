@@ -38,16 +38,12 @@ public class Bullet extends Actor {
 
     @Override
     public void update(float dt) {
-        System.out.println(angle);
-        velocity.set(angle * 100f, MathUtils.sin(angle) * 100f);
+        // System.out.println(angle);
+        velocity.set(angle * 500f, MathUtils.sin(angle) * 100f);
         position.add(velocity.x * dt, velocity.y * dt);
     }
 
     public void render(SpriteBatch batch) {
         batch.draw(texture, position.x, position.y);
-    }
-
-    public void setTargetPosition(float x, float y) {
-        // targetPosition = new Vector2(x, y);
     }
 }
