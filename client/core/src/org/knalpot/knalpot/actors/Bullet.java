@@ -38,8 +38,9 @@ public class Bullet extends Actor {
 
     @Override
     public void update(float dt) {
-        // System.out.println(angle);
-        velocity.set(angle * 500f, MathUtils.sin(angle) * 100f);
+        float sine = (float) -Math.sin(Math.toRadians(angle));
+        float cosine = (float) Math.cos(Math.toRadians(angle));
+        velocity.set((sine * 100f), (cosine * 100f));
         position.add(velocity.x * dt, velocity.y * dt);
     }
 

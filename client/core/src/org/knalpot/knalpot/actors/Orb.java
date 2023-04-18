@@ -11,6 +11,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -92,12 +93,12 @@ public class Orb extends Actor {
         float dy = targetY - position.y;
     
         // Calculate the angle between the cursor position and the orb's position
-        float angle = (float) Math.atan2(Gdx.graphics.getHeight() - Gdx.input.getY() - position.y,
-                                         Gdx.input.getX() - position.x);
+        float angle = (float) MathUtils.atan2(mousePos.y - position.y,
+                                         mousePos.x - position.x);
     
         // Convert the angle to degrees and subtract 90 degrees to account for the orientation of the orb's sprite
-        rotation = (float) Math.toDegrees(angle) - 90;
-    
+        rotation = (angle * MathUtils.radiansToDegrees + 270) % 360;
+
         if (Math.abs((int) dx) == Math.abs((int) dy) && owner.state == State.IDLE) {
             mustFloat = true;
         } else {
@@ -119,17 +120,15 @@ public class Orb extends Actor {
 
         //Bullet stuff
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            position.x -= 10f;
+
             isShooting = true;
         } else {
             isShooting = false;
         }
 
         if (isShooting) {
-            shoot(dt, angle);
+            shoot(dt, rotation);
         }
-
-        System.out.println(bullets.size());
         
         for (Bullet bullet : bullets) {
             bullet.update(dt);
@@ -139,8 +138,8 @@ public class Orb extends Actor {
         bounds.setPosition(position.x, position.y);
     }
 
-    public void shoot(float dt, float rotation) {
-        bullets.add(new Bullet(this, rotation));
+    public void shoot(float dt, float angle) {
+        bullets.add(new Bullet(this, angle));
         isShooting = false;
     }
 
