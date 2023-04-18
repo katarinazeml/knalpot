@@ -31,7 +31,7 @@ public class World {
 	//#endregion
 
 	// Tilemap temporary stuff
-	private String tiledSrc = "level1/untitled1.tmx";
+	private String tiledSrc = "level1/simpleLevel.tmx";
 	public TiledMap tiledMap;
 
 	public List<Static> collisionBlocks;
@@ -76,7 +76,7 @@ public class World {
 	 * Initializes all object needed for this 'world'.
 	 */
 	private void initializeWorld() {
-		player = new Player(new Vector2(0, 200));
+		player = new Player(new Vector2(100, 200));
 
 		for (MapObject obj : tiledMap.getLayers().get("Collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;

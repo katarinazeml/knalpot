@@ -33,7 +33,7 @@ public class Renderer {
     //#region -- VARIABLES --
 
     // Temporary
-    private String tiledSrc = "level1/untitled1.tmx";
+    private String tiledSrc = "level1/simpleLevel.tmx";
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer tiledRender;
 
@@ -100,7 +100,7 @@ public class Renderer {
         // Load other objects' textures.
         loadTextures();
         loadTiledMap();
-        teleport = new Teleport(20, 48, 20, 112, batch);
+        teleport = new Teleport(20, 48, 800, 176, batch);
     }
 
     /**
@@ -200,7 +200,7 @@ public class Renderer {
         //Texture spriteSheet1 = new Texture("teleportanimation.png");
         //teleportRegion = new TextureRegion(spriteSheet1);
 
-        cloud = new ParallaxLayer(cloudTexture, camera, 0.7f, 0.25f);
+        cloud = new ParallaxLayer(cloudTexture, camera, 0.5f, 0.25f);
         darkGrass = new ParallaxLayer(darkGrassTexture, camera, 0.2f, 0.4f);
         lightGrass = new ParallaxLayer(lightGrassTexture, camera, 0.2f, 0.2f);
     }
@@ -262,6 +262,11 @@ public class Renderer {
         cloud.render(batch, targetX, 0);
         darkGrass.render(batch, targetX, 0);
         lightGrass.render(batch, targetX, 0);
+
+        batch.draw(new Texture("level1/rocks.png"), 300, 128, 64, 64);
+        batch.draw(new Texture("level1/tree1.png"), 500, 256, 56 * 3, 77 * 3);
+        batch.draw(new Texture("level1/tree2.png"), 200, 128,26 * 3, 41 * 3);
+        batch.draw(new Texture("level1/rocks.png"), 483, 192, 64, 64);
     }
     //#endregion
 }
