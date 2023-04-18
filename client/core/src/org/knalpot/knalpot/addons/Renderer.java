@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
-import org.knalpot.knalpot.actors.Bullet;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
@@ -55,7 +54,6 @@ public class Renderer {
     private World world;
     private Actor player;
     private Actor orb;
-    private Bullet bullet;
 
     private Teleport teleport;
 
@@ -125,8 +123,6 @@ public class Renderer {
      */
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
-
-        bullet.bulletPosition.add(bullet.bulletVelocity);
         
         // Calculate the target position for the camera.
         float targetX = player.getPosition().x + player.getWidth() / 2;
@@ -153,7 +149,6 @@ public class Renderer {
         // Draw teleport animation
         teleport.render();
         orb.render(batch);
-        bullet.render(batch);
 
     	drawPlayer();
     	batch.end();
@@ -172,9 +167,6 @@ public class Renderer {
     	batch.dispose();
         sky.dispose();
         teleport.swooshSound.dispose();
-        if (bullet.isDisposed) {
-            bullet.texture.dispose();
-        }
     }
 
     /**

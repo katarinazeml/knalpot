@@ -1,19 +1,18 @@
 package org.knalpot.knalpot.actors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.addons.BBGenerator;
-import org.knalpot.knalpot.addons.Renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-
 
 public class Orb extends Actor {
 
@@ -21,8 +20,6 @@ public class Orb extends Actor {
     private Actor owner;
 
     private float speed = 5f;
-
-    private Bullet bullet;
 
     // Levitation variables
     private float levitationTimer;
@@ -32,6 +29,8 @@ public class Orb extends Actor {
     private boolean mustFloat;
 
     private boolean isShooting;
+
+    private List<Bullet>  bullets;
 
     public Orb(Actor owner) {
         this.owner = owner;
@@ -61,7 +60,7 @@ public class Orb extends Actor {
         levitationTimer = 0;
         range = 3f;
 
-        bullet = new Bullet(this);
+        bullets = new ArrayList<>();
     }
 
     public Actor getOwner() {
@@ -107,37 +106,39 @@ public class Orb extends Actor {
             float levitationOffset = range * (float) Math.sin(levitationTimer * 2 * Math.PI);
             position.y = targetY + levitationOffset;
         }
+
         //Bullet stuff
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             position.x -= 10f;
             isShooting = true;
         } else {
             isShooting = false;
         }
+
         if (isShooting) {
-            shoot(angle);
-            bullet.update(dt);
-            isShooting = false;
+            shoot(dt, angle);
         }
+
+        System.out.println(bullets.size());
+        
+        for (Bullet bullet : bullets) {
+            bullet.update(dt);
+        }
+
         position.x += dx * speed * dt;
         bounds.setPosition(position.x, position.y);
     }
 
-    //public void shoot(float dt) {
-    //    if (bullet != null) {
-    //        // Set the target position of the bullet to the mouse click coordinates
-    //        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-    //        Renderer.camera.unproject(mousePos);
-    //        bullet.setTargetPosition(mousePos.x, mousePos.y);
-    //        bullet.update(dt);
-    //    }
-    //}
-    public void shoot(float angle) {
-        bullet.position.set(position.x + WIDTH / 2, position.y + HEIGHT * 7 / 20);
-        bullet.bulletVelocity.set(angle * 12, MathUtils.sin(angle) * 12);
+    public void shoot(float dt, float angle) {
+        bullets.add(new Bullet(this, angle));
+        isShooting = false;
     }
 
     public void render(SpriteBatch batch) {
         batch.draw(region, position.x, position.y, getWidth() / 2, getHeight() / 2, getWidth(), getHeight(), scaleSize, scaleSize, rotation, false);
+        
+        for (Bullet bullet : bullets) {
+            bullet.render(batch);
+        }
     }
 }

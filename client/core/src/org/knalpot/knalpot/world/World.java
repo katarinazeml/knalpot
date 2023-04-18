@@ -88,7 +88,6 @@ public class World {
 	private void initializeWorld() {
 		player = new Player(new Vector2(0, 200));
 		orb = new Orb(player);
-		bullet = new Bullet(orb);
 
 		for (MapObject obj : tiledMap.getLayers().get(1).getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
