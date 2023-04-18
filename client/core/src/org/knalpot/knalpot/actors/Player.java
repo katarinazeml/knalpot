@@ -16,6 +16,8 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Player extends Actor {
     //#region -- VARIABLES --
+    
+    private Enemy enemy;
 
     // no comments //
     public enum State {
@@ -56,6 +58,9 @@ public class Player extends Actor {
         Right = (int) (bounds.x + bounds.width);
         Bottom = (int) bounds.y;
         Top = (int) (bounds.y + bounds.height);
+
+        enemy = new Enemy(new Vector2(100, 100), this);
+
     }
 
     public void update(float dt) {
@@ -67,6 +72,7 @@ public class Player extends Actor {
         Right = (int) bounds.x + WIDTH;
         Bottom = (int) bounds.y;
         Top = (int) bounds.y + HEIGHT;
+        enemy.update(dt);
     }
     //#endregion
 }

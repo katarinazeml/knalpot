@@ -53,6 +53,7 @@ public class Renderer {
 
     private World world;
     private Actor player;
+    private Actor enemy;
 
     private Teleport teleport;
 
@@ -76,6 +77,7 @@ public class Renderer {
     private ParallaxLayer cloud;
     private ParallaxLayer darkGrass;
     private ParallaxLayer lightGrass;
+    private Texture enemyTexture;
        
     //#endregion
 
@@ -95,6 +97,7 @@ public class Renderer {
         // Initialize spritebatch.
         batch = new SpriteBatch();
         player = this.world.getPlayer();
+        enemy = this.world.getEnemy();
         networking = this.world.getClientProgram();
 
         // Load other objects' textures.
@@ -158,6 +161,11 @@ public class Renderer {
         batch.begin();
     	drawPlayer();
         batch.end();
+
+        //Draw enemy
+        batch.begin();
+        drawEnemy();
+        batch.end();
     }
 
     /**
@@ -170,6 +178,7 @@ public class Renderer {
     	batch.dispose();
         sky.dispose();
         teleport.swooshSound.dispose();
+        enemyTexture.dispose();
     }
 
     /**
@@ -188,6 +197,7 @@ public class Renderer {
     private void loadTextures() {
     	playerTexture = new Texture("player.png");
         staticTexture = new Texture("collision.png");
+        enemyTexture = new Texture("jesus.png");
         sky = new Texture("CloudsGrassWallpaperSky.png");
 
         Texture cloudTexture = new Texture("CloudsGrassWallpaperCloud.png");
@@ -263,10 +273,14 @@ public class Renderer {
         darkGrass.render(batch, targetX, 0);
         lightGrass.render(batch, targetX, 0);
 
-        batch.draw(new Texture("level1/rocks.png"), 300, 128, 64, 64);
-        batch.draw(new Texture("level1/tree1.png"), 500, 256, 56 * 3, 77 * 3);
-        batch.draw(new Texture("level1/tree2.png"), 200, 128,26 * 3, 41 * 3);
-        batch.draw(new Texture("level1/rocks.png"), 483, 192, 64, 64);
+        //batch.draw(new Texture("level1/rocks.png"), 300, 128, 64, 64);
+        //batch.draw(new Texture("level1/tree1.png"), 500, 256, 56 * 3, 77 * 3);
+        //batch.draw(new Texture("level1/tree2.png"), 200, 128,26 * 3, 41 * 3);
+        //batch.draw(new Texture("level1/rocks.png"), 483, 192, 64, 64);
+    }
+
+    private void drawEnemy() {
+        batch.draw(enemyTexture, enemy.getPosition().x, enemy.getPosition().y);
     }
     //#endregion
 }
