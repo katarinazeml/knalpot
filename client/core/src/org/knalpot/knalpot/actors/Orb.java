@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.addons.BBGenerator;
+import org.knalpot.knalpot.addons.ParticleGenerator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,6 +22,7 @@ public class Orb extends Actor {
 
     // Owner of the orb
     private Actor owner;
+    private ParticleGenerator particles;
 
     private Vector3 mousePos;
 
@@ -64,6 +67,7 @@ public class Orb extends Actor {
         range = 3f;
 
         bullets = new ArrayList<>();
+        particles = new ParticleGenerator(this.position);
     }
 
     public Actor getOwner() {
@@ -80,10 +84,6 @@ public class Orb extends Actor {
 
     @Override
     public void update(float dt) {
-        System.out.println("Mouse position:");
-        System.out.println(mousePos.x);
-        System.out.println(mousePos.y);
-
         // Calculate the target position for the orb.
         float targetX = owner.getPosition().x - owner.getWidth() * owner.direction;
         float targetY = owner.getPosition().y + owner.getHeight() / 2;
@@ -131,6 +131,7 @@ public class Orb extends Actor {
 
         position.x += dx * speed * dt;
         bounds.setPosition(position.x, position.y);
+        particles.update(dt);
     }
 
     public void shoot(float dt, float angle) {
@@ -141,11 +142,16 @@ public class Orb extends Actor {
         isShooting = false;
     }
 
-    public void render(SpriteBatch batch) {
-        batch.draw(region, position.x, position.y, getWidth() / 2, getHeight() / 2, getWidth(), getHeight(), scaleSize, scaleSize, rotation, false);
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        batch.end();
+        particles.draw(camera);
+        batch.begin();
+
+        batch.draw(region, position.x, position.y, getWidth() / 2, getHeight() / 2, getWidth(), getHeight(), scaleSize, scaleSize, rotation, false);        
         
         for (Bullet bullet : bullets) {
             bullet.render(batch);
         }
+
     }
 }
