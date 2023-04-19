@@ -28,7 +28,7 @@ public class Enemy extends Actor {
     }
     
     private void moveTowardsTarget(float dt) {
-        float speed = 100f;
+        float speed = 50f;
         Vector2 targetVelocity = player.getPosition().cpy().sub(position).nor().scl(speed);
         Vector2 targetAcceleration = targetVelocity.cpy().sub(velocity).scl(1/dt);
         acceleration = targetAcceleration;

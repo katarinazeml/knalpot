@@ -11,8 +11,8 @@ import org.knalpot.knalpot.actors.Player;
 import org.knalpot.knalpot.networking.*;
 
 public class Network extends Listener {
-    String ip = "localhost";
-    public static int port = 8080;
+    String ip = "193.40.156.27";
+    public static int port = 8084;
     private Client client = new Client();
 
     public Client getClient() {
@@ -44,7 +44,6 @@ public class Network extends Listener {
         client.getKryo().register(Player.State.class);
     }
     
-
     public void received(Connection c, Object o){
         if (o instanceof PacketAddPlayer) {
             PacketAddPlayer packet = (PacketAddPlayer) o;

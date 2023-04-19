@@ -58,7 +58,7 @@ public class Actor {
     //#region -- GET/SET --
     // ==== GETTERS ==== //
     public Vector2 getPosition() {
-        return position.cpy();
+        return position;
     }
 
     public Vector2 getAcceleration() {
