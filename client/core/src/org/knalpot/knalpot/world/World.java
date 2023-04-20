@@ -65,10 +65,6 @@ public class World {
 		return orb;
 	}
 
-	public Bullet gBullet(){
-		return bullet;
-	}
-
 	/**
 	 * @return ClientProgram
 	 */

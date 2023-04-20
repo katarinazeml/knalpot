@@ -10,6 +10,7 @@ public class Bullet extends Actor {
 
     private Orb orb;
     private float angle;
+    private float speed = 500f;
 
     public Bullet(Orb orb, float angle){
         super();
@@ -39,7 +40,7 @@ public class Bullet extends Actor {
     public void update(float dt) {
         float sine = (float) -Math.sin(Math.toRadians(angle));
         float cosine = (float) Math.cos(Math.toRadians(angle));
-        velocity.set((sine * 100f), (cosine * 100f));
+        velocity.set((sine * speed), (cosine * speed));
         position.add(velocity.x * dt, velocity.y * dt);
     }
 

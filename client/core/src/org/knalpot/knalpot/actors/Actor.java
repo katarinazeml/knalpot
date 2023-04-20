@@ -20,7 +20,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Actor {
     //#region -- VARIABLES --
 
-    // ==== TEXTYRES ==== //
+    // ==== TEXTURES ==== //
     protected Texture texture;
     protected TextureRegion region;
     protected int[] BBSize;
@@ -56,6 +56,9 @@ public class Actor {
     // ==== TEMPORARY STATE MACHINE ==== //
     public State state;
     public State previousState;
+
+    // ==== ACTOR PROPERTIES  ==== //
+    protected int health;
 
     //#endregion
     //#region -- GET/SET --
