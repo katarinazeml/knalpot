@@ -197,7 +197,7 @@ public class Renderer {
     private void loadTextures() {
     	playerTexture = new Texture("player.png");
         staticTexture = new Texture("collision.png");
-        enemyTexture = new Texture("jesus.png");
+        enemyTexture = new Texture("lavamonster.png");
         sky = new Texture("CloudsGrassWallpaperSky.png");
 
         Texture cloudTexture = new Texture("CloudsGrassWallpaperCloud.png");

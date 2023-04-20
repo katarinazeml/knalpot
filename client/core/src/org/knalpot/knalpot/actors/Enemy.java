@@ -1,12 +1,15 @@
 package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.actors.Player.State;
+
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends Actor {
     
     private Player player;
+    private Texture texturelava;
     
     public Enemy(Vector2 position, Player player) {
         this.position = position;
