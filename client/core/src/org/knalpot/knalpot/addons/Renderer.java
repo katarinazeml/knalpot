@@ -162,17 +162,15 @@ public class Renderer {
     	batch.begin();
         drawBackground(targetX);
     	batch.end();
+
+        tiledRender.setView(camera);
+        tiledRender.render();
         
         // Draw teleport animation
         batch.begin();
         teleport.render();
         orb.render(batch);
-
-    	drawPlayer();
     	batch.end();
-
-        tiledRender.setView(camera);
-        tiledRender.render();
 
         // Draw player
         batch.begin();
