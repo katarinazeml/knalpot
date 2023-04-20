@@ -9,7 +9,6 @@ import org.knalpot.knalpot.addons.ParticleGenerator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,6 +17,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+/**
+ * {@code Orb} playes a major role in game. It acts as a defender of the player
+ * as well as attacking method by shooting little particles.
+ * One player can have multiple orbs, therefore he is able to combine
+ * his horsepower in order to defeat major waves of enemies.
+ * 
+ * @author Katarina Zemljanski
+ * @version 0.1
+ */
 public class Orb extends Actor {
 
     // Owner of the orb
@@ -27,6 +35,7 @@ public class Orb extends Actor {
     private Vector3 mousePos;
 
     private float speed = 5f;
+    private float shootKickback = 20f;
 
     // Levitation variables
     private float levitationTimer;
@@ -135,16 +144,17 @@ public class Orb extends Actor {
     }
 
     public void shoot(float dt, float angle) {
+        particles.setShooting(isShooting, angle);
         float sine = (float) -Math.sin(Math.toRadians(angle));
         float cosine = (float) Math.cos(Math.toRadians(angle));
-        position.add(-sine * 10f, -cosine * 10f);
+        position.add(-sine * shootKickback, -cosine * shootKickback);
         bullets.add(new Bullet(this, angle));
         isShooting = false;
     }
 
-    public void render(SpriteBatch batch, OrthographicCamera camera) {
+    public void render(SpriteBatch batch) {
         batch.end();
-        particles.draw(camera);
+        particles.draw(batch);
         batch.begin();
 
         batch.draw(region, position.x, position.y, getWidth() / 2, getHeight() / 2, getWidth(), getHeight(), scaleSize, scaleSize, rotation, false);        
