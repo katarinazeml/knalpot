@@ -65,6 +65,7 @@ public class PlayerProcessor {
         windowCollision(dt);
         horizontalMovement();
         verticalMovement();
+        changeState();
 
     	player.getAcceleration().scl(dt);
         // System.out.println("scalar Y accel:");
@@ -125,19 +126,13 @@ public class PlayerProcessor {
         boolean isRightPressed = Gdx.input.isKeyPressed(Constants.RIGHT_KEY);
         if (isLeftPressed) {
             moveInput = -1;
-            updateState();
-            player.state = Player.State.MOVE;
             move();
         }
         if (isRightPressed) {
             moveInput = 1;
-            updateState();
-            player.state = Player.State.MOVE;
             move();
         }
         if (((!isLeftPressed && !isRightPressed) || (isLeftPressed && isRightPressed))) {
-            updateState();
-            player.state = Player.State.IDLE;
             player.getVelocity().x = 0f;
         }        
     }
@@ -171,10 +166,38 @@ public class PlayerProcessor {
      */
     private void jump() {
         canJump = false;
-        // player.state = Player.State.JUMP;
     	player.getVelocity().y = JUMP_HEIGHT;
     }
     //#endregion
+
+    /**
+     * Changes player state according to its
+     * velocity data.
+     */
+    private void changeState() {
+        System.out.println("Player data for debugging X:Y:STATE");
+        System.out.println(player.getVelocity().x);
+        System.out.println(player.getVelocity().y);
+        System.out.println(player.state);
+        if (player.getVelocity().x == 0 && player.getVelocity().y == 0) {
+            updateState();
+            player.state = Player.State.IDLE;
+        }
+
+        if (player.getVelocity().x != 0f) {
+            updateState();
+            player.state = Player.State.MOVE;
+        }
+
+        if (player.getVelocity().y > 0) {
+            updateState();
+            player.state = Player.State.JUMP;
+        }
+        if (player.getVelocity().y < 0) {
+            updateState();
+            player.state = Player.State.FALL;
+        }
+    }
 
     //#region - COLLISIONS -
     /**

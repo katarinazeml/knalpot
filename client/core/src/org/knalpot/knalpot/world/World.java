@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Bullet;
+import org.knalpot.knalpot.actors.Orb;
 import org.knalpot.knalpot.actors.Player;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.networking.ClientProgram;
@@ -25,6 +27,8 @@ public class World {
 	//#region -- VARIABLES --
 	// ==== OBJECT VARIABLES ==== //
 	private Player player;
+	private Orb orb;
+	private Bullet bullet;
 
 	// ==== NETWORKING ==== //
 	private ClientProgram clientProgram;
@@ -57,6 +61,14 @@ public class World {
 		return player;
 	}
 
+	public Orb getOrb() {
+		return orb;
+	}
+
+	public Bullet gBullet(){
+		return bullet;
+	}
+
 	/**
 	 * @return ClientProgram
 	 */
@@ -77,6 +89,7 @@ public class World {
 	 */
 	private void initializeWorld() {
 		player = new Player(new Vector2(100, 200));
+		orb = new Orb(player);
 
 		for (MapObject obj : tiledMap.getLayers().get("Collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;

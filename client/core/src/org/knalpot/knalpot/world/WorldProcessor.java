@@ -37,6 +37,7 @@ public class WorldProcessor {
 	 */
 	public void update(float dt) {
 		playerProcessor.update(dt);
+		world.getOrb().update(dt);
 		clientProgram.updateNetwork();
 	}
 	//#endregion

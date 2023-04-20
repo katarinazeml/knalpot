@@ -5,19 +5,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Orb;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
 import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 
 
 /**
@@ -27,7 +28,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
  * <p>
  * Currently WIP, as it utilizes 'I say so' workflow. Must be modular.
  * @author Max Usmanov
- * @version 0.1
+ * @version 0.2
  */
 public class Renderer {
     //#region -- VARIABLES --
@@ -53,14 +54,17 @@ public class Renderer {
 
     private World world;
     private Actor player;
-
+    private Actor orb;
     private Teleport teleport;
+
+    // ==== MOUSE MANIPULATION ==== //
+    private Vector3 mousePos;
 
     // ==== NETWORKING ==== //
     private ClientProgram networking;
 
 	// ==== CAMERA ==== //
-    private OrthographicCamera camera;
+    public static OrthographicCamera camera;
     private static int CAMERA_WIDTH = 400;
     private static int CAMERA_HEIGHT = 400;
     private static final float CAMERA_SPEED = 5.0f;
@@ -88,14 +92,21 @@ public class Renderer {
     public Renderer(World world) {
     	this.world = world;
 
+        // Initializing Vector2 with mouse coordinates
+        mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+
         // Create and setup camera.
     	camera = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT * (WH / WW));
+        camera.unproject(mousePos);
         camera.update();
 
         // Initialize spritebatch.
         batch = new SpriteBatch();
         player = this.world.getPlayer();
+        orb = this.world.getOrb();
         networking = this.world.getClientProgram();
+
+        ((Orb) orb).setMousePos(mousePos);
 
         // Load other objects' textures.
         loadTextures();
@@ -120,8 +131,9 @@ public class Renderer {
      * Renders.
      */
     public void render() {
-        ScreenUtils.clear(0, 0, 0, 1);
-        
+        // ScreenUtils.clear(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+
         // Calculate the target position for the camera.
         float targetX = player.getPosition().x + player.getWidth() / 2;
         float targetY = player.getPosition().y + player.getHeight() / 2;
@@ -140,6 +152,11 @@ public class Renderer {
 
         camera.update();
 
+        mousePos.x = Gdx.input.getX();
+        mousePos.y =  Gdx.input.getY();
+
+        camera.unproject(mousePos);
+
     	batch.setProjectionMatrix(camera.combined);
         // Draw background
     	batch.begin();
@@ -149,7 +166,10 @@ public class Renderer {
         // Draw teleport animation
         batch.begin();
         teleport.render();
-        batch.end();
+        orb.render(batch);
+
+    	drawPlayer();
+    	batch.end();
 
         tiledRender.setView(camera);
         tiledRender.render();
@@ -227,10 +247,11 @@ public class Renderer {
             positionX = player.getPosition().x + player.getWidth() / player.getScale();
         }
 
-        if (player.state != State.IDLE) {
+        if (player.state == State.MOVE) {
             batch.draw(playerTextureRun, positionX, player.getPosition().y,
                 Math.signum(player.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
-        } else {
+        }
+        if (player.state != State.MOVE) {
             batch.draw(playerTexture, positionX, player.getPosition().y, Math.signum(player.direction) * player.getWidth(), player.getHeight());
         }
 

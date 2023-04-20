@@ -4,6 +4,8 @@ import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -20,6 +22,7 @@ public class Actor {
 
     // ==== TEXTYRES ==== //
     protected Texture texture;
+    protected TextureRegion region;
     protected int[] BBSize;
     protected int scaleSize;
 
@@ -37,8 +40,8 @@ public class Actor {
     public int previousDirection;
 
     // ==== SIZE ==== //
-    protected static int WIDTH;
-    protected static int HEIGHT;
+    protected int WIDTH;
+    protected int HEIGHT;
     
     // ==== VECTOR-BASED MOVEMENT VARIABLES ==== //
     protected Vector2 position;
@@ -250,4 +253,6 @@ public class Actor {
     }
     //#endregion
     //#endregion
+
+    public void render(SpriteBatch batch) { }
 }
