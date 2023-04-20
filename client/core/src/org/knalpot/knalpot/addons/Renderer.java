@@ -28,7 +28,7 @@ import com.badlogic.gdx.math.Vector3;
  * <p>
  * Currently WIP, as it utilizes 'I say so' workflow. Must be modular.
  * @author Max Usmanov
- * @version 0.1
+ * @version 0.2
  */
 public class Renderer {
     //#region -- VARIABLES --
@@ -163,7 +163,7 @@ public class Renderer {
 
         // Draw teleport animation
         teleport.render();
-        ((Orb) orb).render(batch, camera);
+        orb.render(batch);
 
     	drawPlayer();
     	batch.end();
