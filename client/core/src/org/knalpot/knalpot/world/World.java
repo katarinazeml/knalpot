@@ -35,10 +35,11 @@ public class World {
 	//#endregion
 
 	// Tilemap temporary stuff
-	private String tiledSrc = "level1/untitled1.tmx";
+	private String tiledSrc = "level1/simpleLevel.tmx";
 	public TiledMap tiledMap;
 
 	public List<Static> collisionBlocks;
+	public List<Static> platforms;
 
 	//#region -- FUNCTIONS --
 	/**
@@ -47,6 +48,7 @@ public class World {
 	public World() {
 		tiledMap = new TmxMapLoader().load(tiledSrc);
 		collisionBlocks = new ArrayList<>();
+		platforms = new ArrayList<>();
 		initializeWorld();
 		initializeNetwork();
 	}
@@ -86,13 +88,19 @@ public class World {
 	 * Initializes all object needed for this 'world'.
 	 */
 	private void initializeWorld() {
-		player = new Player(new Vector2(0, 200));
+		player = new Player(new Vector2(100, 200));
 		orb = new Orb(player);
 
-		for (MapObject obj : tiledMap.getLayers().get(1).getObjects()) {
+		for (MapObject obj : tiledMap.getLayers().get("Collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
 			collisionBlocks.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
+		}
+
+		for (MapObject obj : tiledMap.getLayers().get("Platforms").getObjects()) {
+			RectangleMapObject rectObj = (RectangleMapObject) obj;
+			Rectangle rect = rectObj.getRectangle();
+			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
 		}
 	}
 
