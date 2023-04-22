@@ -1,5 +1,6 @@
 package org.knalpot.knalpot.actors;
 
+import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.addons.BBGenerator;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -10,7 +11,7 @@ public class Bullet extends Actor {
 
     private Orb orb;
     private float angle;
-    private float speed = 500f;
+    private float speed = 1000f;
 
     public Bullet(Orb orb, float angle){
         super();

@@ -1,5 +1,6 @@
-package org.knalpot.knalpot.actors;
+package org.knalpot.knalpot.actors.player;
 
+import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.addons.BBGenerator;
 
 import com.badlogic.gdx.graphics.Texture;

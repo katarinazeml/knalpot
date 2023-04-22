@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.knalpot.knalpot.actors.Actor;
-import org.knalpot.knalpot.actors.Bullet;
-import org.knalpot.knalpot.actors.Orb;
-import org.knalpot.knalpot.actors.Player;
+import org.knalpot.knalpot.actors.orb.Orb;
+import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.networking.ClientProgram;
 
@@ -28,7 +27,6 @@ public class World {
 	// ==== OBJECT VARIABLES ==== //
 	private Player player;
 	private Orb orb;
-	private Bullet bullet;
 
 	// ==== NETWORKING ==== //
 	private ClientProgram clientProgram;

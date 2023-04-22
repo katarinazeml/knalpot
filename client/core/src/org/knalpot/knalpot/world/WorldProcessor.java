@@ -1,6 +1,6 @@
 package org.knalpot.knalpot.world;
 
-import org.knalpot.knalpot.actors.PlayerProcessor;
+import org.knalpot.knalpot.actors.player.PlayerProcessor;
 import org.knalpot.knalpot.networking.ClientProgram;
 
 /**

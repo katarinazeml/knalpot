@@ -1,5 +1,6 @@
-package org.knalpot.knalpot.actors;
+package org.knalpot.knalpot.actors.player;
 
+import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.addons.*;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.world.World;

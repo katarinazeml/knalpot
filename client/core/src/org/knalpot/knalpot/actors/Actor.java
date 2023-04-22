@@ -1,6 +1,6 @@
 package org.knalpot.knalpot.actors;
 
-import org.knalpot.knalpot.actors.Player.State;
+import org.knalpot.knalpot.actors.player.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 
 import com.badlogic.gdx.graphics.Texture;

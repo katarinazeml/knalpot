@@ -3,7 +3,7 @@ package org.knalpot.knalpot.networking;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.knalpot.knalpot.actors.Player;
+import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.world.Network;
 
 import com.badlogic.gdx.ApplicationAdapter;
