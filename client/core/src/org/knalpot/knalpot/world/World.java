@@ -6,6 +6,8 @@ import java.util.List;
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
+import org.knalpot.knalpot.hud.HUDProcessor;
+import org.knalpot.knalpot.hud.HUD.HUDType;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.networking.ClientProgram;
 
@@ -20,7 +22,7 @@ import com.badlogic.gdx.math.Vector2;
  * {@code World} is responsible for creating all required objects
  * and returning them when requested. Basically it is the heart of everything.
  * @author Max Usmanov
- * @version 0.1
+ * @version 0.2
  */
 public class World {
 	//#region -- VARIABLES --
@@ -39,6 +41,9 @@ public class World {
 	public List<Static> collisionBlocks;
 	public List<Static> platforms;
 
+	// ==== HUD ==== //
+	private HUDProcessor hud;
+
 	//#region -- FUNCTIONS --
 	/**
 	 * {@code World} constructor.
@@ -49,6 +54,7 @@ public class World {
 		platforms = new ArrayList<>();
 		initializeWorld();
 		initializeNetwork();
+		initializeHud();
 	}
 
 	/**
@@ -78,6 +84,10 @@ public class World {
 		return collisionBlocks;
 	}
 
+	public HUDProcessor getHUD() {
+		return hud;
+	}
+
 	/**
 	 * Initializes all object needed for this 'world'.
 	 */
@@ -100,6 +110,11 @@ public class World {
 
 	private void initializeNetwork() {
 		clientProgram = new ClientProgram(player);
+	}
+
+	private void initializeHud() {
+		hud = new HUDProcessor(HUDType.INVENTORY);
+		hud.setOSMData();
 	}
 	//#endregion
 }

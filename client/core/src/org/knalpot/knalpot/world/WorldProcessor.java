@@ -1,7 +1,11 @@
 package org.knalpot.knalpot.world;
 
 import org.knalpot.knalpot.actors.player.PlayerProcessor;
+import org.knalpot.knalpot.hud.HUDProcessor;
 import org.knalpot.knalpot.networking.ClientProgram;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 
 /**
  * {@code WorldProcessor} is responsible for updating every single 
@@ -17,6 +21,10 @@ public class WorldProcessor {
 
 	// ==== NETWORKING ==== //
 	private ClientProgram clientProgram;
+
+	// ==== HUD ==== //
+	private HUDProcessor hud;
+	private boolean isHUDActive;
 	//#endregion
 
 	//#region -- FUNCTIONS --
@@ -28,6 +36,7 @@ public class WorldProcessor {
 		this.world = world;
 		playerProcessor = new PlayerProcessor(this.world);
 		clientProgram = this.world.getClientProgram();
+		hud = this.world.getHUD();
 		clientProgram.create();
 	}
 
@@ -36,8 +45,15 @@ public class WorldProcessor {
 	 * @param dt
 	 */
 	public void update(float dt) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+			isHUDActive = !isHUDActive;
+		}
+
 		playerProcessor.update(dt);
 		world.getOrb().update(dt);
+
+		hud.updateHUD(dt, isHUDActive);
+
 		clientProgram.updateNetwork();
 	}
 	//#endregion

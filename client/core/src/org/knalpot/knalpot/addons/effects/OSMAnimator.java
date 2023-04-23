@@ -53,6 +53,11 @@ public class OSMAnimator {
 
     public void updateOSMSize() {
         osm.setSize(new float[size.length]);
+        osm.setLineWidth(lineWidth);
+    }
+
+    public void setLineWidth(float width) {
+        lineWidth = width;
     }
 
     public void increaseLineWidth(float widthLimit, float millis) {
@@ -88,10 +93,12 @@ public class OSMAnimator {
 
         // Changing size first horizontally,
         // then vertically.
-        if (osm.getSize()[0] < size[0]) {
-            changedSize[0] = osm.getSize()[0] + size[0] / 10;
-        } else {
-            changedSize[1] = osm.getSize()[1] + size[1] / 10;
+        if (osm.getSize()[1] < size[1]) {
+            if (osm.getSize()[0] < size[0]) {
+                changedSize[0] = osm.getSize()[0] + size[0] / 10;
+            } else {
+                changedSize[1] = osm.getSize()[1] + size[1] / 10;
+            }
         }
 
         return changedSize;
@@ -105,10 +112,12 @@ public class OSMAnimator {
 
         // Changing horizontally,
         // then vertically.
-        if (osm.getSize()[1] > 0) {
-            changedSize[1] = osm.getSize()[1] - size[1] / 10;
-        } else {
-            changedSize[0] = osm.getSize()[0] - size[0] / 10;
+        if (osm.getSize()[0] > 0) {
+            if (osm.getSize()[1] > 0) {
+                changedSize[1] = osm.getSize()[1] - size[1] / 10;
+            } else {
+                changedSize[0] = osm.getSize()[0] - size[0] / 10;
+            }
         }
 
         return changedSize;
@@ -129,8 +138,8 @@ public class OSMAnimator {
                     changedSize = expandRectByStep();
                     break;
                 case CIRCLE:
-                    if (osm.getSize()[0] + 1 == size[0])
-                        convertationIsDone = true;
+                    if (osm.getSize()[0] + 1 >= size[0])
+                        setConvertation(true);
                     changedSize[0] = osm.getSize()[0] + 1f;
                     break;
                 case POLY:

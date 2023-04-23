@@ -36,6 +36,7 @@ public class OSM {
     
     // General properties
     private float[] size;
+    private float LINE_WIDTH;
     private boolean transparency = false;
     
     // When there must be multiple layers around the
@@ -43,6 +44,14 @@ public class OSM {
     private boolean layers = false;
     private int layerNum;
     
+    public OSM(Shape shape, ShapeType type, Color color) {
+        this.shape = shape;
+        this.type = type;
+        this.color = color;
+
+        renderer = new ShapeRenderer();
+    }
+
     public OSM(Shape shape, ShapeType type, Color color, Vector2 position, float[] size) {
         this.shape = shape;
         this.type = type;
@@ -73,8 +82,16 @@ public class OSM {
         this.size = size;
     }
 
+    public void setPosition(Vector2 position) {
+        this.position = position;
+    }
+
     public void setShape(Shape shape) {
         this.shape = shape;
+    }
+
+    public void setLineWidth(float lineWidth) {
+        this.LINE_WIDTH = lineWidth;
     }
 
     public void enableTransparency() {
@@ -117,31 +134,38 @@ public class OSM {
         renderer.end();
     }
 
+    public void drawRect(float x, float y, float width, float height, Color color, boolean isTransparent) {
+        if (isTransparent) {
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        }
+        renderer.setColor(color);
+        renderer.begin(ShapeType.Filled);
+        renderer.rect(x, y, width, height);
+        renderer.end();
+    } 
+
     public void drawPoly() {
-        Gdx.gl.glLineWidth(10f);
-        renderer.begin(type);
+        renderer.begin(ShapeType.Line);
         renderer.polygon(size);
         renderer.end();
     }
 
-    public void drawPoly(float[] verticles, float lineWidth) {
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    public void drawPoly(float[] verticles, float lineWidth) {     
         Gdx.gl.glLineWidth(lineWidth);
-        
         renderer.begin(ShapeType.Line);
         renderer.polyline(verticles);
         renderer.end();
     }
 
 
-    public void render(SpriteBatch batch) {
+    public void render() {
+        Gdx.gl.glLineWidth(LINE_WIDTH);
         if (transparency) {
             Gdx.gl.glEnable(GL20.GL_BLEND);
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
 
-        renderer.setProjectionMatrix(batch.getProjectionMatrix());
         renderer.setColor(color);
 
         if (shape == Shape.CIRCLE) {
@@ -155,6 +179,11 @@ public class OSM {
         if (shape == Shape.POLY) {
             drawPoly();
         }
+    }
+
+    public void render(SpriteBatch batch) {
+        renderer.setProjectionMatrix(batch.getProjectionMatrix());
+        render();
     }
 
     public void dispose() {
