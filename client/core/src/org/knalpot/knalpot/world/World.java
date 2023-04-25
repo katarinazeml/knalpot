@@ -59,7 +59,7 @@ public class World {
 		return player;
 	}
 
-	public Actor getEnemy() {
+	public Enemy getEnemy() {
 		return enemy;
 	}
 

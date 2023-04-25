@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
@@ -53,7 +54,7 @@ public class Renderer {
 
     private World world;
     private Actor player;
-    private Actor enemy;
+    private Enemy enemy;
 
     private Teleport teleport;
 
@@ -280,7 +281,16 @@ public class Renderer {
     }
 
     private void drawEnemy() {
-        batch.draw(enemyTexture, enemy.getPosition().x, enemy.getPosition().y);
+        float enemyPositionX = 0;
+        if (enemy.enemyDirection == -1) {
+            enemyPositionX = enemy.getPosition().x;
+            batch.draw(enemyTexture, enemyPositionX, enemy.getPosition().y);
+        }
+        if (enemy.enemyDirection == 1) {
+            enemyPositionX = enemy.getPosition().x + enemy.getWidth() / 2f;
+            batch.draw(enemyTexture, enemyPositionX, enemy.getPosition().y, -enemyTexture.getWidth(), enemyTexture.getHeight());
+        }
     }
+    
     //#endregion
 }

@@ -2,6 +2,7 @@ package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.addons.BBGenerator;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -59,8 +60,7 @@ public class Player extends Actor {
         Bottom = (int) bounds.y;
         Top = (int) (bounds.y + bounds.height);
 
-        enemy = new Enemy(new Vector2(100, 100), this);
-
+        enemy = new Enemy(new Vector2(100, 300), this);
     }
 
     public void update(float dt) {
@@ -73,6 +73,9 @@ public class Player extends Actor {
         Bottom = (int) bounds.y;
         Top = (int) bounds.y + HEIGHT;
         enemy.update(dt);
+    }
+    public void caughtByEnemy(){
+        
     }
     //#endregion
 }

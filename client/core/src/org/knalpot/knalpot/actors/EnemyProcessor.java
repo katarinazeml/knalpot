@@ -1,10 +1,8 @@
 package org.knalpot.knalpot.actors;
 
-import org.knalpot.knalpot.addons.Constants;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.world.World;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class EnemyProcessor {
@@ -22,6 +20,10 @@ public class EnemyProcessor {
     //#endregion
     private boolean canJump;
     private float t;
+
+    public enum EnemyState {
+        CHASE, IDLE, ATTACK, JUMP
+    }
     
     //#region -- FUNCTIONS --
 	/**
@@ -111,13 +113,11 @@ public class EnemyProcessor {
             cn = enemy.getContactNormal();
             cp = enemy.getContactPoint();
             t = enemy.getContactTime();
-            // System.out.println("checking velocity");
-            // System.out.println(in.getVelocity().x + ":x before");
             in.getVelocity().x -= cn.x * Math.abs(in.getVelocity().x) * (1 - contactTime);
-            // System.out.println(in.getVelocity().x + ":x after");
-            // System.out.println(in.getVelocity().y + ":y before");
             in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
-            // System.out.println(in.getVelocity().y + ":y after");
+            // move the enemy back along its velocity vector
+            Vector2 correction = cn.scl((1 - contactTime) * in.getScalarVelocity(dt).len());
+            in.getPosition().add(correction.x, correction.y);
             return true;
         }
         return false;
