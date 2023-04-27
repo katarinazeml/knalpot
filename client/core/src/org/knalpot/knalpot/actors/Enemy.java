@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 public class Enemy extends Actor {
 
     //private Vector2 wanderDirection = new Vector2(0, 0);
-    private int enemyDirection = -1; // Default direction is right
 
     //private Player enemyProcessor;
 
