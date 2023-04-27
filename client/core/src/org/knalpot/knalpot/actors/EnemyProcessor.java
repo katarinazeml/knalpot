@@ -32,7 +32,7 @@ public class EnemyProcessor {
     private Vector2 cn;
     private float t;
 
-    private final float CHASE_RADIUS = 100f;
+    private final float CHASE_RADIUS = 150f;
     private float directionChangeCooldown = 0f;
     private final float DIRECTION_CHANGE_COOLDOWN_TIME = 2f; // Change this to adjust the cooldown time
 
@@ -72,6 +72,12 @@ public class EnemyProcessor {
             if (resolvePlatformCollision(enemy, obj, dt)) {
                 if (enemy.getVelocity().y == 0f) canJump = true;
             }
+        }
+
+        if (resolvePlayerCollision(enemy, world.getPlayer(), dt)) {
+            // Enemy collides with player, stop moving
+            enemy.getVelocity().x = 0f;
+            enemy.enemyState = Enemy.EnemyState.IDLE; 
         }
     
         enemy.update(dt);
@@ -175,6 +181,21 @@ public class EnemyProcessor {
             return true;
         }
         return false;
+    }
+
+    private boolean resolvePlayerCollision(Actor in, Actor player, float dt) {
+        cn = new Vector2();
+        cp = new Vector2();
+        float contactTime = 0f;
+        boolean collision = enemy.DynamicAABBplayer(in, player, cp, cn, contactTime, dt);
+        if (collision) {
+            cn = enemy.getContactNormal();
+            cp = enemy.getContactPoint();
+            t = enemy.getContactTime();
+            in.getVelocity().x -= cn.x * Math.abs(in.getVelocity().x) * (1 - contactTime);
+            in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
+        }
+        return collision;
     }
     //#endregion
 }
