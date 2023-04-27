@@ -20,6 +20,8 @@ public class Player extends Actor {
     
     private Enemy enemy;
 
+    private int health = 1000;
+
     // no comments //
     public enum State {
         IDLE, MOVE, JUMP, FALL
@@ -60,7 +62,7 @@ public class Player extends Actor {
         Bottom = (int) bounds.y;
         Top = (int) (bounds.y + bounds.height);
 
-        enemy = new Enemy(new Vector2(200, 100), this);
+        enemy = new Enemy(new Vector2(500, 100), this);
     }
 
     public void update(float dt) {
@@ -74,6 +76,10 @@ public class Player extends Actor {
         Top = (int) bounds.y + HEIGHT;
         enemy.update(dt);
     }
-    public void caughtByEnemy() {}
+    public void caughtByEnemy(int damage) {
+        health -= damage;
+        if (health < 0) health = 0;
+        System.out.println("player`s health " + health);
+    }
     //#endregion
 }

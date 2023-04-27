@@ -16,6 +16,7 @@ public class EnemyProcessor {
     // ==== OBJECT VARIABLES ==== //
 	private World world;
 	private Enemy enemy;
+    private Player player;
 
     // ==== MOVEMENT ==== //
 	private float SPEED = 60f;
@@ -32,11 +33,16 @@ public class EnemyProcessor {
     private Vector2 cn;
     private float t;
 
-    private final float CHASE_RADIUS = 150f;
+    private final float CHASE_RADIUS = 300f;
+    private final float ATTACK_RADIUS = 200f;
     private float directionChangeCooldown = 0f;
     private final float DIRECTION_CHANGE_COOLDOWN_TIME = 2f; // Change this to adjust the cooldown time
 
+    public boolean attacking = false;
+    private float attackTimer = 2f;
+
     private boolean verticalCollisionOccurred = false;
+    private int lastDirection;
 
     //#endregion
     
@@ -48,6 +54,7 @@ public class EnemyProcessor {
 	public EnemyProcessor(World world) {
 		this.world = world;
 		enemy = this.world.getEnemy();
+        player = this.world.getPlayer();
 	}
 
 	/**
@@ -56,7 +63,7 @@ public class EnemyProcessor {
 	 */
     public void update(float dt) {
         gravity();
-        //verticalMovement();
+        attack();
         horizontalMovement();
     
         enemy.getAcceleration().scl(dt);
@@ -74,28 +81,47 @@ public class EnemyProcessor {
             }
         }
 
-        if (resolvePlayerCollision(enemy, world.getPlayer(), dt)) {
+        if (resolvePlayerCollision(enemy, player, dt)) {
             // Enemy collides with player, stop moving
             enemy.getVelocity().x = 0f;
-            enemy.enemyState = Enemy.EnemyState.IDLE; 
+            enemy.enemyState = Enemy.EnemyState.IDLE;
         }
     
         enemy.update(dt);
     }
     
-
 	/**
 	 * Adds constant gravity force to object.
 	 */
+
 	private void gravity() {
 		if (enemy.getVelocity().y < 0) gravityForce = Constants.GRAVITY_FORCE * Constants.GRAVITY_ACCEL;
         enemy.getAcceleration().y = -gravityForce;
 	}
 
+    private void attack() {
+        float playerX = player.getPosition().x;
+        float enemyX = enemy.getPosition().x;
+        float distanceToPlayer = Math.abs(playerX - enemyX);
+        if (distanceToPlayer < ATTACK_RADIUS) {
+            enemy.enemyState = Enemy.EnemyState.ATTACK;
+            attackTimer -= Gdx.graphics.getDeltaTime(); // subtract time passed since last frame
+            if (attackTimer <= 0f) {
+                player.caughtByEnemy(10); // reduce player's health by 10
+                attackTimer = 2f; // reset timer
+            }
+        } else {
+            enemy.enemyState = Enemy.EnemyState.IDLE;
+            attackTimer = 2f; // reset timer
+        }
+    }
+    
+
     /**
      * Moves {@code Enemy} horizontally towards the player.
      */
-    private void horizontalMovement() {
+
+     private void horizontalMovement() {
         float playerX = world.getPlayer().getPosition().x;
         float enemyX = enemy.getPosition().x;
         float distanceToPlayer = Math.abs(playerX - enemyX);
@@ -106,13 +132,18 @@ public class EnemyProcessor {
             enemy.direction = (playerX < enemyX) ? -1 : 1;
             enemy.enemyState = Enemy.EnemyState.MOVE;
             directionChangeCooldown = DIRECTION_CHANGE_COOLDOWN_TIME; // Reset the cooldown when chasing the player
-            System.out.println(enemy.getVelocity().y);
+            //System.out.println(enemy.getVelocity().y);
             if (verticalCollisionOccurred && canJump) {
                 jump();
-                System.out.println(enemy.getVelocity().y);
+                //System.out.println(enemy.getVelocity().y);
                 System.out.println("jumping");
                 verticalCollisionOccurred = false;
             }
+        } else if (enemyX == playerX) {
+            // Enemy and player are at the same x-coordinate, don't move
+            enemy.getVelocity().x = 0;
+            enemy.direction = lastDirection;
+            enemy.enemyState = Enemy.EnemyState.IDLE;
         } else {
             // Player is outside of chase radius, wander around
             SPEED = 40;
@@ -127,26 +158,20 @@ public class EnemyProcessor {
         }
     }
     
+    
     /**
      * Makes {@code Enemy} jump.
      */
+
     private void jump() {
         enemy.getVelocity().y = JUMP_HEIGHT;
         canJump = false;
     }
     
-	/**
-	 * Moves {@code Enemy} vertically using simple jump mechanics.
-	 */
-	// private void verticalMovement() {
-    //     if (canJump) {
-    //         enemy.getVelocity().y = JUMP_HEIGHT;
-    //         System.out.println("jumping");
-    //     }
-	// }
     //#endregion
 
     //#region - COLLISIONS -
+
     private boolean resolveCollision(Actor in, Static block, float dt) {
         cn = new Vector2();
         cp = new Vector2();
