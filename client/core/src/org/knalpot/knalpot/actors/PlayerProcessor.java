@@ -83,6 +83,7 @@ public class PlayerProcessor {
         // System.out.println(cn);
         // System.out.println(cp);
         // System.out.println(t);
+        
 
         for (Static obj : world.collisionBlocks) {
             if (resolveCollision(player, obj, dt)) {
@@ -232,5 +233,5 @@ public class PlayerProcessor {
         }
         return false;
     }
-    //
+    //#endregion
 }

@@ -10,70 +10,54 @@ import org.knalpot.knalpot.addons.Constants;
 import org.knalpot.knalpot.interactive.Static;
 
 public class EnemyProcessor {
-
     //#region -- VARIABLES --
 
     // ==== OBJECT VARIABLES ==== //
-    private World world;
-    private Enemy enemy;
+	private World world;
+	private Enemy enemy;
 
     // ==== MOVEMENT ==== //
-    private float SPEED = 15f;
+	private final float SPEED = 60f;
+    private final float JUMP_HEIGHT = 600f;
 
-    private int moveInput = 1;
+    // ==== JUMP MECHANICS ==== //
+    private boolean canJump = true;
 
     // ==== GRAVITY ==== //
     private float gravityForce = Constants.GRAVITY_FORCE;
 
-    // ==== AI ==== //
-    private final float CHASE_RADIUS = 100f;
-    private float timeSinceStop = 0;
-    private float timeSinceDirectionChange;
-    private boolean canJump = false;
 
     // ==== COLLISION-RELATED ==== //
     private Vector2 cp;
     private Vector2 cn;
     private float t;
-    
 
     //#endregion
-
+    
     //#region -- FUNCTIONS --
-
-    /**
+	/**
      * Processor constructor.
-     * @param world
-     */
-    public EnemyProcessor(World world) {
-        this.world = world;
-        enemy = this.world.getEnemy();
-    }
+	 * @param world
+	 */
+	public EnemyProcessor(World world) {
+		this.world = world;
+		enemy = this.world.getEnemy();
+	}
 
-    /**
+	/**
      * Updating {@code Enemy}'s position each frame.
-     * @param dt
-     */
-    public void update(float dt) {
+	 * @param dt
+	 */
+	public void update(float dt) {
         gravity();
-        if (isPlayerInChaseRadius()) {
-            chasePlayer();
-            SPEED = 20f;
-        } else {
-            wanderAround();
-        }
-    
-        enemy.getPosition().add(enemy.getVelocity().x * dt, 0);
-    
-        if (enemy.getVelocity().x > 0) {
-            enemy.setEnemyDirection(1);
-        } else if (enemy.getVelocity().x < 0) {
-            enemy.setEnemyDirection(-1);
-        }
+        horizontalMovement();
+        verticalMovement();
+
+    	enemy.getAcceleration().scl(dt);
+		enemy.getVelocity().add(enemy.getAcceleration().x, enemy.getAcceleration().y);
 
         for (Static obj : world.collisionBlocks) {
             if (resolveCollision(enemy, obj, dt)) {
-                // System.out.println("Colliding!");
                 if (enemy.getVelocity().y == 0f) canJump = true;
             }
         }
@@ -83,14 +67,11 @@ public class EnemyProcessor {
                 if (enemy.getVelocity().y == 0f) canJump = true;
             }
         }
-    
-        // System.out.println("Enemy positions");
-        // System.out.println(enemy.getPosition().x);
-        // System.out.println(enemy.getPosition().y);
-        enemy.update(dt);
-    }
 
-    /**
+        enemy.update(dt);
+	}
+
+	/**
 	 * Adds constant gravity force to object.
 	 */
 	private void gravity() {
@@ -101,50 +82,35 @@ public class EnemyProcessor {
     /**
      * Moves {@code Enemy} horizontally towards the player.
      */
-    private void chasePlayer() {
-        Actor player = world.getPlayer();
-        if (enemy.getPosition().x < player.getPosition().x) {
-            moveInput = 1;
-        } else if (enemy.getPosition().x > player.getPosition().x) {
-            moveInput = -1;
+    private void horizontalMovement() {
+        float playerX = world.getPlayer().getPosition().x;
+        float enemyX = enemy.getPosition().x;
+        if (playerX < enemyX) {
+            enemy.getVelocity().x = -SPEED;
+            enemy.direction = -1;
+        } else if (playerX > enemyX) {
+            enemy.getVelocity().x = SPEED;
+            enemy.direction = 1;
+        } else {
+            enemy.getVelocity().x = 0f;
         }
-    
-        enemy.getVelocity().x = moveInput * SPEED;
-    }
-    
-    /**
-     * Makes {@code Enemy} wander around randomly.
-     */
-    private void wanderAround() {
-        // Randomly stop moving for a short period of time
-        if (timeSinceStop >= MathUtils.random(3f, 6f)) {
-            enemy.getVelocity().x = 0;
-            timeSinceStop = 0;
-            System.out.println("standing still");
-            return;
-        }
-        
-        // Randomly change the horizontal movement direction every few seconds
-        if (timeSinceDirectionChange >= MathUtils.random(3f, 6f)) {
-            moveInput = MathUtils.randomSign();
-            timeSinceDirectionChange = 0;
-        }
-        
-        enemy.getVelocity().x = moveInput * SPEED;
-        timeSinceStop += Gdx.graphics.getDeltaTime(); // Update time since last stop
-        timeSinceDirectionChange += Gdx.graphics.getDeltaTime(); // Update time since last direction change
-    }    
-    
-    /**
-     * Returns {@code true} if the player is within a certain radius for the AI enemy to chase.
-     * @return
-     */
-    private boolean isPlayerInChaseRadius() {
-        Actor player = world.getPlayer();
-        float distanceToPlayer = enemy.getPosition().dst(player.getPosition());
-        return distanceToPlayer <= CHASE_RADIUS;
+
+        enemy.enemyState = (enemy.getVelocity().x != 0) ? Enemy.EnemyState.MOVE : Enemy.EnemyState.IDLE;
     }
 
+
+	/**
+	 * Moves {@code Enemy} vertically using simple jump mechanics.
+	 */
+	private void verticalMovement() {
+        if (canJump) {
+            enemy.getVelocity().y = JUMP_HEIGHT;
+            canJump = false;
+        }
+	}
+    //#endregion
+
+    //#region - COLLISIONS -
     private boolean resolveCollision(Actor in, Static block, float dt) {
         cn = new Vector2();
         cp = new Vector2();

@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends Actor {
 
+    public enum EnemyState {
+        IDLE, MOVE, JUMP, FALL
+    }
     //private Vector2 wanderDirection = new Vector2(0, 0);
 
     //private Player enemyProcessor;
@@ -21,7 +24,6 @@ public class Enemy extends Actor {
         previousDirection = 1;
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 0);
-        previousState = State.IDLE;
         //this.state = EnemyState.IDLE;
         //wanderDirection.set(MathUtils.random(-1f, 1f), MathUtils.random(-1f, 1f)).nor();
     }

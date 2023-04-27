@@ -1,5 +1,6 @@
 package org.knalpot.knalpot.actors;
 
+import org.knalpot.knalpot.actors.Enemy.EnemyState;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 
@@ -52,6 +53,7 @@ public class Actor {
 
     // ==== TEMPORARY STATE MACHINE ==== //
     public State state;
+    public EnemyState enemyState;
     public State previousState;
     public int enemyDirection;
 
