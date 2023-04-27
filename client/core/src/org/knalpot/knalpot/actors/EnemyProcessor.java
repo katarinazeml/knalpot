@@ -58,7 +58,7 @@ public class EnemyProcessor {
 	 */
     public void update(float dt) {
         gravity();
-        verticalMovement();
+        //verticalMovement();
         horizontalMovement();
     
         enemy.getAcceleration().scl(dt);
@@ -102,9 +102,9 @@ public class EnemyProcessor {
             enemy.direction = (playerX < enemyX) ? -1 : 1;
             enemy.enemyState = Enemy.EnemyState.MOVE;
             directionChangeCooldown = DIRECTION_CHANGE_COOLDOWN_TIME; // Reset the cooldown when chasing the player
-            if (collisionOccurred) {
-                System.out.println("jumping");
+            if (collisionOccurred && canJump) {
                 jump();
+                System.out.println("jumping");
                 collisionOccurred = false;
             }
         } else {
@@ -118,13 +118,13 @@ public class EnemyProcessor {
             } else {
                 directionChangeCooldown -= Gdx.graphics.getDeltaTime();
             }
-            if (collisionOccurred) {
+            if (collisionOccurred && canJump) {
                 jump();
+                System.out.println("jumping");
                 collisionOccurred = false;
             }
         }
     }
-    
     
     /**
      * Makes {@code Enemy} jump.
@@ -132,18 +132,18 @@ public class EnemyProcessor {
     private void jump() {
         enemy.getVelocity().y = JUMP_HEIGHT;
         jumpCooldown = JUMP_COOLDOWN_TIME;
+        canJump = false;
     }
-    
     
 	/**
 	 * Moves {@code Enemy} vertically using simple jump mechanics.
 	 */
-	private void verticalMovement() {
-        if (canJump) {
-            enemy.getVelocity().y = JUMP_HEIGHT;
-            canJump = false;
-        }
-	}
+	// private void verticalMovement() {
+    //     if (canJump) {
+    //         enemy.getVelocity().y = JUMP_HEIGHT;
+    //         System.out.println("jumping");
+    //     }
+	// }
     //#endregion
 
     //#region - COLLISIONS -
@@ -158,7 +158,10 @@ public class EnemyProcessor {
             t = enemy.getContactTime();
             in.getVelocity().x -= cn.x * Math.abs(in.getVelocity().x) * (1 - contactTime);
             in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
-            collisionOccurred = true;
+            if (cn.y > 0.5f) {
+                // Check for vertical collision
+                collisionOccurred = true;
+            }
         }
         return collision;
     }
