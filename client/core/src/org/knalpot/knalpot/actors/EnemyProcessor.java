@@ -17,7 +17,7 @@ public class EnemyProcessor {
 	private Enemy enemy;
 
     // ==== MOVEMENT ==== //
-	private final float SPEED = 60f;
+	private float SPEED = 60f;
     private final float JUMP_HEIGHT = 600f;
 
     // ==== JUMP MECHANICS ==== //
@@ -26,11 +26,14 @@ public class EnemyProcessor {
     // ==== GRAVITY ==== //
     private float gravityForce = Constants.GRAVITY_FORCE;
 
-
     // ==== COLLISION-RELATED ==== //
     private Vector2 cp;
     private Vector2 cn;
     private float t;
+
+    private final float CHASE_RADIUS = 100f;
+    private float directionChangeCooldown = 0f;
+    private final float DIRECTION_CHANGE_COOLDOWN_TIME = 2f; // Change this to adjust the cooldown time
 
     //#endregion
     
@@ -48,28 +51,29 @@ public class EnemyProcessor {
      * Updating {@code Enemy}'s position each frame.
 	 * @param dt
 	 */
-	public void update(float dt) {
+    public void update(float dt) {
         gravity();
-        horizontalMovement();
         verticalMovement();
-
-    	enemy.getAcceleration().scl(dt);
-		enemy.getVelocity().add(enemy.getAcceleration().x, enemy.getAcceleration().y);
-
+        horizontalMovement();
+    
+        enemy.getAcceleration().scl(dt);
+        enemy.getVelocity().add(enemy.getAcceleration().x, enemy.getAcceleration().y);
+    
         for (Static obj : world.collisionBlocks) {
             if (resolveCollision(enemy, obj, dt)) {
                 if (enemy.getVelocity().y == 0f) canJump = true;
             }
         }
-
+    
         for (Static obj : world.platforms) {
             if (resolvePlatformCollision(enemy, obj, dt)) {
                 if (enemy.getVelocity().y == 0f) canJump = true;
             }
         }
-
+    
         enemy.update(dt);
-	}
+    }
+    
 
 	/**
 	 * Adds constant gravity force to object.
@@ -85,20 +89,28 @@ public class EnemyProcessor {
     private void horizontalMovement() {
         float playerX = world.getPlayer().getPosition().x;
         float enemyX = enemy.getPosition().x;
-        if (playerX < enemyX) {
-            enemy.getVelocity().x = -SPEED;
-            enemy.direction = -1;
-        } else if (playerX > enemyX) {
-            enemy.getVelocity().x = SPEED;
-            enemy.direction = 1;
+        float distanceToPlayer = Math.abs(playerX - enemyX);
+        
+        if (distanceToPlayer < CHASE_RADIUS) {
+            // Player is within chase radius, move towards player
+            enemy.getVelocity().x = (playerX < enemyX) ? -SPEED : SPEED;
+            enemy.direction = (playerX < enemyX) ? -1 : 1;
+            enemy.enemyState = Enemy.EnemyState.MOVE;
+            directionChangeCooldown = DIRECTION_CHANGE_COOLDOWN_TIME; // Reset the cooldown when chasing the player
         } else {
-            enemy.getVelocity().x = 0f;
+            // Player is outside of chase radius, wander around
+            SPEED = 40;
+            if (directionChangeCooldown <= 0f) {
+                enemy.getVelocity().x = (MathUtils.randomBoolean()) ? -SPEED : SPEED;
+                enemy.direction = (enemy.getVelocity().x > 0) ? 1 : -1;
+                enemy.enemyState = Enemy.EnemyState.MOVE;
+                directionChangeCooldown = DIRECTION_CHANGE_COOLDOWN_TIME; // Reset the cooldown after changing direction
+            } else {
+                directionChangeCooldown -= Gdx.graphics.getDeltaTime();
+            }
         }
-
-        enemy.enemyState = (enemy.getVelocity().x != 0) ? Enemy.EnemyState.MOVE : Enemy.EnemyState.IDLE;
     }
-
-
+    
 	/**
 	 * Moves {@code Enemy} vertically using simple jump mechanics.
 	 */
