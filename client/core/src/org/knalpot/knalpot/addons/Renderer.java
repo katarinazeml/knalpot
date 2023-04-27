@@ -6,13 +6,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.orb.Orb;
+import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.actors.player.Player.State;
-import org.knalpot.knalpot.hud.HUDProcessor;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
 import org.knalpot.knalpot.world.World;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.Gdx;
 
@@ -81,9 +80,6 @@ public class Renderer {
     private ParallaxLayer cloud;
     private ParallaxLayer darkGrass;
     private ParallaxLayer lightGrass;
-
-    // ==== HUD ==== //
-    private HUDProcessor hud;
        
     //#endregion
 
@@ -109,7 +105,6 @@ public class Renderer {
         player = this.world.getPlayer();
         orb = this.world.getOrb();
         networking = this.world.getClientProgram();
-        hud = this.world.getHUD();
 
         ((Orb) orb).setMousePos(mousePos);
 
@@ -183,7 +178,7 @@ public class Renderer {
         batch.end();
 
         // Draw HUD
-        hud.renderHUD();
+        ((Player) player).getHud().render();
     }
 
     /**

@@ -6,11 +6,11 @@ import java.util.List;
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
-import org.knalpot.knalpot.hud.HUDProcessor;
-import org.knalpot.knalpot.hud.HUD.HUDType;
 import org.knalpot.knalpot.interactive.Static;
+import org.knalpot.knalpot.interactive.props.Prop;
 import org.knalpot.knalpot.networking.ClientProgram;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -41,8 +41,8 @@ public class World {
 	public List<Static> collisionBlocks;
 	public List<Static> platforms;
 
-	// ==== HUD ==== //
-	private HUDProcessor hud;
+	// testing purposes only
+	private Prop prop;
 
 	//#region -- FUNCTIONS --
 	/**
@@ -54,7 +54,7 @@ public class World {
 		platforms = new ArrayList<>();
 		initializeWorld();
 		initializeNetwork();
-		initializeHud();
+		player.initializeHUD();
 	}
 
 	/**
@@ -67,6 +67,11 @@ public class World {
 
 	public Orb getOrb() {
 		return orb;
+	}
+
+	// delete later
+	public Prop getProp() {
+		return prop;
 	}
 
 	/**
@@ -84,10 +89,6 @@ public class World {
 		return collisionBlocks;
 	}
 
-	public HUDProcessor getHUD() {
-		return hud;
-	}
-
 	/**
 	 * Initializes all object needed for this 'world'.
 	 */
@@ -95,6 +96,13 @@ public class World {
 		player = new Player(new Vector2(100, 200));
 		orb = new Orb(player);
 
+		player.addProp(prop = new Prop(new Vector2(0, 0), 32, 32, new Texture("orb.png")));
+		player.addProp(prop = new Prop(new Vector2(0, 0), 32, 32, new Texture("orb.png")));
+		player.addProp(prop = new Prop(new Vector2(0, 0), 32, 32, new Texture("orb.png")));
+		player.getInventory().get(0).setName("Potion");
+		player.getInventory().get(1).setName("Apple");
+		player.getInventory().get(2).setName("Water");
+		
 		for (MapObject obj : tiledMap.getLayers().get("Collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
@@ -110,11 +118,6 @@ public class World {
 
 	private void initializeNetwork() {
 		clientProgram = new ClientProgram(player);
-	}
-
-	private void initializeHud() {
-		hud = new HUDProcessor(HUDType.INVENTORY);
-		hud.setOSMData();
 	}
 	//#endregion
 }

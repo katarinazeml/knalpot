@@ -8,6 +8,7 @@ import org.knalpot.knalpot.world.World;
 import java.lang.Math;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 
 // ===== ALL COMMENTED OUT CODE IS REQUIRED FOR DEBUGGING BUT USELESS AS FOR NOW. DON'T PAY ATTENTION TO IT ===== //
@@ -44,6 +45,9 @@ public class PlayerProcessor {
     private Vector2 cp;
     private Vector2 cn;
     private float t;
+
+    // ==== HUD ==== //
+    private boolean isHUDActive = false;
     //#endregion
     
     //#region -- FUNCTIONS --
@@ -61,11 +65,17 @@ public class PlayerProcessor {
 	 * @param dt
 	 */
 	public void update(float dt) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+			isHUDActive = !isHUDActive;
+		}
+
         // System.out.println("-----");
 		gravity();
         windowCollision(dt);
-        horizontalMovement();
-        verticalMovement();
+        if (!isHUDActive) {
+            horizontalMovement();
+            verticalMovement();
+        }
         changeState();
 
     	player.getAcceleration().scl(dt);
@@ -104,6 +114,8 @@ public class PlayerProcessor {
         player.direction = moveInput;
         player.update(dt);
         // System.out.println("-----");
+
+        ((Player) player).getHud().update(dt, isHUDActive);
 	}
 
 	/**

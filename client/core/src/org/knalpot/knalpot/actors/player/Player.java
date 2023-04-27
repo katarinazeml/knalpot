@@ -1,7 +1,13 @@
 package org.knalpot.knalpot.actors.player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.addons.BBGenerator;
+import org.knalpot.knalpot.hud.HUDProcessor;
+import org.knalpot.knalpot.hud.HUD.HUDType;
+import org.knalpot.knalpot.interactive.props.Prop;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -18,10 +24,19 @@ import com.badlogic.gdx.math.Vector2;
 public class Player extends Actor {
     //#region -- VARIABLES --
 
-    // no comments //
+    // ==== PLAYER STATES ==== //
     public enum State {
-        IDLE, MOVE, JUMP, FALL
+        IDLE, 
+        MOVE, 
+        JUMP, 
+        FALL    
     }
+
+    // ==== INVENTORY ==== //
+    private List<Prop> inventory;
+    
+    // ==== HUD ==== //
+	private HUDProcessor inventoryHUD;
 
     //#endregion
 
@@ -58,6 +73,9 @@ public class Player extends Actor {
         Right = (int) (bounds.x + bounds.width);
         Bottom = (int) bounds.y;
         Top = (int) (bounds.y + bounds.height);
+
+        // Generating inventory list.
+        inventory = new ArrayList<>(5);
     }
 
     public void update(float dt) {
@@ -73,6 +91,50 @@ public class Player extends Actor {
         Right = (int) bounds.x + WIDTH;
         Bottom = (int) bounds.y;
         Top = (int) bounds.y + HEIGHT;
+    }
+
+    /**
+     * Initializes all the parameters of HUD after the object is created.
+     */
+    public void initializeHUD() {
+        inventoryHUD = new HUDProcessor(HUDType.INVENTORY);
+		inventoryHUD.setOSMData();
+        inventoryHUD.initializeInventory(inventory);
+    }
+
+    /**
+     * Getter for player's inventory.
+     * @return List<Prop>
+     */
+    public List<Prop> getInventory() {
+        return inventory;
+    }
+
+    /**
+     * Returns {@link org.knalpot.knalpot.hud.HUDProcessor HUDProcessor}
+     * for external usage.
+     * @return HUDProcessor
+     */
+    public HUDProcessor getHud() {
+        return inventoryHUD;
+    }
+
+    /**
+     * Adds prop to the inventory.
+     * @param prop
+     */
+    public void addProp(Prop prop) {
+        inventory.add(prop);
+    }
+
+    /**
+     * Removes prop from the inventory.
+     * Currently is for testing purposes only.
+     * @param prop
+     */
+    public void removeProp(Prop prop) {
+        if (inventory.contains(prop))
+            inventory.remove(prop);
     }
     //#endregion
 }

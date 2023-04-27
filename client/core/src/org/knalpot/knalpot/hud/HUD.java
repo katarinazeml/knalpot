@@ -10,11 +10,9 @@ public class HUD {
         INVENTORY
     };
 
-    private HUDType type;
     private OSM osm;
 
     public HUD(HUDType type, OSM osm) {
-        this.type = type;
         this.osm = osm;
     }
 
