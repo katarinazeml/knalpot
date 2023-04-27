@@ -2,7 +2,12 @@ package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.world.World;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+
+import org.knalpot.knalpot.addons.Constants;
+import org.knalpot.knalpot.interactive.Static;
 
 public class EnemyProcessor {
 
@@ -17,8 +22,20 @@ public class EnemyProcessor {
 
     private int moveInput = 1;
 
-    // ==== AI CHASING ==== //
-    private final float CHASE_RADIUS = 80f;
+    // ==== GRAVITY ==== //
+    private float gravityForce = Constants.GRAVITY_FORCE;
+
+    // ==== AI ==== //
+    private final float CHASE_RADIUS = 100f;
+    private float timeSinceStop = 0;
+    private float timeSinceDirectionChange;
+    private boolean canJump = false;
+
+    // ==== COLLISION-RELATED ==== //
+    private Vector2 cp;
+    private Vector2 cn;
+    private float t;
+    
 
     //#endregion
 
@@ -38,9 +55,10 @@ public class EnemyProcessor {
      * @param dt
      */
     public void update(float dt) {
+        gravity();
         if (isPlayerInChaseRadius()) {
             chasePlayer();
-            SPEED = 30f;
+            SPEED = 20f;
         } else {
             wanderAround();
         }
@@ -49,12 +67,21 @@ public class EnemyProcessor {
     
         if (enemy.getVelocity().x > 0) {
             enemy.setEnemyDirection(1);
-            System.out.println("facing right");
-            System.out.println(enemy.getEnemyDirection());
         } else if (enemy.getVelocity().x < 0) {
             enemy.setEnemyDirection(-1);
-            System.out.println("facing left");
-            System.out.println(enemy.getEnemyDirection());
+        }
+
+        for (Static obj : world.collisionBlocks) {
+            if (resolveCollision(enemy, obj, dt)) {
+                // System.out.println("Colliding!");
+                if (enemy.getVelocity().y == 0f) canJump = true;
+            }
+        }
+
+        for (Static obj : world.platforms) {
+            if (resolvePlatformCollision(enemy, obj, dt)) {
+                if (enemy.getVelocity().y == 0f) canJump = true;
+            }
         }
     
         // System.out.println("Enemy positions");
@@ -62,7 +89,14 @@ public class EnemyProcessor {
         // System.out.println(enemy.getPosition().y);
         enemy.update(dt);
     }
-    
+
+    /**
+	 * Adds constant gravity force to object.
+	 */
+	private void gravity() {
+		if (enemy.getVelocity().y < 0) gravityForce = Constants.GRAVITY_FORCE * Constants.GRAVITY_ACCEL;
+        enemy.getAcceleration().y = -gravityForce;
+	}
 
     /**
      * Moves {@code Enemy} horizontally towards the player.
@@ -82,14 +116,25 @@ public class EnemyProcessor {
      * Makes {@code Enemy} wander around randomly.
      */
     private void wanderAround() {
-        // Randomly change the horizontal movement direction every few seconds
-        if (MathUtils.randomBoolean(0.005f)) {
-            moveInput = MathUtils.randomSign();
+        // Randomly stop moving for a short period of time
+        if (timeSinceStop >= MathUtils.random(3f, 6f)) {
+            enemy.getVelocity().x = 0;
+            timeSinceStop = 0;
+            System.out.println("standing still");
+            return;
         }
-
+        
+        // Randomly change the horizontal movement direction every few seconds
+        if (timeSinceDirectionChange >= MathUtils.random(3f, 6f)) {
+            moveInput = MathUtils.randomSign();
+            timeSinceDirectionChange = 0;
+        }
+        
         enemy.getVelocity().x = moveInput * SPEED;
-    }
-
+        timeSinceStop += Gdx.graphics.getDeltaTime(); // Update time since last stop
+        timeSinceDirectionChange += Gdx.graphics.getDeltaTime(); // Update time since last direction change
+    }    
+    
     /**
      * Returns {@code true} if the player is within a certain radius for the AI enemy to chase.
      * @return
@@ -100,5 +145,41 @@ public class EnemyProcessor {
         return distanceToPlayer <= CHASE_RADIUS;
     }
 
+    private boolean resolveCollision(Actor in, Static block, float dt) {
+        cn = new Vector2();
+        cp = new Vector2();
+        float contactTime = 0f;
+        if (enemy.DynamicAABB(in, block, cp, cn, contactTime, dt)) {
+            cn = enemy.getContactNormal();
+            cp = enemy.getContactPoint();
+            t = enemy.getContactTime();
+            // System.out.println("checking velocity");
+            // System.out.println(in.getVelocity().x + ":x before");
+            in.getVelocity().x -= cn.x * Math.abs(in.getVelocity().x) * (1 - contactTime);
+            // System.out.println(in.getVelocity().x + ":x after");
+            // System.out.println(in.getVelocity().y + ":y before");
+            in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
+            // System.out.println(in.getVelocity().y + ":y after");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean resolvePlatformCollision(Actor in, Static platform, float dt) {
+        cn = new Vector2();
+        cp = new Vector2();
+        float contactTime = 0f;
+        if (enemy.DynamicAABB(in, platform, cp, cn, contactTime, dt)) {
+            cn = enemy.getContactNormal();
+            cp = enemy.getContactPoint();
+            t = enemy.getContactTime();
+
+            if (in.getVelocity().y < 0f) {
+                in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
+            }
+            return true;
+        }
+        return false;
+    }
     //#endregion
 }
