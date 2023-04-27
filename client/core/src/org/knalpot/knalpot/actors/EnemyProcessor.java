@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import org.knalpot.knalpot.addons.Constants;
 import org.knalpot.knalpot.interactive.Static;
 
+
 public class EnemyProcessor {
     //#region -- VARIABLES --
 
@@ -18,7 +19,7 @@ public class EnemyProcessor {
 
     // ==== MOVEMENT ==== //
 	private float SPEED = 60f;
-    private final float JUMP_HEIGHT = 600f;
+    private final float JUMP_HEIGHT = 400f;
 
     // ==== JUMP MECHANICS ==== //
     private boolean canJump = true;
@@ -34,6 +35,10 @@ public class EnemyProcessor {
     private final float CHASE_RADIUS = 100f;
     private float directionChangeCooldown = 0f;
     private final float DIRECTION_CHANGE_COOLDOWN_TIME = 2f; // Change this to adjust the cooldown time
+    private float jumpCooldown = 0.5f;
+    private float JUMP_COOLDOWN_TIME = 10f; // Control how often the enemy jumps
+
+    private boolean collisionOccurred = false;
 
     //#endregion
     
@@ -90,13 +95,18 @@ public class EnemyProcessor {
         float playerX = world.getPlayer().getPosition().x;
         float enemyX = enemy.getPosition().x;
         float distanceToPlayer = Math.abs(playerX - enemyX);
-        
+    
         if (distanceToPlayer < CHASE_RADIUS) {
             // Player is within chase radius, move towards player
             enemy.getVelocity().x = (playerX < enemyX) ? -SPEED : SPEED;
             enemy.direction = (playerX < enemyX) ? -1 : 1;
             enemy.enemyState = Enemy.EnemyState.MOVE;
             directionChangeCooldown = DIRECTION_CHANGE_COOLDOWN_TIME; // Reset the cooldown when chasing the player
+            if (collisionOccurred) {
+                System.out.println("jumping");
+                jump();
+                collisionOccurred = false;
+            }
         } else {
             // Player is outside of chase radius, wander around
             SPEED = 40;
@@ -108,8 +118,22 @@ public class EnemyProcessor {
             } else {
                 directionChangeCooldown -= Gdx.graphics.getDeltaTime();
             }
+            if (collisionOccurred) {
+                jump();
+                collisionOccurred = false;
+            }
         }
     }
+    
+    
+    /**
+     * Makes {@code Enemy} jump.
+     */
+    private void jump() {
+        enemy.getVelocity().y = JUMP_HEIGHT;
+        jumpCooldown = JUMP_COOLDOWN_TIME;
+    }
+    
     
 	/**
 	 * Moves {@code Enemy} vertically using simple jump mechanics.
@@ -127,20 +151,16 @@ public class EnemyProcessor {
         cn = new Vector2();
         cp = new Vector2();
         float contactTime = 0f;
-        if (enemy.DynamicAABB(in, block, cp, cn, contactTime, dt)) {
+        boolean collision = enemy.DynamicAABB(in, block, cp, cn, contactTime, dt);
+        if (collision) {
             cn = enemy.getContactNormal();
             cp = enemy.getContactPoint();
             t = enemy.getContactTime();
-            // System.out.println("checking velocity");
-            // System.out.println(in.getVelocity().x + ":x before");
             in.getVelocity().x -= cn.x * Math.abs(in.getVelocity().x) * (1 - contactTime);
-            // System.out.println(in.getVelocity().x + ":x after");
-            // System.out.println(in.getVelocity().y + ":y before");
             in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
-            // System.out.println(in.getVelocity().y + ":y after");
-            return true;
+            collisionOccurred = true;
         }
-        return false;
+        return collision;
     }
 
     private boolean resolvePlatformCollision(Actor in, Static platform, float dt) {
