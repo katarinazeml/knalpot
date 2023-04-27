@@ -60,7 +60,7 @@ public class Player extends Actor {
         Bottom = (int) bounds.y;
         Top = (int) (bounds.y + bounds.height);
 
-        enemy = new Enemy(new Vector2(100, 300), this);
+        enemy = new Enemy(new Vector2(200, 100), this);
     }
 
     public void update(float dt) {
@@ -74,8 +74,6 @@ public class Player extends Actor {
         Top = (int) bounds.y + HEIGHT;
         enemy.update(dt);
     }
-    public void caughtByEnemy(){
-        
-    }
+    public void caughtByEnemy() {}
     //#endregion
 }

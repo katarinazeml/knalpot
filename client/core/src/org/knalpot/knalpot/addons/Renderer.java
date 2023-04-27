@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Enemy;
+import org.knalpot.knalpot.actors.EnemyProcessor;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
@@ -281,16 +282,13 @@ public class Renderer {
     }
 
     private void drawEnemy() {
-        float enemyPositionX = 0;
-        if (enemy.enemyDirection == -1) {
-            enemyPositionX = enemy.getPosition().x;
+        float enemyPositionX = enemy.getPosition().x;
+        if (enemy.getEnemyDirection() == -1) {
             batch.draw(enemyTexture, enemyPositionX, enemy.getPosition().y);
         }
-        if (enemy.enemyDirection == 1) {
-            enemyPositionX = enemy.getPosition().x + enemy.getWidth() / 2f;
-            batch.draw(enemyTexture, enemyPositionX, enemy.getPosition().y, -enemyTexture.getWidth(), enemyTexture.getHeight());
+        if (enemy.getEnemyDirection() == 1) {
+            batch.draw(enemyTexture, enemyPositionX + enemy.getWidth(), enemy.getPosition().y, -enemyTexture.getWidth(), enemyTexture.getHeight());
         }
-    }
-    
+    }    
     //#endregion
 }

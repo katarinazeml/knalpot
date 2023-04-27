@@ -1,143 +1,104 @@
 package org.knalpot.knalpot.actors;
 
-import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.world.World;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.MathUtils;
 
 public class EnemyProcessor {
+
     //#region -- VARIABLES --
 
     // ==== OBJECT VARIABLES ==== //
-	private World world;
-	private Actor enemy;
+    private World world;
+    private Enemy enemy;
+
+    // ==== MOVEMENT ==== //
+    private float SPEED = 15f;
 
     private int moveInput = 1;
 
-    // ==== COLLISION-RELATED ==== //
-    private Vector2 cp;
-    private Vector2 cn;
-    //#endregion
-    private boolean canJump;
-    private float t;
+    // ==== AI CHASING ==== //
+    private final float CHASE_RADIUS = 80f;
 
-    public enum EnemyState {
-        CHASE, IDLE, ATTACK, JUMP
+    //#endregion
+
+    //#region -- FUNCTIONS --
+
+    /**
+     * Processor constructor.
+     * @param world
+     */
+    public EnemyProcessor(World world) {
+        this.world = world;
+        enemy = this.world.getEnemy();
+    }
+
+    /**
+     * Updating {@code Enemy}'s position each frame.
+     * @param dt
+     */
+    public void update(float dt) {
+        if (isPlayerInChaseRadius()) {
+            chasePlayer();
+            SPEED = 30f;
+        } else {
+            wanderAround();
+        }
+    
+        enemy.getPosition().add(enemy.getVelocity().x * dt, 0);
+    
+        if (enemy.getVelocity().x > 0) {
+            enemy.setEnemyDirection(1);
+            System.out.println("facing right");
+            System.out.println(enemy.getEnemyDirection());
+        } else if (enemy.getVelocity().x < 0) {
+            enemy.setEnemyDirection(-1);
+            System.out.println("facing left");
+            System.out.println(enemy.getEnemyDirection());
+        }
+    
+        // System.out.println("Enemy positions");
+        // System.out.println(enemy.getPosition().x);
+        // System.out.println(enemy.getPosition().y);
+        enemy.update(dt);
     }
     
-    //#region -- FUNCTIONS --
-	/**
-     * Processor constructor.
-	 * @param world
-	 */
-	public EnemyProcessor(World world) {
-		this.world = world;
-		enemy = this.world.getEnemy();
-	}
 
-	/**
-     * Updating {@code Player}'s position each frame.
-	 * @param dt
-	 */
-	public void update(float dt) {
-        // System.out.println("-----");
-        windowCollision(dt);
-
-    	//enemy.getAcceleration().scl(dt);
-
-        // System.out.println("scalar Y accel:");
-        // System.out.println(player.getAcceleration().y);
-
-		//enemy.getVelocity().add(enemy.getAcceleration().x, enemy.getAcceleration().y);
-
-        // System.out.println("bounds");
-        // System.out.println(player.getBounds().x);
-        // System.out.println("Player X position");
-        // System.out.println(player.getPosition().x);
-        // System.out.println("Player Y pos");
-        // System.out.println(player.getPosition().y);
-
-        // System.out.println("colblock position");
-        // System.out.println(collisionBlock.getPosition());
-        // System.out.println("Important stuff for collisions");
-        // System.out.println(cn);
-        // System.out.println(cp);
-        // System.out.println(t);
-        
-
-        for (Static obj : world.collisionBlocks) {
-            if (resolveCollision(enemy, obj, dt)) {
-                // System.out.println("Colliding!");
-                if (enemy.getVelocity().y == 0f) canJump = true;
-            }
-        }
-
-        for (Static obj : world.platforms) {
-            if (resolvePlatformCollision(enemy, obj, dt)) {
-                if (enemy.getVelocity().y == 0f) canJump = true;
-            }
-        }
-        enemy.update(dt);
-        // System.out.println("-----");
-	}
-
-
-    //#endregion
-
-    //#region - COLLISIONS -
     /**
-     * Temporary collision for window borders. Will be removed in the nearest future.
-     * @param dt
+     * Moves {@code Enemy} horizontally towards the player.
      */
-    private void windowCollision(float dt) {
-        if (enemy.Bottom + enemy.getScalarVelocity(dt).y <= 0) {
-            canJump = true;
-        	enemy.getPosition().y = 0f;
-            enemy.getVelocity().y -= enemy.getVelocity().y;
+    private void chasePlayer() {
+        Actor player = world.getPlayer();
+        if (enemy.getPosition().x < player.getPosition().x) {
+            moveInput = 1;
+        } else if (enemy.getPosition().x > player.getPosition().x) {
+            moveInput = -1;
         }
-        if (enemy.Top + enemy.getScalarVelocity(dt).y >= 480 - enemy.getHeight()) enemy.getVelocity().y -= enemy.getVelocity().y;
+    
+        enemy.getVelocity().x = moveInput * SPEED;
+    }
+    
+    /**
+     * Makes {@code Enemy} wander around randomly.
+     */
+    private void wanderAround() {
+        // Randomly change the horizontal movement direction every few seconds
+        if (MathUtils.randomBoolean(0.005f)) {
+            moveInput = MathUtils.randomSign();
+        }
+
+        enemy.getVelocity().x = moveInput * SPEED;
     }
 
     /**
-     * Resolves AABB collision using {@code Actor}'s physics.
-     * @param in
-     * @param block
-     * @param dt
-     * @return boolean
+     * Returns {@code true} if the player is within a certain radius for the AI enemy to chase.
+     * @return
      */
-    private boolean resolveCollision(Actor in, Static block, float dt) {
-        cn = new Vector2();
-        cp = new Vector2();
-        float contactTime = 0f;
-        if (enemy.DynamicAABB(in, block, cp, cn, contactTime, dt)) {
-            cn = enemy.getContactNormal();
-            cp = enemy.getContactPoint();
-            t = enemy.getContactTime();
-            in.getVelocity().x -= cn.x * Math.abs(in.getVelocity().x) * (1 - contactTime);
-            in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
-            // move the enemy back along its velocity vector
-            Vector2 correction = cn.scl((1 - contactTime) * in.getScalarVelocity(dt).len());
-            in.getPosition().add(correction.x, correction.y);
-            return true;
-        }
-        return false;
+    private boolean isPlayerInChaseRadius() {
+        Actor player = world.getPlayer();
+        float distanceToPlayer = enemy.getPosition().dst(player.getPosition());
+        return distanceToPlayer <= CHASE_RADIUS;
     }
 
-    private boolean resolvePlatformCollision(Actor in, Static platform, float dt) {
-        cn = new Vector2();
-        cp = new Vector2();
-        float contactTime = 0f;
-        if (enemy.DynamicAABB(in, platform, cp, cn, contactTime, dt)) {
-            cn = enemy.getContactNormal();
-            cp = enemy.getContactPoint();
-            t = enemy.getContactTime();
-
-            if (in.getVelocity().y < 0f) {
-                in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
-            }
-            return true;
-        }
-        return false;
-    }
     //#endregion
 }

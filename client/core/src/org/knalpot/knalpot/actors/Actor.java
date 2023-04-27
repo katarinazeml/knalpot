@@ -53,6 +53,7 @@ public class Actor {
     // ==== TEMPORARY STATE MACHINE ==== //
     public State state;
     public State previousState;
+    public int enemyDirection;
 
     //#endregion
     //#region -- GET/SET --
