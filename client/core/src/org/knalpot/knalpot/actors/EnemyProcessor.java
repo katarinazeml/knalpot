@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import org.knalpot.knalpot.actors.Enemy.EnemyState;
 import org.knalpot.knalpot.addons.Constants;
 import org.knalpot.knalpot.interactive.Static;
 
@@ -84,9 +85,8 @@ public class EnemyProcessor {
         if (resolvePlayerCollision(enemy, player, dt)) {
             // Enemy collides with player, stop moving
             enemy.getVelocity().x = 0f;
-            enemy.enemyState = Enemy.EnemyState.IDLE;
+            enemy.setState(EnemyState.IDLE);
         }
-    
         enemy.update(dt);
     }
     
@@ -104,23 +104,23 @@ public class EnemyProcessor {
         float enemyX = enemy.getPosition().x;
         float distanceToPlayer = Math.abs(playerX - enemyX);
         if (distanceToPlayer < ATTACK_RADIUS) {
-            enemy.enemyState = Enemy.EnemyState.ATTACK;
+            // System.out.println("attacking");
+            enemy.setState(EnemyState.ATTACK);
+            // System.out.println(enemy.getState());
             attackTimer -= Gdx.graphics.getDeltaTime(); // subtract time passed since last frame
             if (attackTimer <= 0f) {
                 player.caughtByEnemy(10); // reduce player's health by 10
                 attackTimer = 2f; // reset timer
             }
         } else {
-            enemy.enemyState = Enemy.EnemyState.IDLE;
+            enemy.setState(EnemyState.IDLE);
             attackTimer = 2f; // reset timer
         }
     }
     
-
     /**
      * Moves {@code Enemy} horizontally towards the player.
      */
-
      private void horizontalMovement() {
         float playerX = world.getPlayer().getPosition().x;
         float enemyX = enemy.getPosition().x;
@@ -130,7 +130,7 @@ public class EnemyProcessor {
             // Player is within chase radius, move towards player
             enemy.getVelocity().x = (playerX < enemyX) ? -SPEED : SPEED;
             enemy.direction = (playerX < enemyX) ? -1 : 1;
-            enemy.enemyState = Enemy.EnemyState.MOVE;
+            enemy.setState(EnemyState.MOVE);
             directionChangeCooldown = DIRECTION_CHANGE_COOLDOWN_TIME; // Reset the cooldown when chasing the player
             //System.out.println(enemy.getVelocity().y);
             if (verticalCollisionOccurred && canJump) {
@@ -143,14 +143,14 @@ public class EnemyProcessor {
             // Enemy and player are at the same x-coordinate, don't move
             enemy.getVelocity().x = 0;
             enemy.direction = lastDirection;
-            enemy.enemyState = Enemy.EnemyState.IDLE;
+            enemy.setState(EnemyState.IDLE);
         } else {
             // Player is outside of chase radius, wander around
             SPEED = 40;
             if (directionChangeCooldown <= 0f) {
                 enemy.getVelocity().x = (MathUtils.randomBoolean()) ? -SPEED : SPEED;
                 enemy.direction = (enemy.getVelocity().x > 0) ? 1 : -1;
-                enemy.enemyState = Enemy.EnemyState.MOVE;
+                enemy.setState(EnemyState.MOVE);
                 directionChangeCooldown = DIRECTION_CHANGE_COOLDOWN_TIME; // Reset the cooldown after changing direction
             } else {
                 directionChangeCooldown -= Gdx.graphics.getDeltaTime();

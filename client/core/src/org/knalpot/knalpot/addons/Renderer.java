@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Enemy;
+import org.knalpot.knalpot.actors.EnemyBullet;
 import org.knalpot.knalpot.actors.EnemyProcessor;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
@@ -80,7 +81,7 @@ public class Renderer {
     private ParallaxLayer darkGrass;
     private ParallaxLayer lightGrass;
     private Texture enemyTexture;
-       
+
     //#endregion
 
     //#region -- FUNCTIONS --
@@ -167,6 +168,9 @@ public class Renderer {
         //Draw enemy
         batch.begin();
         drawEnemy();
+        for (EnemyBullet bullet : enemy.getEnemyBullets()) {
+            bullet.render(batch);
+        }
         batch.end();
     }
 
@@ -274,11 +278,6 @@ public class Renderer {
         cloud.render(batch, targetX, 0);
         darkGrass.render(batch, targetX, 0);
         lightGrass.render(batch, targetX, 0);
-
-        //batch.draw(new Texture("level1/rocks.png"), 300, 128, 64, 64);
-        //batch.draw(new Texture("level1/tree1.png"), 500, 256, 56 * 3, 77 * 3);
-        //batch.draw(new Texture("level1/tree2.png"), 200, 128,26 * 3, 41 * 3);
-        //batch.draw(new Texture("level1/rocks.png"), 483, 192, 64, 64);
     }
 
     private void drawEnemy() {
