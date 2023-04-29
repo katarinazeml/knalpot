@@ -22,6 +22,8 @@ public class Enemy extends Actor {
 
     private Player player;
 
+    public boolean attack = false;
+
     public Enemy(Vector2 position, Player player) {
         this.position = position;
         this.player = player;
@@ -58,7 +60,9 @@ public class Enemy extends Actor {
         //     System.out.println(enemyState);
         //     shoot(dt, rotation);
         // }
-        shoot(dt, rotation);
+
+        if (attack) {shoot(dt, rotation);}
+
         for (EnemyBullet bullet : bullets) {
             bullet.update(dt);
         }

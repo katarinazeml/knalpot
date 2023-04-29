@@ -23,7 +23,10 @@ public class EnemyBullet extends Actor {
         WIDTH = texture.getWidth();
         HEIGHT = texture.getHeight();
 
-        position = this.enemy.getPosition().cpy();
+        // set position to the center of the enemy
+        position = new Vector2(enemy.getPosition().x, 
+        enemy.getPosition().y + 40);
+
         velocity = new Vector2();
     }
 
