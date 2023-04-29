@@ -6,6 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+
 import org.knalpot.knalpot.actors.Enemy.EnemyState;
 import org.knalpot.knalpot.addons.Constants;
 import org.knalpot.knalpot.interactive.Static;
@@ -44,7 +46,8 @@ public class EnemyProcessor {
 
     private boolean verticalCollisionOccurred = false;
     private int lastDirection;
-
+    
+    private ArrayList<EnemyBullet> bullets;
     //#endregion
     
     //#region -- FUNCTIONS --
@@ -56,6 +59,7 @@ public class EnemyProcessor {
 		this.world = world;
 		enemy = this.world.getEnemy();
         player = this.world.getPlayer();
+        bullets = enemy.getEnemyBullets();
 	}
 
 	/**
@@ -87,13 +91,21 @@ public class EnemyProcessor {
             enemy.getVelocity().x = 0f;
             enemy.setState(EnemyState.IDLE);
         }
+
+        // for (EnemyBullet bullet : bullets) {
+        //      if (resolvePlayerCollision(bullet, player, dt)) {
+        //         System.out.println("player got shot");
+        //         bullets.remove(bullet);
+        //         player.caughtByEnemy(10);
+        //      }
+        // }
+        
         enemy.update(dt);
     }
     
 	/**
 	 * Adds constant gravity force to object.
 	 */
-
 	private void gravity() {
 		if (enemy.getVelocity().y < 0) gravityForce = Constants.GRAVITY_FORCE * Constants.GRAVITY_ACCEL;
         enemy.getAcceleration().y = -gravityForce;
@@ -106,6 +118,7 @@ public class EnemyProcessor {
         if (distanceToPlayer < ATTACK_RADIUS) {
             // System.out.println("attacking");
             enemy.setState(EnemyState.ATTACK);
+            enemy.attack = true;
             // System.out.println(enemy.getState());
             attackTimer -= Gdx.graphics.getDeltaTime(); // subtract time passed since last frame
             if (attackTimer <= 0f) {
@@ -115,6 +128,7 @@ public class EnemyProcessor {
         } else {
             enemy.setState(EnemyState.IDLE);
             attackTimer = 2f; // reset timer
+            enemy.attack = false;
         }
     }
     
