@@ -1,5 +1,4 @@
 package org.knalpot.knalpot.scenes;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -90,6 +89,7 @@ public class MainMenuScreen implements Screen {
     }
 
     public void createStartButton() {
+        // create style
         TextButton.TextButtonStyle startStyle = new TextButton.TextButtonStyle();
         startStyle.font = font;
         startStyle.fontColor = Color.WHITE;
@@ -99,6 +99,7 @@ public class MainMenuScreen implements Screen {
         startStyle.over = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/start_over.png")), 0, 0, 0, 0));
         startStyle.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/start_down.png")), 0, 0, 0, 0));
 
+        // create start button
         TextButton startButton = new TextButton("", startStyle);
         startButton.setSize(buttonWidth, buttonHeight);
         startButton.setPosition((Gdx.graphics.getWidth() - buttonWidth) / 2f, (Gdx.graphics.getHeight() - buttonHeight) / 2f + 40);
@@ -117,6 +118,7 @@ public class MainMenuScreen implements Screen {
     }
 
     public void createExitButton() {
+        // create style
         TextButton.TextButtonStyle exitStyle = new TextButton.TextButtonStyle();
         exitStyle.font = font;
         exitStyle.fontColor = Color.WHITE;
@@ -126,6 +128,7 @@ public class MainMenuScreen implements Screen {
         exitStyle.over = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/exit_over.png")), 0, 0, 0, 0));
         exitStyle.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/exit_down.png")), 0, 0, 0, 0));
 
+        // create exit button
         TextButton exitButton = new TextButton("", exitStyle);
         exitButton.setSize(buttonWidth, buttonHeight);
         exitButton.setPosition((Gdx.graphics.getWidth() - buttonWidth) / 2f, (Gdx.graphics.getHeight() - buttonHeight) / 2f - buttonHeight + 20);
@@ -142,6 +145,7 @@ public class MainMenuScreen implements Screen {
     }
 
     public void createSettingsButton() {
+        // create style
         TextButton.TextButtonStyle settingsStyle = new TextButton.TextButtonStyle();
         settingsStyle.font = font;
         settingsStyle.fontColor = Color.WHITE;
@@ -151,6 +155,7 @@ public class MainMenuScreen implements Screen {
         settingsStyle.over = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/settings_over.png")), 0, 0, 0, 0));
         settingsStyle.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/settings_down.png")), 0, 0, 0, 0));
 
+        // create settings button
         TextButton settingsButton = new TextButton("", settingsStyle);
         float buttonSize = 118f;
         settingsButton.setSize(buttonSize, buttonSize);
@@ -169,6 +174,7 @@ public class MainMenuScreen implements Screen {
     }
 
     public void createBackground() {
+        // create background
         Texture backgroundTexture = new Texture(Gdx.files.internal("buttons/background.png"));
         Image background = new Image(backgroundTexture);
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

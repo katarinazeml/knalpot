@@ -38,7 +38,6 @@ public class SettingsMenuScreen implements Screen {
         this.game = game;
         batch = new SpriteBatch();
         font = new BitmapFont();
-
     }
 
     @Override
@@ -56,15 +55,9 @@ public class SettingsMenuScreen implements Screen {
         createVolumeSlider();
 
         // create title label
-        Label.LabelStyle titleLabelStyle = new Label.LabelStyle(font, null);
-        titleLabelStyle.fontColor = Color.WHITE;
-        Label titleLabel = new Label("Settings", titleLabelStyle);
-        titleLabel.setAlignment(Align.center);
-        titleLabel.setFontScale(2f);
-        titleLabel.setPosition(0, Gdx.graphics.getHeight() - 100, Align.center);
-        titleLabel.setSize(Gdx.graphics.getWidth(), 100);
-        stage.addActor(titleLabel);
+        createTitleLabel();
     }
+
     @Override
     public void render(float delta) {
         // clear screen
@@ -103,6 +96,7 @@ public class SettingsMenuScreen implements Screen {
     }
 
     public void createBackground() {
+        // create background
         Texture backgroundTexture = new Texture(Gdx.files.internal("buttons/background.png"));
         Image background = new Image(backgroundTexture);
         background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -112,6 +106,7 @@ public class SettingsMenuScreen implements Screen {
     }
 
     public void createBackButton() {
+        // create style
         TextButton.TextButtonStyle backStyle = new TextButton.TextButtonStyle();
         backStyle.font = font;
         backStyle.fontColor = Color.WHITE;
@@ -121,6 +116,7 @@ public class SettingsMenuScreen implements Screen {
         backStyle.over = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/back_over.png")), 0, 0, 0, 0));
         backStyle.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/back_down.png")), 0, 0, 0, 0));
 
+        // create back button
         TextButton backButton = new TextButton("", backStyle);
         backButton.setSize(buttonWidth, buttonHeight);
         backButton.setPosition((Gdx.graphics.getWidth() - buttonWidth) / 2f, (Gdx.graphics.getHeight() - buttonHeight) / 2f - buttonHeight + 20);
@@ -137,11 +133,25 @@ public class SettingsMenuScreen implements Screen {
         stage.addActor(backButton);
     }
 
+    private void createTitleLabel() {
+        // create title label
+        Label.LabelStyle titleLabelStyle = new Label.LabelStyle(font, null);
+        titleLabelStyle.fontColor = Color.WHITE;
+        Label titleLabel = new Label("Settings", titleLabelStyle);
+        titleLabel.setAlignment(Align.center);
+        titleLabel.setFontScale(2f);
+        titleLabel.setPosition(0, Gdx.graphics.getHeight() - 100, Align.center);
+        titleLabel.setSize(1325, 100);
+
+        // add title label to the stage
+        stage.addActor(titleLabel);
+    }
+
     public void createVolumeSlider() {
         // create slider
         volumeSlider = new Slider(0f, 1f, 0.1f, false, new Slider.SliderStyle(
-                new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/start_up.png")))),
-                new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/settings_up.png"))))
+                new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/slider_background.png")))),
+                new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/slider_knob.png"))))
         ));
         // set slider position to center of the screen
         volumeSlider.setPosition((Gdx.graphics.getWidth() - volumeSlider.getWidth()) / 2f - 375, (Gdx.graphics.getHeight() - volumeSlider.getHeight()) / 2f);
@@ -155,7 +165,7 @@ public class SettingsMenuScreen implements Screen {
         volumeLabel = new Label("Volume: " + (int)(game.getVolume() * 100) + "%", volumeLabelStyle);
         volumeLabel.setAlignment(Align.center);
         volumeLabel.setPosition(Gdx.graphics.getWidth() / 2f - 50, volumeSlider.getY() + volumeSlider.getHeight() + 10, Align.center);
-        volumeLabel.setSize(100, 50);
+        volumeLabel.setSize(150, 50);
 
         // add listener to slider that updates volume label and sets volume level
         volumeSlider.addListener(new ChangeListener() {
