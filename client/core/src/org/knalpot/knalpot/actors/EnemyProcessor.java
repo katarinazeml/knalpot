@@ -47,6 +47,7 @@ public class EnemyProcessor {
     private boolean verticalCollisionOccurred = false;
     private int lastDirection;
     
+    // ==== SHOOTING ==== //
     private ArrayList<EnemyBullet> bullets;
     //#endregion
     
@@ -99,7 +100,7 @@ public class EnemyProcessor {
         //         player.caughtByEnemy(10);
         //      }
         // }
-        
+
         enemy.update(dt);
     }
     

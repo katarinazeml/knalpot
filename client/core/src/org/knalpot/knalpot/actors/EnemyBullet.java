@@ -1,6 +1,7 @@
 package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.addons.BBGenerator;
+import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,22 +12,28 @@ public class EnemyBullet extends Actor {
     private Enemy enemy;
     private float speed = 500f;
     private float angle;
+    private Player player;
+    private Vector2 enemyBulletDirection;
+    private Vector2 bulletPosition;
 
-    public EnemyBullet(Enemy enemy, float angle) {
+    public EnemyBullet(Enemy enemy, Player player) {
         this.enemy = enemy;
-        this.angle = angle;
+        this.player = player;
         scaleSize = 2;
-
+    
         texture = new Texture("redSquare.png");
         BBSize = BBGenerator.BBPixels(texture.getTextureData());
-
+    
         WIDTH = texture.getWidth();
         HEIGHT = texture.getHeight();
-
-        // set position to the center of the enemy
-        position = new Vector2(enemy.getPosition().x, 
-        enemy.getPosition().y + 40);
-
+    
+        bulletPosition = new Vector2(enemy.getPosition().x, enemy.getPosition().y + 40);
+    
+        // Calculate the direction towards the center of the player
+        Vector2 playerCenter = new Vector2(player.getPosition().x + player.getWidth() / 2,
+                                           player.getPosition().y + player.getHeight() / 2);
+        enemyBulletDirection = playerCenter.sub(bulletPosition).nor();
+    
         velocity = new Vector2();
     }
 
@@ -40,13 +47,11 @@ public class EnemyBullet extends Actor {
 
     @Override
     public void update(float dt) {
-        float sine = (float) -Math.sin(Math.toRadians(angle));
-        float cosine = (float) Math.cos(Math.toRadians(angle));
-        velocity.set((sine * speed), (cosine * speed));
-        position.add(velocity.x * dt, velocity.y * dt);
+        velocity.set(enemyBulletDirection.x * speed, enemyBulletDirection.y * speed);
+        bulletPosition.add(velocity.x * dt, velocity.y * dt);
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(texture, position.x, position.y);
+        batch.draw(texture, bulletPosition.x, bulletPosition.y);
     }
 }
