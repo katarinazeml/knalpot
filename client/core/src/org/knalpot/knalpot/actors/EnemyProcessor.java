@@ -5,8 +5,10 @@ import org.knalpot.knalpot.world.World;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.SortedIntList.Iterator;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 import org.knalpot.knalpot.actors.Enemy.EnemyState;
 import org.knalpot.knalpot.addons.Constants;
@@ -93,15 +95,19 @@ public class EnemyProcessor {
             enemy.setState(EnemyState.IDLE);
         }
 
-        for (EnemyBullet bullet : bullets) {
-             if (bullet.getBounds().overlaps(player.getBounds())) {
+        ListIterator<EnemyBullet> bulletIterator = bullets.listIterator();
+        while (bulletIterator.hasNext()) {
+            EnemyBullet bullet = bulletIterator.next();
+            System.out.println("player`s bound x: " + player.getBounds().x + " bound y: " + player.getBounds().y);
+            System.out.println("bullet`s bound x: " + bullet.getBounds().x + " bound y: " + bullet.getBounds().y);
+            System.out.println(bullet.getBounds().overlaps(player.getBounds()));
+            if (bullet.getBounds().overlaps(player.getBounds())) {
                 System.out.println("player got shot");
-                bullets.remove(bullet);
+                bulletIterator.remove();
                 System.out.println(bullets.size());
                 player.caughtByEnemy(10);
-             }
+            }
         }
-
         enemy.update(dt);
     }
     
@@ -114,17 +120,20 @@ public class EnemyProcessor {
 	}
 
     private void attack() {
+        float playerCenterX = player.getPosition().x + player.getWidth() / 2;
+        float playerCenterY = player.getPosition().y + player.getHeight() / 2;
+
         float playerX = player.getPosition().x;
         float enemyX = enemy.getPosition().x;
         float distanceToPlayer = Math.abs(playerX - enemyX);
         if (distanceToPlayer < ATTACK_RADIUS) {
-            // System.out.println("attacking");
             enemy.setState(EnemyState.ATTACK);
             enemy.attack = true;
             // System.out.println(enemy.getState());
             attackTimer -= Gdx.graphics.getDeltaTime(); // subtract time passed since last frame
             if (enemy.attack && enemy.timeSinceLastShot > enemy.shootingCooldown) {
-                enemy.shoot(player.getPosition().cpy());
+                Vector2 target = new Vector2(playerCenterX, playerCenterY);
+                enemy.shoot(target);
                 enemy.timeSinceLastShot = 0f;
             }
             if (attackTimer <= 0f) {

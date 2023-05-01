@@ -57,17 +57,6 @@ public class Enemy extends Actor {
         Bottom = (int) bounds.y;
         Top = (int) bounds.y + HEIGHT;
 
-        // Calculate the angle between the player position and the enemy's position
-        // float angle = (float) MathUtils.atan2(player.getPosition().y - position.y,
-        // player.getPosition().x - position.x);
-
-        // Convert the angle to degrees and subtract 90 degrees to account for the orientation of the orb's sprite
-        // rotation = (angle * MathUtils.radiansToDegrees + 270) % 360;
-
-        // if (enemyState == EnemyState.ATTACK) {
-        //     System.out.println(enemyState);
-        //     shoot(dt, rotation);
-        // }
         for (EnemyBullet bullet : bullets) {
             bullet.update(dt);
         }
