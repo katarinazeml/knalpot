@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 public class EnemyBullet extends Actor {
 
     private Enemy enemy;
-    private float speed = 200f;
+    public float speed = 300f;
     private Vector2 enemyBulletDirection;
     private Vector2 bulletPosition;
 
@@ -33,7 +33,6 @@ public class EnemyBullet extends Actor {
         bounds.width = BBSize[0] * scaleSize;
         bounds.height = BBSize[1] * scaleSize;
     
-        // Calculate the direction towards the center of the player
         enemyBulletDirection = targetPos.sub(bulletPosition).nor();
     
         velocity = new Vector2();

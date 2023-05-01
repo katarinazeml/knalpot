@@ -47,7 +47,7 @@ public class EnemyProcessor {
     private float attackTimer = 2f;
 
     private boolean verticalCollisionOccurred = false;
-    private int lastDirection;
+    // private int lastDirection;
     
     // ==== SHOOTING ==== //
     private ArrayList<EnemyBullet> bullets;
@@ -98,13 +98,12 @@ public class EnemyProcessor {
         ListIterator<EnemyBullet> bulletIterator = bullets.listIterator();
         while (bulletIterator.hasNext()) {
             EnemyBullet bullet = bulletIterator.next();
-            System.out.println("player`s bound x: " + player.getBounds().x + " bound y: " + player.getBounds().y);
+            System.out.println("player`s bound x: " + player.getBounds().x + "bound y: " + player.getBounds().y);
             System.out.println("bullet`s bound x: " + bullet.getBounds().x + " bound y: " + bullet.getBounds().y);
             System.out.println(bullet.getBounds().overlaps(player.getBounds()));
             if (bullet.getBounds().overlaps(player.getBounds())) {
-                System.out.println("player got shot");
+                System.out.println("˖⁺‧₊˚♡˚₊‧⁺˖player got shot˖⁺‧₊˚♡˚₊‧⁺˖");
                 bulletIterator.remove();
-                System.out.println(bullets.size());
                 player.caughtByEnemy(10);
             }
         }
@@ -122,7 +121,7 @@ public class EnemyProcessor {
     private void attack() {
         float playerCenterX = player.getPosition().x + player.getWidth() / 2;
         float playerCenterY = player.getPosition().y + player.getHeight() / 2;
-
+    
         float playerX = player.getPosition().x;
         float enemyX = enemy.getPosition().x;
         float distanceToPlayer = Math.abs(playerX - enemyX);
@@ -133,6 +132,21 @@ public class EnemyProcessor {
             attackTimer -= Gdx.graphics.getDeltaTime(); // subtract time passed since last frame
             if (enemy.attack && enemy.timeSinceLastShot > enemy.shootingCooldown) {
                 Vector2 target = new Vector2(playerCenterX, playerCenterY);
+                float bulletSpeed = 300f;
+                if (player.getVelocity().x != 0 || player.getVelocity().y != 0) {
+                    // Calculate the time it takes for the bullet to reach the player's position
+                    float dx = playerCenterX - enemy.getPosition().x;
+                    float dy = playerCenterY - enemy.getPosition().y;
+                    float distanceToTarget = (float) Math.sqrt(dx * dx + dy * dy);
+                    float timeToTarget = distanceToTarget / bulletSpeed;
+                    
+                    // Calculate the player's predicted position after the bullet reaches the target position
+                    float predictedX = playerCenterX + (player.getVelocity().x * timeToTarget);
+                    float predictedY = playerCenterY + (player.getVelocity().y * timeToTarget);
+                    
+                    // Set the target position to the predicted position
+                    target = new Vector2(predictedX, predictedY);
+                }
                 enemy.shoot(target);
                 enemy.timeSinceLastShot = 0f;
             }
@@ -146,6 +160,7 @@ public class EnemyProcessor {
             enemy.attack = false;
         }
     }
+    
     
     /**
      * Moves {@code Enemy} horizontally towards the player.
