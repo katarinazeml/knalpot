@@ -2,6 +2,7 @@ package org.knalpot.knalpot.interactive;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
@@ -123,6 +124,10 @@ public class Static {
 	 */
 	public int getHeight() {
 		return (int) bounds.height;
+	}
+
+	public void render(SpriteBatch batch) {
+		batch.draw(texture, position.x, position.y, getWidth(), getHeight());
 	}
 	//#endregion
 }

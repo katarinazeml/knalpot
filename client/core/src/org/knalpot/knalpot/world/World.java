@@ -7,7 +7,8 @@ import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.interactive.Static;
-import org.knalpot.knalpot.interactive.props.Prop;
+import org.knalpot.knalpot.interactive.props.Chest;
+import org.knalpot.knalpot.interactive.props.Consumable;
 import org.knalpot.knalpot.networking.ClientProgram;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -40,9 +41,10 @@ public class World {
 
 	public List<Static> collisionBlocks;
 	public List<Static> platforms;
+	private List<Chest> chests;
 
 	// testing purposes only
-	private Prop prop;
+	private Chest chest;
 
 	//#region -- FUNCTIONS --
 	/**
@@ -52,9 +54,11 @@ public class World {
 		tiledMap = new TmxMapLoader().load(tiledSrc);
 		collisionBlocks = new ArrayList<>();
 		platforms = new ArrayList<>();
+		chests = new ArrayList<>();
 		initializeWorld();
 		initializeNetwork();
 		player.initializeHUD();
+		chests.forEach(e -> e.initializeChestHUD());
 	}
 
 	/**
@@ -69,9 +73,8 @@ public class World {
 		return orb;
 	}
 
-	// delete later
-	public Prop getProp() {
-		return prop;
+	public List<Chest> getChest() {
+		return chests;
 	}
 
 	/**
@@ -95,14 +98,14 @@ public class World {
 	private void initializeWorld() {
 		player = new Player(new Vector2(100, 200));
 		orb = new Orb(player);
+		chest = new Chest(new Vector2(200, 132), 32, 32, new Texture("orb.png"));
 
-		player.addProp(prop = new Prop(new Vector2(0, 0), 32, 32, new Texture("orb.png")));
-		player.addProp(prop = new Prop(new Vector2(0, 0), 32, 32, new Texture("orb.png")));
-		player.addProp(prop = new Prop(new Vector2(0, 0), 32, 32, new Texture("orb.png")));
-		player.getInventory().get(0).setName("Potion");
-		player.getInventory().get(1).setName("Apple");
-		player.getInventory().get(2).setName("Water");
+		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
+		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
+		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Water"));
 		
+		chests.add(chest);
+
 		for (MapObject obj : tiledMap.getLayers().get("Collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();

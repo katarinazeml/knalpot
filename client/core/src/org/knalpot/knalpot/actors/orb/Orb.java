@@ -140,7 +140,6 @@ public class Orb extends Actor {
         }
 
         if (state == OrbState.TRANSFORM_TO_ORB) {
-            System.out.println(osm.getSize().length);
             if (osm.getSize().length == 2)
                 animator.shrinkShape(0.01f);
             
@@ -153,8 +152,6 @@ public class Orb extends Actor {
             if (osm.getSize().length == 1 && osm.getSize()[0] != WIDTH)
                 animator.expandShape(0.02f);
             
-            System.out.println(animator.isConvertationDone());
-
             if (animator.isConvertationDone()) {
                 state = OrbState.ORB;
                 animator.setConvertation(false);

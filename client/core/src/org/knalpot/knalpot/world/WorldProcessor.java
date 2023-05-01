@@ -41,6 +41,7 @@ public class WorldProcessor {
 	public void update(float dt) {
 		playerProcessor.update(dt);
 		world.getOrb().update(dt);
+		world.getChest().forEach(e -> e.update(dt));
 
 		clientProgram.updateNetwork();
 	}

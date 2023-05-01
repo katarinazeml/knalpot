@@ -7,25 +7,30 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Prop class.
+ * Consumable class.
  * @author Maksim Usmanov
  * @version 0.1
  */
-public class Prop extends Static {
-    public enum PropType {
+public class Consumable extends Static {
+    public enum ConsumType {
         POTION,
         USELESS
     }
 
     private String name;
-    private PropType type;
+    private ConsumType type;
     private int power;
     private float scale;
 
     private Vector2 targetPos;
 
-    public Prop(Vector2 position, int width, int height, Texture texture) {
+    public Consumable(Vector2 position, int width, int height, Texture texture) {
         super(position, width, height, texture);
+    }
+
+    public Consumable(Vector2 position, int width, int height, Texture texture, String name) {
+        super(position, width, height, texture);
+        this.name = name;
     }
 
     public String getName() {
@@ -36,11 +41,11 @@ public class Prop extends Static {
         this.name = name;
     }
 
-    public PropType getType() {
+    public ConsumType getType() {
         return type;
     }
 
-    public void setType(PropType type) {
+    public void setType(ConsumType type) {
         this.type = type;
     }
 

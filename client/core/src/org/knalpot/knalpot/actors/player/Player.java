@@ -7,7 +7,7 @@ import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.addons.BBGenerator;
 import org.knalpot.knalpot.hud.HUDProcessor;
 import org.knalpot.knalpot.hud.HUD.HUDType;
-import org.knalpot.knalpot.interactive.props.Prop;
+import org.knalpot.knalpot.interactive.props.Consumable;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -33,11 +33,14 @@ public class Player extends Actor {
     }
 
     // ==== INVENTORY ==== //
-    private List<Prop> inventory;
+    private List<Consumable> inventory;
     
     // ==== HUD ==== //
 	private HUDProcessor inventoryHUD;
 
+    // temporary
+    public int chestIndex = 0;
+    public boolean chestIsActive = false;
     //#endregion
 
     //#region -- FUNCTIONS --
@@ -83,10 +86,6 @@ public class Player extends Actor {
         bounds.x = position.x;
         bounds.y = position.y;
 
-        System.out.println("Player Size");
-        System.out.println(getWidth());
-        System.out.println(getHeight());
-
         Left = (int) bounds.x;
         Right = (int) bounds.x + WIDTH;
         Bottom = (int) bounds.y;
@@ -104,9 +103,9 @@ public class Player extends Actor {
 
     /**
      * Getter for player's inventory.
-     * @return List<Prop>
+     * @return List<Consumable>
      */
-    public List<Prop> getInventory() {
+    public List<Consumable> getInventory() {
         return inventory;
     }
 
@@ -120,21 +119,21 @@ public class Player extends Actor {
     }
 
     /**
-     * Adds prop to the inventory.
-     * @param prop
+     * Adds consumable to the inventory.
+     * @param consum
      */
-    public void addProp(Prop prop) {
-        inventory.add(prop);
+    public void addConsumable(Consumable consum) {
+        inventory.add(consum);
     }
 
     /**
-     * Removes prop from the inventory.
+     * Removes consumable from the inventory.
      * Currently is for testing purposes only.
-     * @param prop
+     * @param consumable
      */
-    public void removeProp(Prop prop) {
-        if (inventory.contains(prop))
-            inventory.remove(prop);
+    public void removeConsumable(Consumable consumable) {
+        if (inventory.contains(consumable))
+            inventory.remove(consumable);
     }
     //#endregion
 }

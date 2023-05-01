@@ -7,7 +7,7 @@ import org.knalpot.knalpot.addons.effects.OSM;
 import org.knalpot.knalpot.addons.effects.OSMAnimator;
 import org.knalpot.knalpot.addons.effects.OSM.Shape;
 import org.knalpot.knalpot.hud.HUD.HUDType;
-import org.knalpot.knalpot.interactive.props.Prop;
+import org.knalpot.knalpot.interactive.props.Consumable;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -36,8 +36,8 @@ public class HUDProcessor {
     // this code is probably a bad idea but i need it
     // for testing purposes.
     private SpriteBatch batch;
-    private List<Prop> inventory;
-    private int currentProp = 0;
+    private List<Consumable> inventory;
+    private int currentConsum = 0;
     private float speed = 4f;
 
     // Fonts.
@@ -84,8 +84,16 @@ public class HUDProcessor {
         animator = new OSMAnimator(osm);
     }
 
-    public int getCurrentProp() {
-        return currentProp;
+    public int getCurrentConsum() {
+        return currentConsum;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void decreaseCurrentConsum() {
+        currentConsum = 0;
     }
 
     public void setOSMData() {
@@ -95,12 +103,12 @@ public class HUDProcessor {
         animator.updateOSMSize();
     }
 
-    public void initializeInventory(List<Prop> props) {
-        this.inventory = props;
+    public void initializeInventory(List<Consumable> consumables) {
+        inventory = consumables;
         for (int i = 0; i < inventory.size(); i++) {
-            Prop prop = inventory.get(i);
-            prop.setPosition(
-                Constants.WINDOW_WIDTH / 2 - prop.getWidth() / 2 + prop.getWidth() * 3 * (i - currentProp), 
+            Consumable consumable = inventory.get(i);
+            consumable.setPosition(
+                Constants.WINDOW_WIDTH / 2 - consumable.getWidth() / 2 + consumable.getWidth() * 3 * (i - currentConsum), 
                 Constants.WINDOW_HEIGHT / 2
             );
         }
@@ -108,48 +116,61 @@ public class HUDProcessor {
 
     public void setTargetPosition() {
         for (int i = 0; i < inventory.size(); i++) {
-            Prop prop = inventory.get(i);
-            prop.setTargetPos(
-                Constants.WINDOW_WIDTH / 2 - prop.getWidth() / 2 + prop.getWidth() * 3 * (i - currentProp), 
+            Consumable consumable = inventory.get(i);
+            consumable.setTargetPos(
+                Constants.WINDOW_WIDTH / 2 - consumable.getWidth() / 2 + consumable.getWidth() * 3 * (i - currentConsum), 
                 Constants.WINDOW_HEIGHT / 2
             );
         }
     }
     
-    public void updatePropsPosition(float dt) {
-        for (Prop prop : inventory) {
-            prop.setScale(1f);
+    public void updateConsumPosition(float dt) {
+        for (Consumable consumable : inventory) {
+            consumable.setScale(1f);
 
-            if (prop.getTargetPos() != null) {
-                float dx = prop.getTargetPos().x - prop.getPosition().x;
+            if (consumable.getTargetPos() != null) {
+                float dx = consumable.getTargetPos().x - consumable.getPosition().x;
 
-                if (inventory.indexOf(prop) == currentProp) prop.setScale(2 - Math.abs(dx / 100));
-                prop.changePosition(dx * speed, 0, dt);
+                if (inventory.indexOf(consumable) == currentConsum) consumable.setScale(2 - Math.abs(dx / 100));
+                consumable.changePosition(dx * speed, 0, dt);
             }
         }
     }
 
-    public void update(float dt, boolean isActive) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            currentProp += 1;
-            currentProp %= inventory.size();
-            setTargetPosition();
-        }
-        
-        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            currentProp -= 1;
-            currentProp = (currentProp % inventory.size() + inventory.size()) % inventory.size();
-            setTargetPosition();
-        }
-
-        updatePropsPosition(dt);
-
+    public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public void changeActive() {
+        isActive = !isActive;
+    }
+
+    public void updateInventory(List<Consumable> consumables) {
+        this.inventory = consumables;
+    }
+
+    public void update(float dt) {
+        if (isActive) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+                currentConsum += 1;
+                currentConsum %= inventory.size();
+                setTargetPosition();
+            }
+            
+            if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+                currentConsum -= 1;
+                currentConsum = (currentConsum % inventory.size() + inventory.size()) % inventory.size();
+                setTargetPosition();
+            }
+        }
+
+        updateConsumPosition(dt);
+
         if (!animator.isConvertationDone())
-            if (this.isActive)
+            if (isActive)
                 animator.expandShape(dt);
 
-            if (!this.isActive)
+            if (!isActive)
                 animator.shrinkShape(dt);
     }
 
@@ -159,19 +180,19 @@ public class HUDProcessor {
             osm.drawRect(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, new Color(0, 0, 0, 0.4f), true);
             osm.render();
 
-            for (Prop prop : inventory) {
-                System.out.println(prop.getPosition().x);
-                System.out.println(prop.getPosition().y);
-                prop.render(batch);
+            for (Consumable consumable : inventory) {
+                consumable.render(batch);
             }
 
-            batch.begin();
-
-            Prop prop = inventory.get(currentProp);
-            font.draw(batch, prop.getName(),
-                Constants.WINDOW_WIDTH / 2 - (prop.getName().length() * 24) / 2, Constants.WINDOW_HEIGHT / 2 - Constants.WINDOW_HEIGHT / 6);
-
-            batch.end();
+            if (inventory.size() != 0) {
+                batch.begin();
+    
+                Consumable consumable = inventory.get(currentConsum);
+                font.draw(batch, consumable.getName(),
+                    Constants.WINDOW_WIDTH / 2 - (consumable.getName().length() * 24) / 2, Constants.WINDOW_HEIGHT / 2 - Constants.WINDOW_HEIGHT / 6);
+    
+                batch.end();
+            }
         }
         // batch.begin();
     }

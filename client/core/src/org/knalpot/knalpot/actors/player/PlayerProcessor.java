@@ -3,6 +3,8 @@ package org.knalpot.knalpot.actors.player;
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.addons.*;
 import org.knalpot.knalpot.interactive.Static;
+import org.knalpot.knalpot.interactive.props.Chest;
+import org.knalpot.knalpot.interactive.props.Consumable;
 import org.knalpot.knalpot.world.World;
 
 import java.lang.Math;
@@ -110,13 +112,35 @@ public class PlayerProcessor {
             }
         }
 
+        for (Chest chest : world.getChest()) {
+            if (Actor.SimpleAABB(player, chest, dt) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                chest.getHUD().changeActive();
+                ((Player) player).chestIndex = world.getChest().indexOf(chest);
+            }
+        }
+
         player.previousDirection = player.direction;
         player.direction = moveInput;
         player.update(dt);
         // System.out.println("-----");
 
-        ((Player) player).getHud().update(dt, isHUDActive);
+        // HUD and inventory stuff // temporary
+        takeConsumableFromChest();
+        ((Player) player).getHud().setIsActive(isHUDActive);
+        ((Player) player).getHud().update(dt);
 	}
+
+    private void takeConsumableFromChest() {
+        Chest chest = world.getChest().get(((Player) player).chestIndex);
+        if (chest.getHUD().getIsActive()) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+                Consumable consumable = chest.getConsumableOfIndex(chest.getHUD().getCurrentConsum());
+                chest.getHUD().decreaseCurrentConsum();
+                ((Player) player).addConsumable(consumable);
+                chest.removeConsumable(consumable);
+            }
+        }
+    }
 
 	/**
 	 * Adds constant gravity force to object.

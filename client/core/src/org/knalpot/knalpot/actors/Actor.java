@@ -254,6 +254,17 @@ public class Actor {
         }
         return false;
     }
+
+    public static boolean SimpleAABB(Actor in, Static target, float dt) {
+        if (in.getBounds().x < target.getBounds().x + target.getWidth() &&
+            in.getBounds().x + in.getWidth() > target.getBounds().x &&
+            in.getBounds().y < target.getBounds().y + target.getHeight() &&
+            in.getBounds().y + in.getHeight() > target.getBounds().y) {
+            
+            return true;
+        }
+        return false;
+    }
     //#endregion
     //#endregion
 

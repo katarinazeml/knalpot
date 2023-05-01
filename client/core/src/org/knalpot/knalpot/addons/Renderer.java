@@ -169,6 +169,7 @@ public class Renderer {
         // Draw teleport animation
         batch.begin();
         teleport.render();
+        world.getChest().forEach(e -> e.render(batch));
         orb.render(batch);
     	batch.end();
 
@@ -179,6 +180,8 @@ public class Renderer {
 
         // Draw HUD
         ((Player) player).getHud().render();
+        // world.getChest().get(((Player) player).chestIndex).renderHUD(batch, ((Player) player).chestIsActive);
+        world.getChest().get(((Player) player).chestIndex).getHUD().render();
     }
 
     /**
