@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.EnemyBullet;
-import org.knalpot.knalpot.actors.EnemyProcessor;
 import org.knalpot.knalpot.actors.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
@@ -168,9 +167,11 @@ public class Renderer {
         //Draw enemy
         batch.begin();
         drawEnemy();
+
         for (EnemyBullet bullet : enemy.getEnemyBullets()) {
             bullet.render(batch);
         }
+
         batch.end();
     }
 

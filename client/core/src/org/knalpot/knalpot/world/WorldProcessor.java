@@ -29,7 +29,7 @@ public class WorldProcessor {
 	public WorldProcessor(World world) {
 		this.world = world;
 		playerProcessor = new PlayerProcessor(this.world);
-		enemyProcessor = new EnemyProcessor(world);
+		enemyProcessor = new EnemyProcessor(this.world);
 		clientProgram = this.world.getClientProgram();
 		clientProgram.create();
 	}

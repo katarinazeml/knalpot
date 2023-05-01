@@ -83,7 +83,7 @@ public class World {
 	 */
 	private void initializeWorld() {
 		player = new Player(new Vector2(100, 200));
-		enemy = new Enemy(new Vector2(500, 110), player);
+		enemy = new Enemy(new Vector2(500, 110));
 
 		for (MapObject obj : tiledMap.getLayers().get("Collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;

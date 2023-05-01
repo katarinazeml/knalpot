@@ -38,8 +38,8 @@ public class Actor {
     public int previousDirection;
 
     // ==== SIZE ==== //
-    protected static int WIDTH;
-    protected static int HEIGHT;
+    protected int WIDTH;
+    protected int HEIGHT;
     
     // ==== VECTOR-BASED MOVEMENT VARIABLES ==== //
     protected Vector2 position;
@@ -252,7 +252,7 @@ public class Actor {
         return false;
     }
 
-    public boolean DynamicAABBplayer(Actor in, Actor player, Vector2 contactPoint, Vector2 contactNormal, float contactTime, float dt) {
+    public boolean DynamicAABBActor(Actor in, Actor player, Vector2 contactPoint, Vector2 contactNormal, float contactTime, float dt) {
         if (in.getVelocity().x == 0 && in.getVelocity().y == 0) return false;
         
         Rectangle expandedTarget = new Rectangle();

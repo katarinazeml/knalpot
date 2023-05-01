@@ -1,38 +1,40 @@
 package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.addons.BBGenerator;
-import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class EnemyBullet extends Actor {
 
     private Enemy enemy;
-    private float speed = 500f;
-    private float angle;
-    private Player player;
+    private float speed = 200f;
     private Vector2 enemyBulletDirection;
     private Vector2 bulletPosition;
 
-    public EnemyBullet(Enemy enemy, Player player) {
+    public EnemyBullet(Enemy enemy, Vector2 targetPos) {
         this.enemy = enemy;
-        this.player = player;
         scaleSize = 2;
     
         texture = new Texture("redSquare.png");
         BBSize = BBGenerator.BBPixels(texture.getTextureData());
     
-        WIDTH = texture.getWidth();
-        HEIGHT = texture.getHeight();
-    
+        WIDTH = texture.getWidth() * scaleSize;
+        HEIGHT = texture.getHeight() * scaleSize;
+        
         bulletPosition = new Vector2(enemy.getPosition().x, enemy.getPosition().y + 40);
+        
+        // Bounds
+        bounds = new Rectangle();
+        bounds.x = bulletPosition.x;
+        bounds.y = bulletPosition.y;
+        bounds.width = BBSize[0] * scaleSize;
+        bounds.height = BBSize[1] * scaleSize;
     
         // Calculate the direction towards the center of the player
-        Vector2 playerCenter = new Vector2(player.getPosition().x + player.getWidth() / 2,
-                                           player.getPosition().y + player.getHeight() / 2);
-        enemyBulletDirection = playerCenter.sub(bulletPosition).nor();
+        enemyBulletDirection = targetPos.sub(bulletPosition).nor();
     
         velocity = new Vector2();
     }

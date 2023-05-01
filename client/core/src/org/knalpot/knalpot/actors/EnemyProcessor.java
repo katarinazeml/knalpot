@@ -87,19 +87,20 @@ public class EnemyProcessor {
             }
         }
 
-        if (resolvePlayerCollision(enemy, player, dt)) {
+        if (enemy.getBounds().overlaps(player.getBounds())) {
             // Enemy collides with player, stop moving
             enemy.getVelocity().x = 0f;
             enemy.setState(EnemyState.IDLE);
         }
 
-        // for (EnemyBullet bullet : bullets) {
-        //      if (resolvePlayerCollision(bullet, player, dt)) {
-        //         System.out.println("player got shot");
-        //         bullets.remove(bullet);
-        //         player.caughtByEnemy(10);
-        //      }
-        // }
+        for (EnemyBullet bullet : bullets) {
+             if (bullet.getBounds().overlaps(player.getBounds())) {
+                System.out.println("player got shot");
+                bullets.remove(bullet);
+                System.out.println(bullets.size());
+                player.caughtByEnemy(10);
+             }
+        }
 
         enemy.update(dt);
     }
@@ -122,6 +123,10 @@ public class EnemyProcessor {
             enemy.attack = true;
             // System.out.println(enemy.getState());
             attackTimer -= Gdx.graphics.getDeltaTime(); // subtract time passed since last frame
+            if (enemy.attack && enemy.timeSinceLastShot > enemy.shootingCooldown) {
+                enemy.shoot(player.getPosition().cpy());
+                enemy.timeSinceLastShot = 0f;
+            }
             if (attackTimer <= 0f) {
                 player.caughtByEnemy(10); // reduce player's health by 10
                 attackTimer = 2f; // reset timer
@@ -154,11 +159,6 @@ public class EnemyProcessor {
                 System.out.println("jumping");
                 verticalCollisionOccurred = false;
             }
-        } else if (enemyX == playerX) {
-            // Enemy and player are at the same x-coordinate, don't move
-            enemy.getVelocity().x = 0;
-            enemy.direction = lastDirection;
-            enemy.setState(EnemyState.IDLE);
         } else {
             // Player is outside of chase radius, wander around
             SPEED = 40;
@@ -173,7 +173,6 @@ public class EnemyProcessor {
         }
     }
     
-    
     /**
      * Makes {@code Enemy} jump.
      */
@@ -186,7 +185,6 @@ public class EnemyProcessor {
     //#endregion
 
     //#region - COLLISIONS -
-
     private boolean resolveCollision(Actor in, Static block, float dt) {
         cn = new Vector2();
         cp = new Vector2();
@@ -221,21 +219,6 @@ public class EnemyProcessor {
             return true;
         }
         return false;
-    }
-
-    private boolean resolvePlayerCollision(Actor in, Actor player, float dt) {
-        cn = new Vector2();
-        cp = new Vector2();
-        float contactTime = 0f;
-        boolean collision = enemy.DynamicAABBplayer(in, player, cp, cn, contactTime, dt);
-        if (collision) {
-            cn = enemy.getContactNormal();
-            cp = enemy.getContactPoint();
-            t = enemy.getContactTime();
-            in.getVelocity().x -= cn.x * Math.abs(in.getVelocity().x) * (1 - contactTime);
-            in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
-        }
-        return collision;
     }
     //#endregion
 }

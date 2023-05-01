@@ -1,12 +1,12 @@
 package org.knalpot.knalpot.actors;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 
-import com.badlogic.gdx.math.MathUtils;
+import org.knalpot.knalpot.addons.BBGenerator;
+
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 
 public class Enemy extends Actor {
 
@@ -18,27 +18,30 @@ public class Enemy extends Actor {
 
     private EnemyState enemyState;
 
-    private float rotation;
-
-    private Player player;
-
     public boolean attack = false;
 
-    private float shootingCooldown = 1f;
+    public float shootingCooldown = 1f;
 
-    private float timeSinceLastShot = 0f;
+    public float timeSinceLastShot = 0f;
 
-    public Enemy(Vector2 position, Player player) {
+    public Enemy(Vector2 position) {
         this.position = position;
-        this.player = player;
-        BBSize = new int[]{60, 60};
+        
+        texture = new Texture("lavamonster.png");
+        BBSize = BBGenerator.BBPixels(texture.getTextureData());
         scaleSize = 2;
-        bounds = new Rectangle(position.x, position.y, BBSize[0] * scaleSize, BBSize[1] * scaleSize);
         direction = 1;
         previousDirection = 1;
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 0);
         bullets = new ArrayList<>();
+        
+        bounds = new Rectangle(position.x, position.y, BBSize[0] * scaleSize, BBSize[1] * scaleSize);
+
+        Left = (int) bounds.x;
+        Right = (int) (bounds.x + bounds.width);
+        Bottom = (int) bounds.y;
+        Top = (int) (bounds.y + bounds.height);
     }
 
     @Override
@@ -65,19 +68,13 @@ public class Enemy extends Actor {
         //     System.out.println(enemyState);
         //     shoot(dt, rotation);
         // }
-
-        if (attack && timeSinceLastShot > shootingCooldown) {
-            shoot(dt, rotation);
-            timeSinceLastShot = 0f;
-        }
-
         for (EnemyBullet bullet : bullets) {
             bullet.update(dt);
         }
     }
 
-    public void shoot(float dt, float angle) {
-        bullets.add(new EnemyBullet(this, player));
+    public void shoot(Vector2 targetPos) {
+        bullets.add(new EnemyBullet(this, targetPos.cpy()));
     }
 
     public void setEnemyDirection(int direction) {

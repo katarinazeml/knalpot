@@ -2,7 +2,6 @@ package org.knalpot.knalpot.actors;
 
 import org.knalpot.knalpot.addons.BBGenerator;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -17,9 +16,6 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Player extends Actor {
     //#region -- VARIABLES --
-    
-    private Enemy enemy;
-
     private int health = 1000;
 
     // no comments //
@@ -61,8 +57,6 @@ public class Player extends Actor {
         Right = (int) (bounds.x + bounds.width);
         Bottom = (int) bounds.y;
         Top = (int) (bounds.y + bounds.height);
-
-        enemy = new Enemy(new Vector2(500, 100), this);
     }
 
     public void update(float dt) {
@@ -74,8 +68,12 @@ public class Player extends Actor {
         Right = (int) bounds.x + WIDTH;
         Bottom = (int) bounds.y;
         Top = (int) bounds.y + HEIGHT;
-        enemy.update(dt);
+
+        System.out.println("Player width and height");
+        System.out.println(WIDTH);
+        System.out.println(HEIGHT);
     }
+
     public void caughtByEnemy(int damage) {
         health -= damage;
         if (health < 0) health = 0;
