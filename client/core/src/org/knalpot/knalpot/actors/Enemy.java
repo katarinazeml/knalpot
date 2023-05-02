@@ -26,8 +26,9 @@ public class Enemy extends Actor {
 
     public float timeSinceLastShot = 0f;
 
+    private int health = 100;
+
     public Enemy(Vector2 position) {
-        this.position = position;
         this.position = position;
     
         texture = new Texture("lavamonster.png");
@@ -87,5 +88,10 @@ public class Enemy extends Actor {
 
     public ArrayList<EnemyBullet> getEnemyBullets() {
         return bullets;
+    }
+
+    public void gotShot(int damage) {
+        health -= damage;
+        System.out.println("enemy`s health: " + health);
     }
 }

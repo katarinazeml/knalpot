@@ -42,6 +42,7 @@ public class Player extends Actor {
     // temporary
     public int chestIndex = 0;
     public boolean chestIsActive = false;
+    
     //#endregion
 
     //#region -- FUNCTIONS --

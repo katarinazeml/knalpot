@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import org.knalpot.knalpot.actors.player.Player;
+
 import org.knalpot.knalpot.actors.Enemy.EnemyState;
 import org.knalpot.knalpot.addons.Constants;
 import org.knalpot.knalpot.interactive.Static;
@@ -51,7 +53,7 @@ public class EnemyProcessor {
     // ==== SHOOTING ==== //
     private ArrayList<EnemyBullet> bullets;
     //#endregion
-    
+
     //#region -- FUNCTIONS --
 	/**
      * Processor constructor.
@@ -93,19 +95,6 @@ public class EnemyProcessor {
             enemy.getVelocity().x = 0f;
             enemy.setState(EnemyState.IDLE);
         }
-
-        // ListIterator<EnemyBullet> bulletIterator = bullets.listIterator();
-        // while (bulletIterator.hasNext()) {
-        //     EnemyBullet bullet = bulletIterator.next();
-        //     // System.out.println("player`s bound x: " + player.getBounds().x + "bound y: " + player.getBounds().y);
-        //     // System.out.println("bullet`s bound x: " + bullet.getBounds().x + " bound y: " + bullet.getBounds().y);
-        //     // System.out.println(bullet.getBounds().overlaps(player.getBounds()));
-        //     if (bullet.getBounds().overlaps(player.getBounds())) {
-        //         System.out.println("˖⁺‧₊˚♡˚₊‧⁺˖player got shot˖⁺‧₊˚♡˚₊‧⁺˖");
-        //         bulletIterator.remove();
-        //         player.caughtByEnemy(10);
-        //     }
-        // }
 
         ListIterator<EnemyBullet> bulletIterator = bullets.listIterator();
         while (bulletIterator.hasNext()) {

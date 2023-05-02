@@ -1,5 +1,6 @@
 package org.knalpot.knalpot.actors;
 
+import org.knalpot.knalpot.actors.Enemy.EnemyState;
 import org.knalpot.knalpot.actors.player.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 

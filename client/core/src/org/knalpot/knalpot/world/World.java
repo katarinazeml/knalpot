@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.interactive.Static;
@@ -45,6 +46,7 @@ public class World {
 
 	// testing purposes only
 	private Chest chest;
+	private Enemy enemy;
 
 	//#region -- FUNCTIONS --
 	/**
@@ -73,6 +75,10 @@ public class World {
 		return orb;
 	}
 
+	public Enemy getEnemy() {
+		return enemy;
+	}
+
 	public List<Chest> getChest() {
 		return chests;
 	}
@@ -99,6 +105,7 @@ public class World {
 		player = new Player(new Vector2(100, 200));
 		orb = new Orb(player);
 		chest = new Chest(new Vector2(200, 132), 32, 32, new Texture("orb.png"));
+		enemy = new Enemy(new Vector2(500, 110));
 
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));

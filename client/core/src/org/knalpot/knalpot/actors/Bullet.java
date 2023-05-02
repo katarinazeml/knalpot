@@ -5,6 +5,7 @@ import org.knalpot.knalpot.addons.BBGenerator;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bullet extends Actor {
@@ -27,6 +28,13 @@ public class Bullet extends Actor {
 
         position = this.orb.getPosition().cpy();
         velocity = new Vector2();
+
+        // Bounds
+        bounds = new Rectangle();
+        bounds.x = position.x;
+        bounds.y = position.y;
+        bounds.width = BBSize[0] * scaleSize;
+        bounds.height = BBSize[1] * scaleSize;
     }
 
     public Orb getOrb() {
@@ -43,6 +51,8 @@ public class Bullet extends Actor {
         float cosine = (float) Math.cos(Math.toRadians(angle));
         velocity.set((sine * speed), (cosine * speed));
         position.add(velocity.x * dt, velocity.y * dt);
+        bounds.x = position.x;
+        bounds.y = position.y;
     }
 
     public void render(SpriteBatch batch) {

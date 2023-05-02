@@ -113,7 +113,7 @@ public class PlayerProcessor {
         }
 
         for (Chest chest : world.getChest()) {
-            if (Actor.SimpleAABB(player, chest, dt) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (player.getBounds().overlaps(chest.getBounds()) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 chest.getHUD().changeActive();
                 ((Player) player).chestIndex = world.getChest().indexOf(chest);
             }

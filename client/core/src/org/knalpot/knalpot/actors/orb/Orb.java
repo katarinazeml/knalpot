@@ -2,6 +2,7 @@ package org.knalpot.knalpot.actors.orb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Bullet;
@@ -10,6 +11,7 @@ import org.knalpot.knalpot.addons.ParticleGenerator;
 import org.knalpot.knalpot.addons.effects.OSM;
 import org.knalpot.knalpot.addons.effects.OSMAnimator;
 import org.knalpot.knalpot.addons.effects.OSM.Shape;
+import org.knalpot.knalpot.interactive.Static;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -42,6 +44,11 @@ public class Orb extends Actor {
 
     private OrbState state = OrbState.ORB;
 
+    // ==== COLLISION-RELATED ==== //
+    private Vector2 cp;
+    private Vector2 cn;
+    private float t;
+
     // Owner of the orb
     private Actor owner;
 
@@ -66,7 +73,11 @@ public class Orb extends Actor {
 
     private boolean mustFloat;
 
-    private List<Bullet>  bullets;
+    private List<Bullet> bullets;
+
+    public List<Bullet> getBullets() {
+        return bullets;
+    }
 
     public Orb(Actor owner) {
         this.owner = owner;
