@@ -92,16 +92,12 @@ public class Player extends Actor {
         Right = (int) bounds.x + WIDTH;
         Bottom = (int) bounds.y;
         Top = (int) bounds.y + HEIGHT;
-
-        System.out.println("Player width and height");
-        System.out.println(WIDTH);
-        System.out.println(HEIGHT);
     }
 
     public void caughtByEnemy(int damage) {
         health -= damage;
         if (health < 0) health = 0;
-        System.out.println("player`s health " + health);
+        //System.out.println("player`s health " + health);
     }
 
     /**

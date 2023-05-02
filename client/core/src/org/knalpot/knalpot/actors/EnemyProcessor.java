@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.knalpot.knalpot.actors.player.Player;
@@ -53,6 +54,7 @@ public class EnemyProcessor {
     // ==== SHOOTING ==== //
     private ArrayList<EnemyBullet> bullets;
     //#endregion
+    private List<Enemy> enemies;
 
     //#region -- FUNCTIONS --
 	/**
@@ -64,6 +66,7 @@ public class EnemyProcessor {
 		enemy = this.world.getEnemy();
         player = this.world.getPlayer();
         bullets = enemy.getEnemyBullets();
+        enemies = world.getEnemies();
 	}
 
 	/**
@@ -111,9 +114,10 @@ public class EnemyProcessor {
                 }
             }
         }
-        enemy.update(dt);
+        for (Enemy enemy : enemies) {
+            enemy.update(dt);
+        }
     }
-    
 	/**
 	 * Adds constant gravity force to object.
 	 */

@@ -1,10 +1,16 @@
 package org.knalpot.knalpot.world;
 
+import java.util.ArrayList;
+import java.util.ListIterator;
+
+import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.EnemyProcessor;
 import org.knalpot.knalpot.actors.orb.OrbProcessor;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.actors.player.PlayerProcessor;
 import org.knalpot.knalpot.networking.ClientProgram;
+
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 
 /**
  * {@code WorldProcessor} is responsible for updating every single 
@@ -50,10 +56,23 @@ public class WorldProcessor {
 		orbProcessor.update(dt);
 		world.getOrb().update(dt);
 
+		System.out.println("enemies list size: " + world.getEnemies().size());
+
+		ArrayList<Enemy> removedEnemies = new ArrayList<>(); // Create a new list to store removed enemies
+
+		for (Enemy enemy : world.getEnemies()) {
+			if (enemy.health <= 0) {
+				//world.removeEnemy(enemy); // Remove enemy from game world
+				System.out.println("enemy removed");
+				removedEnemies.add(enemy); // Add enemy to the removedEnemies list
+			}
+		}
+		
+		world.getEnemies().removeAll(removedEnemies); // Remove all removed enemies from the original list
+
 		world.getChest().forEach(e -> e.update(dt));
 
 		clientProgram.updateNetwork();
-		enemyProcessor.update(dt);
 	}
 	//#endregion
 }

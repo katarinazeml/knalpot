@@ -26,7 +26,7 @@ public class Enemy extends Actor {
 
     public float timeSinceLastShot = 0f;
 
-    private int health = 100;
+    public int health = 100;
 
     public Enemy(Vector2 position) {
         this.position = position;
@@ -50,6 +50,7 @@ public class Enemy extends Actor {
 
     @Override
     public void update(float dt) {
+        
         timeSinceLastShot += dt;
         // Update enemy position using the Actor class's position
         position.add(velocity.cpy().scl(dt));
@@ -92,6 +93,7 @@ public class Enemy extends Actor {
 
     public void gotShot(int damage) {
         health -= damage;
-        System.out.println("enemy`s health: " + health);
+        if (health < 0) health = 0;
+        //System.out.println("enemy`s health: " + health);
     }
 }

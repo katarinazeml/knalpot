@@ -32,7 +32,8 @@ public class OrbProcessor {
             Bullet bullet = bulletIterator.next();
             if (bullet.getBounds().overlaps(enemy.getBounds())) {
                 bulletIterator.remove();
-                world.getEnemy().gotShot(10);
+                enemy.gotShot(10);
+                //System.out.println("enemy`s health: " + enemy.health);
             }
         }
     }

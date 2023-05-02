@@ -212,10 +212,6 @@ public class PlayerProcessor {
      * velocity data.
      */
     private void changeState() {
-        System.out.println("Player data for debugging X:Y:STATE");
-        System.out.println(player.getVelocity().x);
-        System.out.println(player.getVelocity().y);
-        System.out.println(player.state);
         if (player.getVelocity().x == 0 && player.getVelocity().y == 0) {
             updateState();
             player.state = Player.State.IDLE;

@@ -194,12 +194,14 @@ public class Renderer {
 
         // Draw player
         batch.begin();
-        drawEnemy();
-
+        //drawEnemy();
+        for (Enemy enemy : world.getEnemies()) {
+            drawEnemy(enemy);
+            enemy.render(batch);
+        }
         for (EnemyBullet bullet : enemy.getEnemyBullets()) {
             bullet.render(batch);
         }
-
         batch.end();
 
 
@@ -291,9 +293,6 @@ public class Renderer {
             if (mpPlayer.direction == 1) mpPositionX = mpPlayer.x;
             if (mpPlayer.direction == -1) mpPositionX = mpPlayer.x + player.getWidth() / player.getScale();
 
-            System.out.println("MPPlayer State:");
-            System.out.println(mpPlayer.state);
-
             if (mpPlayer.state != State.IDLE) {
                 batch.draw(playerTextureRun, mpPositionX, mpPlayer.y,
                     Math.signum(mpPlayer.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
@@ -315,7 +314,7 @@ public class Renderer {
         lightGrass.render(batch, targetX, 0);
     }
 
-    private void drawEnemy() {
+    private void drawEnemy(Enemy enemy) {
          float enemyPositionX = enemy.getPosition().x;
          if (enemy.getEnemyDirection() == -1) {
              batch.draw(enemyTexture, enemyPositionX, enemy.getPosition().y);

@@ -43,6 +43,7 @@ public class World {
 	public List<Static> collisionBlocks;
 	public List<Static> platforms;
 	private List<Chest> chests;
+	private List<Enemy> enemies;
 
 	// testing purposes only
 	private Chest chest;
@@ -57,6 +58,7 @@ public class World {
 		collisionBlocks = new ArrayList<>();
 		platforms = new ArrayList<>();
 		chests = new ArrayList<>();
+		enemies = new ArrayList<>();
 		initializeWorld();
 		initializeNetwork();
 		player.initializeHUD();
@@ -98,6 +100,14 @@ public class World {
 		return collisionBlocks;
 	}
 
+	public List<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
+    }
+
 	/**
 	 * Initializes all object needed for this 'world'.
 	 */
@@ -106,6 +116,7 @@ public class World {
 		orb = new Orb(player);
 		chest = new Chest(new Vector2(200, 132), 32, 32, new Texture("orb.png"));
 		enemy = new Enemy(new Vector2(500, 110));
+		enemies.add(enemy);
 
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
