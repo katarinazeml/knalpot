@@ -94,19 +94,34 @@ public class EnemyProcessor {
             enemy.setState(EnemyState.IDLE);
         }
 
+        // ListIterator<EnemyBullet> bulletIterator = bullets.listIterator();
+        // while (bulletIterator.hasNext()) {
+        //     EnemyBullet bullet = bulletIterator.next();
+        //     // System.out.println("player`s bound x: " + player.getBounds().x + "bound y: " + player.getBounds().y);
+        //     // System.out.println("bullet`s bound x: " + bullet.getBounds().x + " bound y: " + bullet.getBounds().y);
+        //     // System.out.println(bullet.getBounds().overlaps(player.getBounds()));
+        //     if (bullet.getBounds().overlaps(player.getBounds())) {
+        //         System.out.println("˖⁺‧₊˚♡˚₊‧⁺˖player got shot˖⁺‧₊˚♡˚₊‧⁺˖");
+        //         bulletIterator.remove();
+        //         player.caughtByEnemy(10);
+        //     }
+        // }
+
         ListIterator<EnemyBullet> bulletIterator = bullets.listIterator();
         while (bulletIterator.hasNext()) {
             EnemyBullet bullet = bulletIterator.next();
-            // System.out.println("player`s bound x: " + player.getBounds().x + "bound y: " + player.getBounds().y);
-            // System.out.println("bullet`s bound x: " + bullet.getBounds().x + " bound y: " + bullet.getBounds().y);
-            // System.out.println(bullet.getBounds().overlaps(player.getBounds()));
             if (bullet.getBounds().overlaps(player.getBounds())) {
-                System.out.println("˖⁺‧₊˚♡˚₊‧⁺˖player got shot˖⁺‧₊˚♡˚₊‧⁺˖");
                 bulletIterator.remove();
                 player.caughtByEnemy(10);
+            } else {
+                for (Static obj : world.collisionBlocks) {
+                    if (resolveCollision(bullet, obj, dt)) {
+                        bulletIterator.remove();
+                        break;
+                    }
+                }
             }
         }
-
         enemy.update(dt);
     }
     
