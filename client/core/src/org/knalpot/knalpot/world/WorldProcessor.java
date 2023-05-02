@@ -1,6 +1,7 @@
 package org.knalpot.knalpot.world;
 
-import org.knalpot.knalpot.actors.PlayerProcessor;
+import org.knalpot.knalpot.actors.player.Player;
+import org.knalpot.knalpot.actors.player.PlayerProcessor;
 import org.knalpot.knalpot.networking.ClientProgram;
 
 /**
@@ -13,6 +14,7 @@ import org.knalpot.knalpot.networking.ClientProgram;
 public class WorldProcessor {
 	//#region -- VARIABLES --
 	private World world;
+	private Player player;
 	private PlayerProcessor playerProcessor;
 
 	// ==== NETWORKING ==== //
@@ -26,6 +28,7 @@ public class WorldProcessor {
 	 */
 	public WorldProcessor(World world) {
 		this.world = world;
+		this.player = (Player) this.world.getPlayer();
 		playerProcessor = new PlayerProcessor(this.world);
 		clientProgram = this.world.getClientProgram();
 		clientProgram.create();
@@ -38,6 +41,8 @@ public class WorldProcessor {
 	public void update(float dt) {
 		playerProcessor.update(dt);
 		world.getOrb().update(dt);
+		world.getChest().forEach(e -> e.update(dt));
+
 		clientProgram.updateNetwork();
 	}
 	//#endregion

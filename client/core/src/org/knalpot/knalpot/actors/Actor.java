@@ -1,6 +1,6 @@
 package org.knalpot.knalpot.actors;
 
-import org.knalpot.knalpot.actors.Player.State;
+import org.knalpot.knalpot.actors.player.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -250,6 +250,17 @@ public class Actor {
         // System.out.println(dynamicRectPos.y);
 
         if (RayAABB(dynamicRectPos, in.getVelocity().cpy().scl(dt), expandedTarget, contactPoint, contactNormal, contactTime)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean SimpleAABB(Actor in, Static target, float dt) {
+        if (in.getBounds().x < target.getBounds().x + target.getWidth() &&
+            in.getBounds().x + in.getWidth() > target.getBounds().x &&
+            in.getBounds().y < target.getBounds().y + target.getHeight() &&
+            in.getBounds().y + in.getHeight() > target.getBounds().y) {
+            
             return true;
         }
         return false;

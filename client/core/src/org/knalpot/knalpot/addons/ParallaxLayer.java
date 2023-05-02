@@ -29,7 +29,7 @@ public class ParallaxLayer {
 
     public void render(SpriteBatch batch, float targetX, float targetY) {
         float cameraX = camera.position.x - camera.viewportWidth / 2;
-        float cameraY = camera.position.y - camera.viewportHeight / 2;
+        // float cameraY = camera.position.y - camera.viewportHeight / 2;
 
         // NB! THIS IS A TEMPORARY SOLUTION, IT MIGHT LEAD TO EITHER
         // MEMORY LEAK OR MEMORY OVERLOAD. COEFFICENT MUST BE

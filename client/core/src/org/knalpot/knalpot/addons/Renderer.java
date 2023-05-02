@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Actor;
-import org.knalpot.knalpot.actors.Orb;
-import org.knalpot.knalpot.actors.Player.State;
+import org.knalpot.knalpot.actors.orb.Orb;
+import org.knalpot.knalpot.actors.player.Player;
+import org.knalpot.knalpot.actors.player.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
 import org.knalpot.knalpot.networking.MPPlayer;
 import org.knalpot.knalpot.world.World;
@@ -68,7 +69,6 @@ public class Renderer {
     private static int CAMERA_WIDTH = 400;
     private static int CAMERA_HEIGHT = 400;
     private static final float CAMERA_SPEED = 5.0f;
-
 
     // ==== SHORTCUTS ==== //
     float WW = Constants.WINDOW_WIDTH;
@@ -169,6 +169,7 @@ public class Renderer {
         // Draw teleport animation
         batch.begin();
         teleport.render();
+        world.getChest().forEach(e -> e.render(batch));
         orb.render(batch);
     	batch.end();
 
@@ -176,6 +177,11 @@ public class Renderer {
         batch.begin();
     	drawPlayer();
         batch.end();
+
+        // Draw HUD
+        ((Player) player).getHud().render();
+        // world.getChest().get(((Player) player).chestIndex).renderHUD(batch, ((Player) player).chestIsActive);
+        world.getChest().get(((Player) player).chestIndex).getHUD().render();
     }
 
     /**
@@ -281,11 +287,6 @@ public class Renderer {
         cloud.render(batch, targetX, 0);
         darkGrass.render(batch, targetX, 0);
         lightGrass.render(batch, targetX, 0);
-
-        batch.draw(new Texture("level1/rocks.png"), 300, 128, 64, 64);
-        batch.draw(new Texture("level1/tree1.png"), 500, 256, 56 * 3, 77 * 3);
-        batch.draw(new Texture("level1/tree2.png"), 200, 128,26 * 3, 41 * 3);
-        batch.draw(new Texture("level1/rocks.png"), 483, 192, 64, 64);
     }
     //#endregion
 }
