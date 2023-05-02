@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
 
+import org.knalpot.knalpot.actors.Enemy.EnemyState;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -47,6 +49,7 @@ public class Renderer {
     private float animationTime = 0; // The time elapsed since the animation started
     private float frameDuration = 0.1f; // The duration of each frame in seconds
 
+    private TextureRegion enemyRegion;
 
     // ==== OBJECTS ==== //
     private SpriteBatch batch;
@@ -80,6 +83,7 @@ public class Renderer {
     private ParallaxLayer darkGrass;
     private ParallaxLayer lightGrass;
     private Texture enemyTexture;
+    private Texture enemySpriteSheet;
 
     //#endregion
 
@@ -214,8 +218,8 @@ public class Renderer {
         Texture spriteSheet = new Texture("playeranimation.png");
         playerRegion = new TextureRegion(spriteSheet, 0, 0, frameWidth, frameHeight);
 
-        //Texture spriteSheet1 = new Texture("teleportanimation.png");
-        //teleportRegion = new TextureRegion(spriteSheet1);
+        //Texture enemySpritesheet = new Texture("enemyanimation.png");
+        //enemyRegion = new TextureRegion(enemySpriteSheet, 0, 0, frameWidth, frameHeight);
 
         cloud = new ParallaxLayer(cloudTexture, camera, 0.5f, 0.25f);
         darkGrass = new ParallaxLayer(darkGrassTexture, camera, 0.2f, 0.4f);
@@ -268,7 +272,6 @@ public class Renderer {
         }
     }
     
-
     private void drawBackground(float targetX) {
         // Calculate the positions of the backgrounds
         float cameraX = camera.position.x - camera.viewportWidth / 2;
@@ -282,13 +285,37 @@ public class Renderer {
     }
 
     private void drawEnemy() {
-        float enemyPositionX = enemy.getPosition().x;
-        if (enemy.getEnemyDirection() == -1) {
-            batch.draw(enemyTexture, enemyPositionX, enemy.getPosition().y);
-        }
-        if (enemy.getEnemyDirection() == 1) {
-            batch.draw(enemyTexture, enemyPositionX + enemy.getWidth(), enemy.getPosition().y, -enemyTexture.getWidth(), enemyTexture.getHeight());
-        }
-    }    
+         float enemyPositionX = enemy.getPosition().x;
+         if (enemy.getEnemyDirection() == -1) {
+             batch.draw(enemyTexture, enemyPositionX, enemy.getPosition().y);
+         }
+         if (enemy.getEnemyDirection() == 1) {
+             batch.draw(enemyTexture, enemyPositionX + enemy.getWidth(), enemy.getPosition().y, -enemyTexture.getWidth(), enemyTexture.getHeight());
+         } 
+    }
+            // put - in front of width to reverse player.
+        //     float positionX = 0;
+
+        //     // Animation.
+        //     animationTime += Gdx.graphics.getDeltaTime();
+        //     int frameIndex = (int) (animationTime / frameDuration) % numFrames;
+        //     int offsetX = frameIndex * frameWidth;
+        //     Texture enemyTextureRun = enemyRegion.getTexture();
+            
+        //     // General logic.
+        //     if (enemy.direction == 1) {
+        //         positionX = player.getPosition().x;
+        //     }
+        //     if (enemy.direction == -1) {
+        //         positionX = player.getPosition().x + player.getWidth() / player.getScale();
+        //     }
+    
+        //     if (enemy.getState() != enemy.EnemyState.IDLE) {
+        //         batch.draw(enemyTextureRun, positionX, enemy.getPosition().y,
+        //             Math.signum(enemy.direction) * (frameWidth * enemy.getScale()), (frameHeight * enemy.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
+        //     } else {
+        //         batch.draw(enemyTexture, positionX, enemy.getPosition().y, Math.signum(enemy.direction) * enemy.getWidth(), enemy.getHeight());
+        //     }
+        // }    
     //#endregion
 }

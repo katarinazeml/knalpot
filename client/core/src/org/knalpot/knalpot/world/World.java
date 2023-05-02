@@ -97,7 +97,6 @@ public class World {
 			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
 		}
 	}
-
 	private void initializeNetwork() {
 		clientProgram = new ClientProgram(player);
 	}

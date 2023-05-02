@@ -14,6 +14,8 @@ public class Enemy extends Actor {
         IDLE, MOVE, JUMP, ATTACK
     }
 
+    public final String EnemyState = null;
+
     private ArrayList<EnemyBullet> bullets;
 
     private EnemyState enemyState;
@@ -26,10 +28,11 @@ public class Enemy extends Actor {
 
     public Enemy(Vector2 position) {
         this.position = position;
-        
+        this.position = position;
+    
         texture = new Texture("lavamonster.png");
         BBSize = BBGenerator.BBPixels(texture.getTextureData());
-        scaleSize = 2;
+        scaleSize = 2; // Update scaleSize to 2
         direction = 1;
         previousDirection = 1;
         velocity = new Vector2(0, 0);
@@ -37,7 +40,7 @@ public class Enemy extends Actor {
         bullets = new ArrayList<>();
         
         bounds = new Rectangle(position.x, position.y, BBSize[0] * scaleSize, BBSize[1] * scaleSize);
-
+    
         Left = (int) bounds.x;
         Right = (int) (bounds.x + bounds.width);
         Bottom = (int) bounds.y;

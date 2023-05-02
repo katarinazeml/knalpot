@@ -5,7 +5,6 @@ import org.knalpot.knalpot.world.World;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.SortedIntList.Iterator;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -98,9 +97,9 @@ public class EnemyProcessor {
         ListIterator<EnemyBullet> bulletIterator = bullets.listIterator();
         while (bulletIterator.hasNext()) {
             EnemyBullet bullet = bulletIterator.next();
-            System.out.println("player`s bound x: " + player.getBounds().x + "bound y: " + player.getBounds().y);
-            System.out.println("bullet`s bound x: " + bullet.getBounds().x + " bound y: " + bullet.getBounds().y);
-            System.out.println(bullet.getBounds().overlaps(player.getBounds()));
+            // System.out.println("player`s bound x: " + player.getBounds().x + "bound y: " + player.getBounds().y);
+            // System.out.println("bullet`s bound x: " + bullet.getBounds().x + " bound y: " + bullet.getBounds().y);
+            // System.out.println(bullet.getBounds().overlaps(player.getBounds()));
             if (bullet.getBounds().overlaps(player.getBounds())) {
                 System.out.println("˖⁺‧₊˚♡˚₊‧⁺˖player got shot˖⁺‧₊˚♡˚₊‧⁺˖");
                 bulletIterator.remove();
@@ -113,11 +112,11 @@ public class EnemyProcessor {
 	/**
 	 * Adds constant gravity force to object.
 	 */
-	private void gravity() {
-		if (enemy.getVelocity().y < 0) gravityForce = Constants.GRAVITY_FORCE * Constants.GRAVITY_ACCEL;
+    private void gravity() {
+        if (enemy.getVelocity().y < 0) gravityForce = Constants.GRAVITY_FORCE * Constants.GRAVITY_ACCEL;
         enemy.getAcceleration().y = -gravityForce;
-	}
-
+    }
+    
     private void attack() {
         float playerCenterX = player.getPosition().x + player.getWidth() / 2;
         float playerCenterY = player.getPosition().y + player.getHeight() / 2;
@@ -128,28 +127,47 @@ public class EnemyProcessor {
         if (distanceToPlayer < ATTACK_RADIUS) {
             enemy.setState(EnemyState.ATTACK);
             enemy.attack = true;
-            // System.out.println(enemy.getState());
-            attackTimer -= Gdx.graphics.getDeltaTime(); // subtract time passed since last frame
+            attackTimer -= Gdx.graphics.getDeltaTime();
+    
             if (enemy.attack && enemy.timeSinceLastShot > enemy.shootingCooldown) {
                 Vector2 target = new Vector2(playerCenterX, playerCenterY);
                 float bulletSpeed = 300f;
-                if (player.getVelocity().x != 0 || player.getVelocity().y != 0) {
-                    // Calculate the time it takes for the bullet to reach the player's position
-                    float dx = playerCenterX - enemy.getPosition().x;
-                    float dy = playerCenterY - enemy.getPosition().y;
-                    float distanceToTarget = (float) Math.sqrt(dx * dx + dy * dy);
-                    float timeToTarget = distanceToTarget / bulletSpeed;
-                    
-                    // Calculate the player's predicted position after the bullet reaches the target position
-                    float predictedX = playerCenterX + (player.getVelocity().x * timeToTarget);
-                    float predictedY = playerCenterY + (player.getVelocity().y * timeToTarget);
-                    
-                    // Set the target position to the predicted position
-                    target = new Vector2(predictedX, predictedY);
+                float dx = playerCenterX - enemy.getPosition().x;
+                float dy = playerCenterY - enemy.getPosition().y;
+                float distanceToTarget = (float) Math.sqrt(dx * dx + dy * dy);
+                float timeToTarget = distanceToTarget / bulletSpeed;
+
+                // Calculate the player's predicted position after the bullet reaches the target position
+                float predictedX = playerCenterX + player.getVelocity().x * timeToTarget;
+                float predictedY = playerCenterY + player.getVelocity().y * timeToTarget + 0.5f * gravityForce * timeToTarget * timeToTarget;
+
+                // Adjust the predicted y position based on the player's vertical acceleration
+                float predictedYAcceleration = player.getAcceleration().y - gravityForce;
+                predictedY += 0.5f * predictedYAcceleration * timeToTarget * timeToTarget;
+    
+                // Adjust the predicted y position based on the player's vertical velocity
+                if (player.getVelocity().y > 0) {
+                    float timeToReachPeak = player.getVelocity().y / gravityForce;
+                    float jumpHeight = (player.getVelocity().y * timeToReachPeak) - (0.5f * gravityForce * timeToReachPeak * timeToReachPeak);
+                    predictedY += jumpHeight;
                 }
+    
+                // If the predicted position is below the player's current position, adjust the y value to prevent shooting below the player
+                if (predictedY < playerCenterY) {
+                    float timeToFall = (playerCenterY - predictedY) / Constants.GRAVITY_FORCE;
+                    float fallDistance = (player.getVelocity().y - Constants.GRAVITY_FORCE * timeToFall) * timeToTarget;
+                    if (fallDistance >= predictedY - playerCenterY) {
+                        predictedY += fallDistance;
+                    } else {
+                        predictedY = playerCenterY;
+                    }
+                }
+                // Set the target position to the predicted position
+                target = new Vector2(predictedX, predictedY);
                 enemy.shoot(target);
                 enemy.timeSinceLastShot = 0f;
             }
+    
             if (attackTimer <= 0f) {
                 player.caughtByEnemy(10); // reduce player's health by 10
                 attackTimer = 2f; // reset timer
@@ -160,7 +178,6 @@ public class EnemyProcessor {
             enemy.attack = false;
         }
     }
-    
     
     /**
      * Moves {@code Enemy} horizontally towards the player.
@@ -200,14 +217,12 @@ public class EnemyProcessor {
     /**
      * Makes {@code Enemy} jump.
      */
-
     private void jump() {
         enemy.getVelocity().y = JUMP_HEIGHT;
         canJump = false;
     }
     
     //#endregion
-
     //#region - COLLISIONS -
     private boolean resolveCollision(Actor in, Static block, float dt) {
         cn = new Vector2();
