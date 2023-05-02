@@ -106,6 +106,7 @@ public class EnemyProcessor {
                 player.caughtByEnemy(10);
             }
         }
+
         enemy.update(dt);
     }
     
@@ -255,6 +256,19 @@ public class EnemyProcessor {
             if (in.getVelocity().y < 0f) {
                 in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
             }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean resolveBulletCollision(Actor in, Actor target, float dt) {
+        cn = new Vector2();
+        cp = new Vector2();
+        float contactTime = 0f;
+        if (enemy.DynamicAABBActor(in, target, cp, cn, contactTime, dt)) {
+            cn = enemy.getContactNormal();
+            cp = enemy.getContactPoint();
+            t = enemy.getContactTime();
             return true;
         }
         return false;
