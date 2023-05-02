@@ -1,6 +1,6 @@
 package org.knalpot.knalpot.networking;
 
-import org.knalpot.knalpot.actors.Player.State;
+import org.knalpot.knalpot.actors.player.Player.State;
 
 public class MPPlayer {
     public float x, y;

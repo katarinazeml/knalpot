@@ -7,7 +7,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-import org.knalpot.knalpot.actors.Player;
+import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.networking.*;
 
 public class Network extends Listener {

@@ -1,10 +1,11 @@
 package org.knalpot.knalpot.actors;
 
-import org.knalpot.knalpot.actors.Enemy.EnemyState;
-import org.knalpot.knalpot.actors.Player.State;
+import org.knalpot.knalpot.actors.player.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -19,8 +20,9 @@ import com.badlogic.gdx.math.Vector2;
 public class Actor {
     //#region -- VARIABLES --
 
-    // ==== TEXTYRES ==== //
+    // ==== TEXTURES ==== //
     protected Texture texture;
+    protected TextureRegion region;
     protected int[] BBSize;
     protected int scaleSize;
 
@@ -56,6 +58,9 @@ public class Actor {
     public EnemyState enemyState;
     public State previousState;
     public int enemyDirection;
+
+    // ==== ACTOR PROPERTIES  ==== //
+    protected int health;
 
     //#endregion
     //#region -- GET/SET --
@@ -272,4 +277,6 @@ public class Actor {
     }
     //#endregion
     //#endregion
+
+    public void render(SpriteBatch batch) { }
 }

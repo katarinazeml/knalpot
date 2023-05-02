@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.knalpot.knalpot.actors.Actor;
-import org.knalpot.knalpot.actors.Enemy;
-import org.knalpot.knalpot.actors.Player;
+import org.knalpot.knalpot.actors.orb.Orb;
+import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.interactive.Static;
+import org.knalpot.knalpot.interactive.props.Chest;
+import org.knalpot.knalpot.interactive.props.Consumable;
 import org.knalpot.knalpot.networking.ClientProgram;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -20,13 +23,13 @@ import com.badlogic.gdx.math.Vector2;
  * {@code World} is responsible for creating all required objects
  * and returning them when requested. Basically it is the heart of everything.
  * @author Max Usmanov
- * @version 0.1
+ * @version 0.2
  */
 public class World {
 	//#region -- VARIABLES --
 	// ==== OBJECT VARIABLES ==== //
 	private Player player;
-	private Enemy enemy;
+	private Orb orb;
 
 	// ==== NETWORKING ==== //
 	private ClientProgram clientProgram;
@@ -38,6 +41,10 @@ public class World {
 
 	public List<Static> collisionBlocks;
 	public List<Static> platforms;
+	private List<Chest> chests;
+
+	// testing purposes only
+	private Chest chest;
 
 	//#region -- FUNCTIONS --
 	/**
@@ -47,8 +54,11 @@ public class World {
 		tiledMap = new TmxMapLoader().load(tiledSrc);
 		collisionBlocks = new ArrayList<>();
 		platforms = new ArrayList<>();
+		chests = new ArrayList<>();
 		initializeWorld();
 		initializeNetwork();
+		player.initializeHUD();
+		chests.forEach(e -> e.initializeChestHUD());
 	}
 
 	/**
@@ -59,8 +69,12 @@ public class World {
 		return player;
 	}
 
-	public Enemy getEnemy() {
-		return enemy;
+	public Orb getOrb() {
+		return orb;
+	}
+
+	public List<Chest> getChest() {
+		return chests;
 	}
 
 	/**
@@ -83,7 +97,14 @@ public class World {
 	 */
 	private void initializeWorld() {
 		player = new Player(new Vector2(100, 200));
-		enemy = new Enemy(new Vector2(500, 110));
+		orb = new Orb(player);
+		chest = new Chest(new Vector2(200, 132), 32, 32, new Texture("orb.png"));
+
+		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
+		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
+		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Water"));
+		
+		chests.add(chest);
 
 		for (MapObject obj : tiledMap.getLayers().get("Collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
