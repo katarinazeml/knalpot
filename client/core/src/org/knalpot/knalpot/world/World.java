@@ -133,7 +133,7 @@ public class World {
     	for (MapObject obj : tiledMap.getLayers().get("enemies").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
-			enemies.add(new Enemy(new Vector2(rect.getX(), rect.getY())));
+			enemies.add(new Enemy(new Vector2(rect.getX() * 2, rect.getY() * 2)));
 			System.out.println("enemies amount: " + enemies.size());
 			// for (Enemy enemy: enemies) {
 			// 	System.out.println(enemy.getBounds().x);
