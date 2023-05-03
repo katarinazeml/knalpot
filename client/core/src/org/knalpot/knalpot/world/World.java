@@ -110,14 +110,10 @@ public class World {
 	private void initializeWorld() {
 		player = new Player(new Vector2(100, 200));
 		orb = new Orb(player);
-		chest = new Chest(new Vector2(200, 132), 32, 32, new Texture("orb.png"));
+		//chest = new Chest(new Vector2(200, 132), 32, 32, new Texture("orb.png"));
 		//enemies.add(new Enemy(new Vector2(500, 110)));
-
-		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
-		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
-		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Water"));
 		
-		chests.add(chest);
+		//chests.add(chest);
 
 		for (MapObject obj : tiledMap.getLayers().get("collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
@@ -134,10 +130,15 @@ public class World {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
 			enemies.add(new Enemy(new Vector2(rect.getX() * 2, rect.getY() * 2)));
-			System.out.println("enemies amount: " + enemies.size());
-			// for (Enemy enemy: enemies) {
-			// 	System.out.println(enemy.getBounds().x);
-			// }
+    	}
+		for (MapObject obj : tiledMap.getLayers().get("enemies").getObjects()) {
+			RectangleMapObject rectObj = (RectangleMapObject) obj;
+			Rectangle rect = rectObj.getRectangle();
+			chest = new Chest(new Vector2(rect.getX() * 2, rect.getY() * 2), 32, 32, new Texture("orb.png"));
+			chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
+			chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
+			chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Water"));
+			chests.add(chest);
     	}
 	}
 
