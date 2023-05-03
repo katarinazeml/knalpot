@@ -13,7 +13,8 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Consumable extends Static {
     public enum ConsumType {
-        POTION,
+        HEAL,
+        HURT,
         USELESS
     }
 

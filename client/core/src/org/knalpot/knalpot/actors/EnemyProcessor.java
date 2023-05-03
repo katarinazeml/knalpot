@@ -55,19 +55,17 @@ public class EnemyProcessor {
     // ==== SHOOTING ==== //
     private ArrayList<EnemyBullet> bullets;
     //#endregion
-    private List<Enemy> enemies;
 
     //#region -- FUNCTIONS --
 	/**
      * Processor constructor.
 	 * @param world
 	 */
-	public EnemyProcessor(World world) {
+	public EnemyProcessor(World world, Enemy enemy) {
 		this.world = world;
-		enemy = this.world.getEnemy();
+        this.enemy = enemy;
         player = this.world.getPlayer();
         bullets = enemy.getEnemyBullets();
-        enemies = world.getEnemies();
 	}
 
 	/**
@@ -119,9 +117,8 @@ public class EnemyProcessor {
                 }
             }
         }
-        for (Enemy enemy : enemies) {
-            enemy.update(dt);
-        }
+
+        enemy.update(dt);
     }
 	/**
 	 * Adds constant gravity force to object.

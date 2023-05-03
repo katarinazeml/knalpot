@@ -46,7 +46,6 @@ public class World {
 
 	// testing purposes only
 	private Chest chest;
-	private Enemy enemy;
 
 	//#region -- FUNCTIONS --
 	/**
@@ -58,8 +57,10 @@ public class World {
 		platforms = new ArrayList<>();
 		chests = new ArrayList<>();
 		enemies = new ArrayList<>();
+
 		initializeWorld();
 		initializeNetwork();
+
 		player.initializeHUD();
 		chests.forEach(e -> e.initializeChestHUD());
 	}
@@ -74,10 +75,6 @@ public class World {
 
 	public Orb getOrb() {
 		return orb;
-	}
-
-	public Enemy getEnemy() {
-		return enemy;
 	}
 
 	public List<Chest> getChest() {
@@ -114,8 +111,7 @@ public class World {
 		player = new Player(new Vector2(100, 200));
 		orb = new Orb(player);
 		chest = new Chest(new Vector2(200, 132), 32, 32, new Texture("orb.png"));
-		enemy = new Enemy(new Vector2(500, 110));
-		enemies.add(enemy);
+		enemies.add(new Enemy(new Vector2(500, 110)));
 
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
@@ -135,6 +131,11 @@ public class World {
 			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
 		}
 	}
+
+	private void initializeConsumables() {
+
+	}
+
 	private void initializeNetwork() {
 		clientProgram = new ClientProgram(player);
 	}

@@ -6,9 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.EnemyBullet;
-import org.knalpot.knalpot.actors.EnemyProcessor;
-
-import java.util.ArrayList;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.orb.Orb;
@@ -63,7 +60,6 @@ public class Renderer {
     private World world;
     private Player player;
     private Actor orb;
-    private Enemy enemy;
     private Teleport teleport;
 
     // ==== MOUSE MANIPULATION ==== //
@@ -91,8 +87,6 @@ public class Renderer {
     private Texture enemyTexture;
     private Texture enemySpriteSheet;
 
-    private ArrayList<EnemyBullet> bullets;
-
     private BitmapFont labelFont;
 
     //#endregion
@@ -118,7 +112,6 @@ public class Renderer {
         batch = new SpriteBatch();
         player = this.world.getPlayer();
         orb = this.world.getOrb();
-        enemy = this.world.getEnemy();
         networking = this.world.getClientProgram();
         ((Orb) orb).setMousePos(mousePos);
 
@@ -215,10 +208,13 @@ public class Renderer {
         //drawEnemy();
         for (Enemy enemy : world.getEnemies()) {
             drawEnemy(enemy);
+
+            for (EnemyBullet bullet : enemy.getEnemyBullets()) {
+                bullet.render(batch);
+            }
         }
-        for (EnemyBullet bullet : enemy.getEnemyBullets()) {
-            bullet.render(batch);
-        }
+
+
         batch.end();
 
 
