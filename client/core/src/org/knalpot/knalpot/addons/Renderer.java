@@ -41,7 +41,7 @@ public class Renderer {
     //#region -- VARIABLES --
 
     // Temporary
-    private String tiledSrc = "level1/simpleLevel.tmx";
+    private String tiledSrc = "level1/tilemap.xml";
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer tiledRender;
 

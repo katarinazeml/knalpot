@@ -36,7 +36,7 @@ public class World {
 	//#endregion
 
 	// Tilemap temporary stuff
-	private String tiledSrc = "level1/simpleLevel.tmx";
+	private String tiledSrc = "level1/tilemap.xml";
 	public TiledMap tiledMap;
 
 	public List<Static> collisionBlocks;
@@ -123,13 +123,13 @@ public class World {
 		
 		chests.add(chest);
 
-		for (MapObject obj : tiledMap.getLayers().get("Collisions").getObjects()) {
+		for (MapObject obj : tiledMap.getLayers().get("collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
 			collisionBlocks.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
 		}
 
-		for (MapObject obj : tiledMap.getLayers().get("Platforms").getObjects()) {
+		for (MapObject obj : tiledMap.getLayers().get("platforms").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
 			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
