@@ -44,7 +44,6 @@ public class Network extends Listener {
         client.getKryo().register(Player.State.class);
     }
     
-
     public void received(Connection c, Object o){
         if (o instanceof PacketAddPlayer) {
             PacketAddPlayer packet = (PacketAddPlayer) o;

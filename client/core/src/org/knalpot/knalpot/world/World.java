@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.interactive.Static;
@@ -42,9 +43,11 @@ public class World {
 	public List<Static> collisionBlocks;
 	public List<Static> platforms;
 	private List<Chest> chests;
+	private List<Enemy> enemies;
 
 	// testing purposes only
 	private Chest chest;
+	private Enemy enemy;
 
 	//#region -- FUNCTIONS --
 	/**
@@ -55,6 +58,7 @@ public class World {
 		collisionBlocks = new ArrayList<>();
 		platforms = new ArrayList<>();
 		chests = new ArrayList<>();
+		enemies = new ArrayList<>();
 		initializeWorld();
 		initializeNetwork();
 		player.initializeHUD();
@@ -65,12 +69,16 @@ public class World {
 	 * Returns {@code Player} object when requested.
 	 * @return {@code Player} object.
 	 */
-	public Actor getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 
 	public Orb getOrb() {
 		return orb;
+	}
+
+	public Enemy getEnemy() {
+		return enemy;
 	}
 
 	public List<Chest> getChest() {
@@ -92,6 +100,14 @@ public class World {
 		return collisionBlocks;
 	}
 
+	public List<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
+    }
+
 	/**
 	 * Initializes all object needed for this 'world'.
 	 */
@@ -99,6 +115,8 @@ public class World {
 		player = new Player(new Vector2(100, 200));
 		orb = new Orb(player);
 		chest = new Chest(new Vector2(200, 132), 32, 32, new Texture("orb.png"));
+		enemy = new Enemy(new Vector2(500, 110));
+		enemies.add(enemy);
 
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
@@ -118,7 +136,6 @@ public class World {
 			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
 		}
 	}
-
 	private void initializeNetwork() {
 		clientProgram = new ClientProgram(player);
 	}

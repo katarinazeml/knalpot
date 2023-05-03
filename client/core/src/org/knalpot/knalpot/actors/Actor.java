@@ -1,5 +1,6 @@
 package org.knalpot.knalpot.actors;
 
+import org.knalpot.knalpot.actors.Enemy.EnemyState;
 import org.knalpot.knalpot.actors.player.Player.State;
 import org.knalpot.knalpot.interactive.Static;
 
@@ -55,7 +56,9 @@ public class Actor {
 
     // ==== TEMPORARY STATE MACHINE ==== //
     public State state;
+    public EnemyState enemyState;
     public State previousState;
+    public int enemyDirection;
 
     // ==== ACTOR PROPERTIES  ==== //
     protected int health;
@@ -255,12 +258,20 @@ public class Actor {
         return false;
     }
 
-    public static boolean SimpleAABB(Actor in, Static target, float dt) {
-        if (in.getBounds().x < target.getBounds().x + target.getWidth() &&
-            in.getBounds().x + in.getWidth() > target.getBounds().x &&
-            in.getBounds().y < target.getBounds().y + target.getHeight() &&
-            in.getBounds().y + in.getHeight() > target.getBounds().y) {
-            
+    public boolean DynamicAABBActor(Actor in, Actor player, Vector2 contactPoint, Vector2 contactNormal, float contactTime, float dt) {
+        if (in.getVelocity().x == 0 && in.getVelocity().y == 0) return false;
+        
+        Rectangle expandedTarget = new Rectangle();
+        expandedTarget.x = player.getPosition().x - (in.getBounds().width / 2);
+        expandedTarget.y = player.getPosition().y - (in.getBounds().height / 2);
+        expandedTarget.width = player.getWidth() + in.getBounds().width;
+        expandedTarget.height = player.getHeight() + in.getBounds().height;
+
+        Vector2 dynamicRectPos = new Vector2();
+        dynamicRectPos.x = in.getBounds().x + (in.getBounds().width / 2);
+        dynamicRectPos.y = in.getBounds().y + (in.getBounds().height / 2);
+
+        if (RayAABB(dynamicRectPos, in.getVelocity().cpy().scl(dt), expandedTarget, contactPoint, contactNormal, contactTime)) {
             return true;
         }
         return false;
@@ -269,4 +280,8 @@ public class Actor {
     //#endregion
 
     public void render(SpriteBatch batch) { }
+
+    public String getHealth() {
+        return Integer.toString(health);
+    }
 }

@@ -1,8 +1,14 @@
 package org.knalpot.knalpot.addons;
 
 import com.badlogic.gdx.graphics.Texture;
-
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import org.knalpot.knalpot.actors.Enemy;
+import org.knalpot.knalpot.actors.EnemyBullet;
+import org.knalpot.knalpot.actors.EnemyProcessor;
+
+import java.util.ArrayList;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.orb.Orb;
@@ -47,6 +53,7 @@ public class Renderer {
     private float animationTime = 0; // The time elapsed since the animation started
     private float frameDuration = 0.1f; // The duration of each frame in seconds
 
+    private TextureRegion enemyRegion;
 
     // ==== OBJECTS ==== //
     private SpriteBatch batch;
@@ -54,8 +61,9 @@ public class Renderer {
     private Texture staticTexture;
 
     private World world;
-    private Actor player;
+    private Player player;
     private Actor orb;
+    private Enemy enemy;
     private Teleport teleport;
 
     // ==== MOUSE MANIPULATION ==== //
@@ -80,7 +88,13 @@ public class Renderer {
     private ParallaxLayer cloud;
     private ParallaxLayer darkGrass;
     private ParallaxLayer lightGrass;
-       
+    private Texture enemyTexture;
+    private Texture enemySpriteSheet;
+
+    private ArrayList<EnemyBullet> bullets;
+
+    private BitmapFont labelFont;
+
     //#endregion
 
     //#region -- FUNCTIONS --
@@ -104,14 +118,16 @@ public class Renderer {
         batch = new SpriteBatch();
         player = this.world.getPlayer();
         orb = this.world.getOrb();
+        enemy = this.world.getEnemy();
         networking = this.world.getClientProgram();
-
         ((Orb) orb).setMousePos(mousePos);
 
         // Load other objects' textures.
         loadTextures();
         loadTiledMap();
         teleport = new Teleport(20, 48, 800, 176, batch);
+
+        labelFont = new BitmapFont();
     }
 
     /**
@@ -165,6 +181,16 @@ public class Renderer {
 
         tiledRender.setView(camera);
         tiledRender.render();
+
+        // // Create a new BitmapFont
+        // BitmapFont font = new BitmapFont();
+
+        // Player player = world.getPlayer();
+
+        // // Draw the player's health at the top-left corner of the screen
+        // batch.begin();
+        // font.draw(batch, "Health: " + player.getHealth(), 20, Gdx.graphics.getHeight() - 400);
+        // batch.end();
         
         // Draw teleport animation
         batch.begin();
@@ -177,6 +203,25 @@ public class Renderer {
         batch.begin();
     	drawPlayer();
         batch.end();
+
+        // Draw label
+        batch.begin();
+        String labelText = "Your health: " + player.getHealth();
+        labelFont.draw(batch, labelText, player.getPosition().x - 35, player.getPosition().y + player.getHeight() + 10);
+        batch.end();
+
+        // Draw enemy
+        batch.begin();
+        //drawEnemy();
+        for (Enemy enemy : world.getEnemies()) {
+            drawEnemy(enemy);
+            enemy.render(batch);
+        }
+        for (EnemyBullet bullet : enemy.getEnemyBullets()) {
+            bullet.render(batch);
+        }
+        batch.end();
+
 
         // Draw HUD
         ((Player) player).getHud().render();
@@ -194,6 +239,7 @@ public class Renderer {
     	batch.dispose();
         sky.dispose();
         teleport.swooshSound.dispose();
+        enemyTexture.dispose();
     }
 
     /**
@@ -212,6 +258,7 @@ public class Renderer {
     private void loadTextures() {
     	playerTexture = new Texture("player.png");
         staticTexture = new Texture("collision.png");
+        enemyTexture = new Texture("lavamonster.png");
         sky = new Texture("CloudsGrassWallpaperSky.png");
 
         Texture cloudTexture = new Texture("CloudsGrassWallpaperCloud.png");
@@ -221,8 +268,8 @@ public class Renderer {
         Texture spriteSheet = new Texture("playeranimation.png");
         playerRegion = new TextureRegion(spriteSheet, 0, 0, frameWidth, frameHeight);
 
-        //Texture spriteSheet1 = new Texture("teleportanimation.png");
-        //teleportRegion = new TextureRegion(spriteSheet1);
+        //Texture enemySpritesheet = new Texture("enemyanimation.png");
+        //enemyRegion = new TextureRegion(enemySpriteSheet, 0, 0, frameWidth, frameHeight);
 
         cloud = new ParallaxLayer(cloudTexture, camera, 0.5f, 0.25f);
         darkGrass = new ParallaxLayer(darkGrassTexture, camera, 0.2f, 0.4f);
@@ -264,9 +311,6 @@ public class Renderer {
             if (mpPlayer.direction == 1) mpPositionX = mpPlayer.x;
             if (mpPlayer.direction == -1) mpPositionX = mpPlayer.x + player.getWidth() / player.getScale();
 
-            System.out.println("MPPlayer State:");
-            System.out.println(mpPlayer.state);
-
             if (mpPlayer.state != State.IDLE) {
                 batch.draw(playerTextureRun, mpPositionX, mpPlayer.y,
                     Math.signum(mpPlayer.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
@@ -276,7 +320,6 @@ public class Renderer {
         }
     }
     
-
     private void drawBackground(float targetX) {
         // Calculate the positions of the backgrounds
         float cameraX = camera.position.x - camera.viewportWidth / 2;
@@ -288,5 +331,39 @@ public class Renderer {
         darkGrass.render(batch, targetX, 0);
         lightGrass.render(batch, targetX, 0);
     }
+
+    private void drawEnemy(Enemy enemy) {
+         float enemyPositionX = enemy.getPosition().x;
+         if (enemy.getEnemyDirection() == -1) {
+             batch.draw(enemyTexture, enemyPositionX, enemy.getPosition().y);
+         }
+         if (enemy.getEnemyDirection() == 1) {
+             batch.draw(enemyTexture, enemyPositionX + enemy.getWidth(), enemy.getPosition().y, -enemyTexture.getWidth(), enemyTexture.getHeight());
+         } 
+    }
+            // put - in front of width to reverse player.
+        //     float positionX = 0;
+
+        //     // Animation.
+        //     animationTime += Gdx.graphics.getDeltaTime();
+        //     int frameIndex = (int) (animationTime / frameDuration) % numFrames;
+        //     int offsetX = frameIndex * frameWidth;
+        //     Texture enemyTextureRun = enemyRegion.getTexture();
+            
+        //     // General logic.
+        //     if (enemy.direction == 1) {
+        //         positionX = player.getPosition().x;
+        //     }
+        //     if (enemy.direction == -1) {
+        //         positionX = player.getPosition().x + player.getWidth() / player.getScale();
+        //     }
+    
+        //     if (enemy.getState() != enemy.EnemyState.IDLE) {
+        //         batch.draw(enemyTextureRun, positionX, enemy.getPosition().y,
+        //             Math.signum(enemy.direction) * (frameWidth * enemy.getScale()), (frameHeight * enemy.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
+        //     } else {
+        //         batch.draw(enemyTexture, positionX, enemy.getPosition().y, Math.signum(enemy.direction) * enemy.getWidth(), enemy.getHeight());
+        //     }
+        // }    
     //#endregion
 }

@@ -113,7 +113,7 @@ public class PlayerProcessor {
         }
 
         for (Chest chest : world.getChest()) {
-            if (Actor.SimpleAABB(player, chest, dt) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (player.getBounds().overlaps(chest.getBounds()) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 chest.getHUD().changeActive();
                 ((Player) player).chestIndex = world.getChest().indexOf(chest);
             }
@@ -212,10 +212,6 @@ public class PlayerProcessor {
      * velocity data.
      */
     private void changeState() {
-        System.out.println("Player data for debugging X:Y:STATE");
-        System.out.println(player.getVelocity().x);
-        System.out.println(player.getVelocity().y);
-        System.out.println(player.state);
         if (player.getVelocity().x == 0 && player.getVelocity().y == 0) {
             updateState();
             player.state = Player.State.IDLE;
@@ -293,7 +289,5 @@ public class PlayerProcessor {
         }
         return false;
     }
-    //#endregion
-
     //#endregion
 }
