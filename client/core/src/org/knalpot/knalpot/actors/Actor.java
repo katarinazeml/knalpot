@@ -280,4 +280,8 @@ public class Actor {
     //#endregion
 
     public void render(SpriteBatch batch) { }
+
+    public String getHealth() {
+        return Integer.toString(health);
+    }
 }

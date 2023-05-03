@@ -1,7 +1,7 @@
 package org.knalpot.knalpot.addons;
 
 import com.badlogic.gdx.graphics.Texture;
-
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Enemy;
@@ -20,8 +20,6 @@ import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.Gdx;
-
-import org.knalpot.knalpot.actors.Enemy.EnemyState;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -63,7 +61,7 @@ public class Renderer {
     private Texture staticTexture;
 
     private World world;
-    private Actor player;
+    private Player player;
     private Actor orb;
     private Enemy enemy;
     private Teleport teleport;
@@ -94,6 +92,8 @@ public class Renderer {
     private Texture enemySpriteSheet;
 
     private ArrayList<EnemyBullet> bullets;
+
+    private BitmapFont labelFont;
 
     //#endregion
 
@@ -126,6 +126,8 @@ public class Renderer {
         loadTextures();
         loadTiledMap();
         teleport = new Teleport(20, 48, 800, 176, batch);
+
+        labelFont = new BitmapFont();
     }
 
     /**
@@ -179,6 +181,16 @@ public class Renderer {
 
         tiledRender.setView(camera);
         tiledRender.render();
+
+        // // Create a new BitmapFont
+        // BitmapFont font = new BitmapFont();
+
+        // Player player = world.getPlayer();
+
+        // // Draw the player's health at the top-left corner of the screen
+        // batch.begin();
+        // font.draw(batch, "Health: " + player.getHealth(), 20, Gdx.graphics.getHeight() - 400);
+        // batch.end();
         
         // Draw teleport animation
         batch.begin();
@@ -193,6 +205,17 @@ public class Renderer {
         batch.end();
 
         // Draw player
+        batch.begin();
+        drawPlayer();
+        batch.end();
+
+        // Draw label
+        batch.begin();
+        String labelText = "Your health: " + player.getHealth();
+        labelFont.draw(batch, labelText, player.getPosition().x - 35, player.getPosition().y + player.getHeight() + 10);
+        batch.end();
+
+        // Draw enemy
         batch.begin();
         //drawEnemy();
         for (Enemy enemy : world.getEnemies()) {

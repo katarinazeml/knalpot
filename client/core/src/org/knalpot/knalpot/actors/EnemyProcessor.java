@@ -40,10 +40,11 @@ public class EnemyProcessor {
     private Vector2 cn;
     private float t;
 
-    private final float CHASE_RADIUS = 300f;
-    private final float ATTACK_RADIUS = 200f;
+    private final float CHASE_RADIUS = 400f;
+    private final float ATTACK_RADIUS = 300f;
+    private final float STOP_RADIUS = 100f;
     private float directionChangeCooldown = 0f;
-    private final float DIRECTION_CHANGE_COOLDOWN_TIME = 2f; // Change this to adjust the cooldown time
+    private final float DIRECTION_CHANGE_COOLDOWN_TIME = 2f; // adjust the cooldown time
 
     public boolean attacking = false;
     private float attackTimer = 2f;
@@ -92,8 +93,10 @@ public class EnemyProcessor {
                 if (enemy.getVelocity().y == 0f) canJump = true;
             }
         }
-
-        if (enemy.getBounds().overlaps(player.getBounds())) {
+        float playerX = player.getPosition().x;
+        float enemyX = enemy.getPosition().x;
+        float distanceToPlayer = Math.abs(playerX - enemyX);
+        if ((distanceToPlayer <= STOP_RADIUS)) {
             // Enemy collides with player, stop moving
             enemy.getVelocity().x = 0f;
             enemy.setState(EnemyState.IDLE);
@@ -103,8 +106,10 @@ public class EnemyProcessor {
         while (bulletIterator.hasNext()) {
             EnemyBullet bullet = bulletIterator.next();
             if (bullet.getBounds().overlaps(player.getBounds())) {
+                if (enemy.EnemyHealth > 0) {
                 bulletIterator.remove();
-                player.caughtByEnemy(10);
+                player.caughtByEnemy(10); 
+            }
             } else {
                 for (Static obj : world.collisionBlocks) {
                     if (resolveCollision(bullet, obj, dt)) {
@@ -173,11 +178,13 @@ public class EnemyProcessor {
                 }
                 // Set the target position to the predicted position
                 target = new Vector2(predictedX, predictedY);
-                enemy.shoot(target);
+                if (enemy.EnemyHealth > 0) {
+                    enemy.shoot(target);
+                }
                 enemy.timeSinceLastShot = 0f;
             }
     
-            if (attackTimer <= 0f) {
+            if (attackTimer <= 0f && enemy.EnemyHealth > 0) {
                 player.caughtByEnemy(10); // reduce player's health by 10
                 attackTimer = 2f; // reset timer
             }

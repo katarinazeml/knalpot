@@ -61,7 +61,7 @@ public class WorldProcessor {
 		ArrayList<Enemy> removedEnemies = new ArrayList<>(); // Create a new list to store removed enemies
 
 		for (Enemy enemy : world.getEnemies()) {
-			if (enemy.health <= 0) {
+			if (enemy.EnemyHealth <= 0) {
 				enemy.deleteAllBullets();
 				//world.removeEnemy(enemy); // Remove enemy from game world
 				System.out.println("enemy removed");

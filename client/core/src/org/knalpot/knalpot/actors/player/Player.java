@@ -84,6 +84,7 @@ public class Player extends Actor {
     }
 
     public void update(float dt) {
+        System.out.println("health: " + health);
         position.add(velocity.cpy().scl(dt));
         bounds.x = position.x;
         bounds.y = position.y;
@@ -124,6 +125,10 @@ public class Player extends Actor {
      */
     public HUDProcessor getHud() {
         return inventoryHUD;
+    }
+
+    public String getHealth() {
+        return Integer.toString(health);
     }
 
     /**

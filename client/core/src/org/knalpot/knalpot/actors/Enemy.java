@@ -28,7 +28,7 @@ public class Enemy extends Actor {
 
     public float timeSinceLastShot = 0f;
 
-    public int health = 100;
+    public int EnemyHealth = 100;
 
     private Sound oofSound;
 
@@ -102,7 +102,7 @@ public class Enemy extends Actor {
 
     public void gotShot(int damage) {
         oofSound.play();
-        health -= damage;
+        EnemyHealth -= damage;
         if (health < 0) health = 0;
         //System.out.println("enemy`s health: " + health);
     }
