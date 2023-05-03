@@ -62,6 +62,7 @@ public class WorldProcessor {
 
 		for (Enemy enemy : world.getEnemies()) {
 			if (enemy.health <= 0) {
+				enemy.deleteAllBullets();
 				//world.removeEnemy(enemy); // Remove enemy from game world
 				System.out.println("enemy removed");
 				removedEnemies.add(enemy); // Add enemy to the removedEnemies list

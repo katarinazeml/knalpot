@@ -91,6 +91,10 @@ public class Enemy extends Actor {
         return bullets;
     }
 
+    public void deleteAllBullets() {
+        bullets.clear();
+    }
+
     public void gotShot(int damage) {
         health -= damage;
         if (health < 0) health = 0;
