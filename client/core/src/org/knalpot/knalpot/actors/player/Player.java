@@ -23,7 +23,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Player extends Actor {
     //#region -- VARIABLES --
-    private int health = 1000;
+    private int health;
 
     // ==== PLAYER STATES ==== //
     public enum State {

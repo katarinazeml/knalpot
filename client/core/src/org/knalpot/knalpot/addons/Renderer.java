@@ -204,11 +204,6 @@ public class Renderer {
     	drawPlayer();
         batch.end();
 
-        // Draw player
-        batch.begin();
-        drawPlayer();
-        batch.end();
-
         // Draw label
         batch.begin();
         String labelText = "Your health: " + player.getHealth();

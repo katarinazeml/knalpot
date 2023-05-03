@@ -30,7 +30,7 @@ public class PlayerProcessor {
 
     // ==== MOVEMENT ==== //
 	private final float SPEED = 120f;
-    private final float JUMP_HEIGHT = 600f;
+    private final float JUMP_HEIGHT = 400f;
     private final float ACCELERATION = 12f;
     private final float DECCELERATION = 16f;
     private final float VELOCITY_POWER = 0.9f;
