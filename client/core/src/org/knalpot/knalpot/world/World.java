@@ -2,6 +2,7 @@ package org.knalpot.knalpot.world;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.orb.Orb;
@@ -12,6 +13,7 @@ import org.knalpot.knalpot.interactive.props.Consumable;
 import org.knalpot.knalpot.networking.ClientProgram;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.RegionInfluencer.Random;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -135,11 +137,22 @@ public class World {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
 			chest = new Chest(new Vector2(rect.getX() * 2, rect.getY() * 2), 32, 32, new Texture("orb.png"));
-			chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
-			chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
-			chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Water"));
+		
+			// Add consumables to the chest
+			List<Consumable> consumables = new ArrayList<>();
+			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
+			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
+			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Water"));
+		
+			// Add elements randomly to the chest
+			for (int i = 0; i < 2; i++) {
+				int randomIndex = ThreadLocalRandom.current().nextInt(consumables.size());
+				Consumable randomConsumable = consumables.get(randomIndex);
+				chest.addConsumable(randomConsumable);
+				consumables.remove(randomConsumable);
+			}
 			chests.add(chest);
-    	}
+		}
 	}
 
 	private void initializeConsumables() {
