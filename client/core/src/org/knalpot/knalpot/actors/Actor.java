@@ -118,6 +118,10 @@ public class Actor {
         return health;
     }
 
+    public void changeHealth(int amount) {
+        health += amount;
+    }
+
     // ==== SETTERS ==== //
     public void setTexture(Texture texture) {
         this.texture = texture;
