@@ -114,6 +114,10 @@ public class Actor {
         return t;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
     // ==== SETTERS ==== //
     public void setTexture(Texture texture) {
         this.texture = texture;
@@ -280,8 +284,4 @@ public class Actor {
     //#endregion
 
     public void render(SpriteBatch batch) { }
-
-    public String getHealth() {
-        return Integer.toString(health);
-    }
 }

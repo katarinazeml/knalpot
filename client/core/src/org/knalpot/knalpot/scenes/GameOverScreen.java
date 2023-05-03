@@ -3,22 +3,13 @@ package org.knalpot.knalpot.scenes;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.knalpot.knalpot.Knalpot;
 
 public class GameOverScreen implements Screen {
-
-    private final float buttonWidth = Gdx.graphics.getWidth() / 4f;
-    private final float buttonHeight = Gdx.graphics.getHeight() / 6f;
     private final Knalpot game;
 
     private BitmapFont font;
@@ -52,13 +43,7 @@ public class GameOverScreen implements Screen {
         // Update the timer
         timeElapsed += delta;
         float timeRemaining = 10f - timeElapsed;
-
-        // Check if 10 seconds have passed
-        if (!showMenu && timeElapsed >= 10f) {
-            showMenu = true;
-            ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(this.game));
-        }
-
+        
         // Draw the remaining time
         String time = "Time Remaining: " + String.format("%.1f", timeRemaining);
         String gameOver = "Game Over";
@@ -68,6 +53,14 @@ public class GameOverScreen implements Screen {
         font.draw(batch, gameOver, 560, 600);
         font.draw(batch, message, 450, 500);
         batch.end();
+
+        // Check if 10 seconds have passed
+        if (!showMenu && timeElapsed >= 10f) {
+            showMenu = true;
+            dispose();
+            ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(this.game));
+        }
+
     }
 
     @Override

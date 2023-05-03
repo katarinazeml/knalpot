@@ -124,8 +124,8 @@ public class SettingsMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.audio.newSound(Gdx.files.internal("buttons/start_sound.mp3")).play(1.0f);
-                game.setScreen(new MainMenuScreen(game));
                 stage.dispose();
+                game.setScreen(new MainMenuScreen(game));
             }
         });
 

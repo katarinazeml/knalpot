@@ -11,7 +11,6 @@ public class Knalpot extends Game {
 
 	private Game game;
 	private Music music;
-	private boolean isMusicOn = true;
 	public float volume;
 
 	public Knalpot() {
@@ -22,7 +21,7 @@ public class Knalpot extends Game {
 		// play music in MainMenuScreen and SettingsMenuScreen
 		music();
 
-		this.setScreen(new GameOverScreen((Knalpot) game));
+		this.setScreen(new MainMenuScreen((Knalpot) game));
 		//this.setScreen(new MainMenuScreen());
 	}
 
