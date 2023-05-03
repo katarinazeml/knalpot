@@ -73,12 +73,6 @@ public class Enemy extends Actor {
         for (EnemyBullet bullet : bullets) {
             bullet.update(dt);
         }
-
-        System.out.println("Enemy BB");
-        System.out.println(bounds.width);
-        System.out.println(bounds.height);
-        System.out.println(getWidth());
-        System.out.println(getHeight());
     }
 
     public void shoot(Vector2 targetPos) {
