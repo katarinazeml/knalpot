@@ -111,7 +111,7 @@ public class World {
 		player = new Player(new Vector2(100, 200));
 		orb = new Orb(player);
 		chest = new Chest(new Vector2(200, 132), 32, 32, new Texture("orb.png"));
-		enemies.add(new Enemy(new Vector2(500, 110)));
+		//enemies.add(new Enemy(new Vector2(500, 110)));
 
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
 		chest.addConsumable(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
@@ -130,6 +130,15 @@ public class World {
 			Rectangle rect = rectObj.getRectangle();
 			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
 		}
+    	for (MapObject obj : tiledMap.getLayers().get("enemies").getObjects()) {
+			RectangleMapObject rectObj = (RectangleMapObject) obj;
+			Rectangle rect = rectObj.getRectangle();
+			enemies.add(new Enemy(new Vector2(rect.getX(), rect.getY())));
+			System.out.println("enemies amount: " + enemies.size());
+			// for (Enemy enemy: enemies) {
+			// 	System.out.println(enemy.getBounds().x);
+			// }
+    	}
 	}
 
 	private void initializeConsumables() {
