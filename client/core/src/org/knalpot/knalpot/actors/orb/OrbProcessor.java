@@ -5,11 +5,8 @@ import java.util.ListIterator;
 
 import org.knalpot.knalpot.actors.Bullet;
 import org.knalpot.knalpot.actors.Enemy;
-import org.knalpot.knalpot.actors.EnemyBullet;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.world.World;
-
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 
 public class OrbProcessor {
     private World world;
