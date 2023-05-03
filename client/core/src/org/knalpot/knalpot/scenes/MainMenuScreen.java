@@ -30,6 +30,7 @@ public class MainMenuScreen implements Screen {
         this.game = game;
         batch = new SpriteBatch();
         font = new BitmapFont();
+        game.getMusic().play();
     }
 
     @Override
