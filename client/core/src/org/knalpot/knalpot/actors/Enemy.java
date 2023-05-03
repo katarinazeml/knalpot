@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.knalpot.knalpot.addons.BBGenerator;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -28,10 +30,13 @@ public class Enemy extends Actor {
 
     public int health = 100;
 
+    private Sound oofSound;
+
     public Enemy(Vector2 position) {
         this.position = position;
     
         texture = new Texture("lavamonster.png");
+        oofSound = Gdx.audio.newSound(Gdx.files.internal("oof.mp3"));
         BBSize = BBGenerator.BBPixels(texture.getTextureData());
         scaleSize = 2; // Update scaleSize to 2
         direction = 1;
@@ -92,6 +97,7 @@ public class Enemy extends Actor {
     }
 
     public void gotShot(int damage) {
+        oofSound.play();
         health -= damage;
         if (health < 0) health = 0;
         //System.out.println("enemy`s health: " + health);
