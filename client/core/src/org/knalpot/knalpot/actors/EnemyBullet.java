@@ -20,8 +20,8 @@ public class EnemyBullet extends Actor {
         texture = new Texture("redSquare.png");
         BBSize = BBGenerator.BBPixels(texture.getTextureData());
     
-        WIDTH = texture.getWidth() * scaleSize;
-        HEIGHT = texture.getHeight() * scaleSize;
+        WIDTH = BBSize[0] * scaleSize;
+        HEIGHT = BBSize[1] * scaleSize;
         
         position = new Vector2(enemy.getPosition().x, enemy.getPosition().y + 40);
         

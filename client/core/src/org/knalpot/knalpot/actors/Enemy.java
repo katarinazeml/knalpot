@@ -44,6 +44,9 @@ public class Enemy extends Actor {
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 0);
         bullets = new ArrayList<>();
+
+        WIDTH = BBSize[0] * scaleSize;
+        HEIGHT = BBSize[1] * scaleSize;
         
         bounds = new Rectangle(position.x, position.y, BBSize[0] * scaleSize, BBSize[1] * scaleSize);
     
@@ -70,6 +73,12 @@ public class Enemy extends Actor {
         for (EnemyBullet bullet : bullets) {
             bullet.update(dt);
         }
+
+        System.out.println("Enemy BB");
+        System.out.println(bounds.width);
+        System.out.println(bounds.height);
+        System.out.println(getWidth());
+        System.out.println(getHeight());
     }
 
     public void shoot(Vector2 targetPos) {

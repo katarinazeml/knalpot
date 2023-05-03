@@ -215,7 +215,6 @@ public class Renderer {
         //drawEnemy();
         for (Enemy enemy : world.getEnemies()) {
             drawEnemy(enemy);
-            enemy.render(batch);
         }
         for (EnemyBullet bullet : enemy.getEnemyBullets()) {
             bullet.render(batch);

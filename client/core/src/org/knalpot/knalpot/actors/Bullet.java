@@ -23,8 +23,8 @@ public class Bullet extends Actor {
         texture = new Texture("bullet.png");
         BBSize = BBGenerator.BBPixels(texture.getTextureData());
 
-        WIDTH = texture.getWidth();
-        HEIGHT = texture.getHeight();
+        WIDTH = BBSize[0] * scaleSize;
+        HEIGHT = BBSize[1] * scaleSize;
 
         position = this.orb.getPosition().cpy();
         velocity = new Vector2();
