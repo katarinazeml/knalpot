@@ -126,9 +126,20 @@ public class PlayerProcessor {
 
         // HUD and inventory stuff // temporary
         takeConsumableFromChest();
+        useCurrentConsumable();
         ((Player) player).getHud().setIsActive(isHUDActive);
         ((Player) player).getHud().update(dt);
 	}
+
+    private void useCurrentConsumable() {
+        if (isHUDActive) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+                Consumable consumable = ((Player) player).getInventory().get(((Player) player).getHud().getCurrentConsum());
+                player.changeHealth(consumable.getPower());
+                ((Player) player).removeConsumable(consumable);
+            }
+        }
+    }
 
     private void takeConsumableFromChest() {
         Chest chest = world.getChest().get(((Player) player).chestIndex);
