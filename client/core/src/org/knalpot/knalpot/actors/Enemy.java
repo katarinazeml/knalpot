@@ -96,6 +96,10 @@ public class Enemy extends Actor {
         return bullets;
     }
 
+    public void deleteAllBullets() {
+        bullets.clear();
+    }
+
     public void gotShot(int damage) {
         oofSound.play();
         health -= damage;
