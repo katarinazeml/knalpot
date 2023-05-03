@@ -2,6 +2,7 @@ package org.knalpot.knalpot;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import org.knalpot.knalpot.scenes.GameOverScreen;
 import org.knalpot.knalpot.scenes.MainMenuScreen;
 
 import com.badlogic.gdx.Game;
@@ -10,7 +11,6 @@ public class Knalpot extends Game {
 
 	private Game game;
 	private Music music;
-	private boolean isMusicOn = true;
 	public float volume;
 
 	public Knalpot() {
@@ -21,7 +21,8 @@ public class Knalpot extends Game {
 		// play music in MainMenuScreen and SettingsMenuScreen
 		music();
 
-		this.setScreen(new MainMenuScreen(this));
+		this.setScreen(new MainMenuScreen((Knalpot) game));
+		//this.setScreen(new MainMenuScreen());
 	}
 
 	public void render() {

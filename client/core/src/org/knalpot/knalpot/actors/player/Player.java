@@ -23,8 +23,6 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Player extends Actor {
     //#region -- VARIABLES --
-    private int health;
-
     // ==== PLAYER STATES ==== //
     public enum State {
         IDLE, 
@@ -125,10 +123,6 @@ public class Player extends Actor {
      */
     public HUDProcessor getHud() {
         return inventoryHUD;
-    }
-
-    public String getHealth() {
-        return Integer.toString(health);
     }
 
     /**

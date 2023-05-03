@@ -30,6 +30,7 @@ public class MainMenuScreen implements Screen {
         this.game = game;
         batch = new SpriteBatch();
         font = new BitmapFont();
+        game.getMusic().play();
     }
 
     @Override
@@ -107,9 +108,9 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.audio.newSound(Gdx.files.internal("buttons/start_sound.mp3")).play(1.0f);
-                game.setScreen(new GameScene());
                 stage.dispose();
                 game.getMusic().dispose();
+                game.setScreen(new GameScene(game));
             }
         });
 
@@ -135,8 +136,8 @@ public class MainMenuScreen implements Screen {
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
                 stage.dispose();
+                Gdx.app.exit();
             }
         });
 
@@ -164,8 +165,8 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.audio.newSound(Gdx.files.internal("buttons/start_sound.mp3")).play(1.0f);
-                game.setScreen(new SettingsMenuScreen(game));
                 stage.dispose();
+                game.setScreen(new SettingsMenuScreen(game));
             }
         });
 

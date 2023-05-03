@@ -1,7 +1,6 @@
 package org.knalpot.knalpot.world;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.EnemyProcessor;
@@ -9,8 +8,6 @@ import org.knalpot.knalpot.actors.orb.OrbProcessor;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.actors.player.PlayerProcessor;
 import org.knalpot.knalpot.networking.ClientProgram;
-
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 
 /**
  * {@code WorldProcessor} is responsible for updating every single 
@@ -47,6 +44,15 @@ public class WorldProcessor {
 	}
 
 	/**
+	 * Checks if the player is dead or not.
+	 * If it is, then the scenery must be changed.
+	 * @return boolean
+	 */
+	public boolean isPlayerDead() {
+		return player.getHealth() <= 0;
+	}
+
+	/**
 	 * Updates every single 'processor' in the world.
 	 * @param dt
 	 */
@@ -55,8 +61,6 @@ public class WorldProcessor {
 		enemyProcessor.update(dt);
 		orbProcessor.update(dt);
 		world.getOrb().update(dt);
-
-		System.out.println("enemies list size: " + world.getEnemies().size());
 
 		ArrayList<Enemy> removedEnemies = new ArrayList<>(); // Create a new list to store removed enemies
 

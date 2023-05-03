@@ -3,7 +3,6 @@ package org.knalpot.knalpot.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;

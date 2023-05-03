@@ -1,5 +1,6 @@
 package org.knalpot.knalpot.scenes;
 
+import org.knalpot.knalpot.Knalpot;
 import org.knalpot.knalpot.addons.Constants;
 import org.knalpot.knalpot.addons.Renderer;
 import org.knalpot.knalpot.world.World;
@@ -17,10 +18,15 @@ import com.badlogic.gdx.Screen;
 public class GameScene implements Screen {
 	//#region -- VARIABLES --
 	// ==== OBJECT VARIABLES ==== //
+	private Knalpot game;
 	private World world;
 	private WorldProcessor processor;
 	private Renderer renderer;
 	//#endregion	
+
+	public GameScene(Knalpot game) {
+		this.game = game;
+	}
 
 	//#region -- FUNCTIONS --
 	@Override
@@ -54,6 +60,11 @@ public class GameScene implements Screen {
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		processor.update(dt);
 		renderer.render();
+
+		if (processor.isPlayerDead()) {
+			dispose();
+			game.setScreen(new GameOverScreen(game));
+		}
 	}
 	
 	@Override
