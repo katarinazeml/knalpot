@@ -1,6 +1,7 @@
 package org.knalpot.knalpot.world;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.EnemyProcessor;
@@ -21,8 +22,9 @@ public class WorldProcessor {
 	private World world;
 	private Player player;
 	private PlayerProcessor playerProcessor;
-	private EnemyProcessor enemyProcessor;
 	private OrbProcessor orbProcessor;
+
+	private List<EnemyProcessor> enemyProcessors;
 
 	// ==== NETWORKING ==== //
 	private ClientProgram clientProgram;
@@ -37,8 +39,13 @@ public class WorldProcessor {
 		this.world = world;
 		this.player = (Player) this.world.getPlayer();
 		playerProcessor = new PlayerProcessor(this.world);
-		enemyProcessor = new EnemyProcessor(this.world);
 		orbProcessor = new OrbProcessor(this.world);
+
+		enemyProcessors = new ArrayList<>();
+		this.world.getEnemies().forEach(e -> {
+			enemyProcessors.add(new EnemyProcessor(this.world, e));
+		});
+
 		clientProgram = this.world.getClientProgram();
 		clientProgram.create();
 	}
@@ -58,16 +65,17 @@ public class WorldProcessor {
 	 */
 	public void update(float dt) {
 		playerProcessor.update(dt);
-		enemyProcessor.update(dt);
 		orbProcessor.update(dt);
 		world.getOrb().update(dt);
+
+		enemyProcessors.forEach(e -> e.update(dt));
 
 		ArrayList<Enemy> removedEnemies = new ArrayList<>(); // Create a new list to store removed enemies
 
 		for (Enemy enemy : world.getEnemies()) {
 			if (enemy.EnemyHealth <= 0) {
 				enemy.deleteAllBullets();
-				//world.removeEnemy(enemy); // Remove enemy from game world
+				// world.removeEnemy(enemy); // Remove enemy from game world
 				System.out.println("enemy removed");
 				removedEnemies.add(enemy); // Add enemy to the removedEnemies list
 			}
