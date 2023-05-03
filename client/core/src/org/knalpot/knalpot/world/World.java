@@ -145,11 +145,11 @@ public class World {
 			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Water"));
 		
 			// Add elements randomly to the chest
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 3; i++) {
 				int randomIndex = ThreadLocalRandom.current().nextInt(consumables.size());
 				Consumable randomConsumable = consumables.get(randomIndex);
 				chest.addConsumable(randomConsumable);
-				consumables.remove(randomConsumable);
+				//consumables.remove(randomConsumable);
 			}
 			chests.add(chest);
 		}
