@@ -132,16 +132,20 @@ public class World {
 		for (MapObject obj : tiledMap.getLayers().get("enemies").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
-			chest = new Chest(new Vector2(rect.getX() * 2, rect.getY() * 2), 32, 32, new Texture("orb.png"));
+			chest = new Chest(new Vector2(rect.getX() * 2, rect.getY() * 2), 32, 32, new Texture("chest.png"));
 		
 			// Add elements randomly to the chest
 			for (int i = 0; i < 3; i++) {
 				// Add consumables to the chest
 				List<Consumable> consumables = new ArrayList<>();
-				consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Potion"));
-				consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Apple"));
-				consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("orb.png"), "Water"));
+				consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Potion"));
+				consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Apple"));
+				consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Water"));
 				
+				consumables.get(0).setPower(10);
+				consumables.get(1).setPower(5);
+				consumables.get(2).setPower(-4);
+
 				int randomIndex = ThreadLocalRandom.current().nextInt(consumables.size());
 				Consumable randomConsumable = consumables.get(randomIndex);
 				chest.addConsumable(randomConsumable);
@@ -149,10 +153,6 @@ public class World {
 			}
 			chests.add(chest);
 		}
-	}
-
-	private void initializeConsumables() {
-
 	}
 
 	private void initializeNetwork() {
