@@ -51,7 +51,7 @@ public class Player extends Actor {
      */
     public Player(Vector2 position) {
         this.position = position;
-        health = 1000;
+        health = 100;
 
         // Temporary solution
         texture = new Texture("player.png");

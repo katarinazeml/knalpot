@@ -43,7 +43,7 @@ public class Knalpot extends Game {
 
 	public void music() {
 		// Load music file
-		music = Gdx.audio.newMusic(Gdx.files.internal("psy.mp3"));
+		music = Gdx.audio.newMusic(Gdx.files.internal("menu-music.mp3"));
 
 		// Set loop and volume for music and play it
 		music.setLooping(true);
