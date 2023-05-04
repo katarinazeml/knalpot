@@ -103,11 +103,9 @@ public class EnemyProcessor {
         ListIterator<EnemyBullet> bulletIterator = bullets.listIterator();
         while (bulletIterator.hasNext()) {
             EnemyBullet bullet = bulletIterator.next();
-            if (bullet.getBounds().overlaps(player.getBounds())) {
-                if (enemy.EnemyHealth > 0) {
+            if (bullet.getBounds().overlaps(player.getBounds()) && enemy.EnemyHealth > 0) {
                 bulletIterator.remove();
-                player.caughtByEnemy(10); 
-            }
+                player.caughtByEnemy(10);
             } else {
                 for (Static obj : world.collisionBlocks) {
                     if (resolveCollision(bullet, obj, dt)) {
