@@ -11,7 +11,7 @@ import org.knalpot.knalpot.addons.ParticleGenerator;
 import org.knalpot.knalpot.addons.effects.OSM;
 import org.knalpot.knalpot.addons.effects.OSMAnimator;
 import org.knalpot.knalpot.addons.effects.OSM.Shape;
-import org.knalpot.knalpot.interactive.Static;
+import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -33,7 +33,6 @@ import com.badlogic.gdx.math.Vector3;
  * @version 0.2
  */
 public class Orb extends Actor {
-
     public enum OrbState {
         ORB,
         WALL,
@@ -42,12 +41,9 @@ public class Orb extends Actor {
         TRANSFORM_TO_WALL
     }
 
-    private OrbState state = OrbState.ORB;
+    private World world;
 
-    // ==== COLLISION-RELATED ==== //
-    private Vector2 cp;
-    private Vector2 cn;
-    private float t;
+    private OrbState state = OrbState.ORB;
 
     // Owner of the orb
     private Actor owner;
@@ -73,14 +69,22 @@ public class Orb extends Actor {
 
     private boolean mustFloat;
 
+    private float previousX;
+
+    // Bullets
     private List<Bullet> bullets;
 
     public List<Bullet> getBullets() {
         return bullets;
     }
 
-    public Orb(Actor owner) {
+    public Orb(Actor owner, World world) {
         this.owner = owner;
+        initializeOrb(world);
+    }
+
+    private void initializeOrb(World world) {
+        this.world = world;
 
         scaleSize = 2;
         
@@ -106,6 +110,10 @@ public class Orb extends Actor {
 
     public Actor getOwner() {
         return owner;
+    }
+    
+    public float getDeltaPosition() {
+        return position.x - previousX;
     }
 
     public void setOwner(Actor owner) {
@@ -134,6 +142,8 @@ public class Orb extends Actor {
             floating(dt);
             particles.update(dt);
         }
+
+        previousX = position.cpy().x;
 
         if (state == OrbState.TRANSFORM_TO_WALL) {
             if (osm.getSize().length == 1)
@@ -181,6 +191,8 @@ public class Orb extends Actor {
             timeSinceLastShot = 0f;
         }
         
+        updateBullets();
+
         for (Bullet bullet : bullets) {
             bullet.update(dt);
         }
@@ -203,6 +215,21 @@ public class Orb extends Actor {
         batch.begin();
         for (Bullet bullet : bullets) {
             bullet.render(batch);
+        }
+    }
+
+    private void updateBullets() {
+        ListIterator<Bullet> bulletIterator = bullets.listIterator();
+        while (bulletIterator.hasNext()) {
+            Bullet bullet = bulletIterator.next();
+            world.getEnemies().forEach(e -> {
+                if (bullet.getBounds().overlaps(e.getBounds())) {
+                    if (e.EnemyHealth > 0) {
+                        bulletIterator.remove();
+                        e.gotShot(10);
+                    }
+                }
+            });
         }
     }
 

@@ -248,7 +248,6 @@ public class EnemyProcessor {
             in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
         }
         if (enemy.getVelocity().x == 0 && collision) {
-            System.out.println("vertical collision occured");
             verticalCollisionOccurred = true;
         }
         return collision;

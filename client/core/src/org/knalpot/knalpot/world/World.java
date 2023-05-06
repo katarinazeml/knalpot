@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
@@ -45,6 +46,7 @@ public class World {
 	public List<Static> platforms;
 	private List<Chest> chests;
 	private List<Enemy> enemies;
+	private List<Orb> orbs;
 
 	// testing purposes only
 	private Chest chest;
@@ -59,6 +61,7 @@ public class World {
 		platforms = new ArrayList<>();
 		chests = new ArrayList<>();
 		enemies = new ArrayList<>();
+		orbs = new ArrayList<>();
 
 		initializeWorld();
 		initializeNetwork();
@@ -75,8 +78,8 @@ public class World {
 		return player;
 	}
 
-	public Orb getOrb() {
-		return orb;
+	public List<Orb> getOrbs() {
+		return orbs;
 	}
 
 	public List<Chest> getChest() {
@@ -102,6 +105,10 @@ public class World {
 		return enemies;
 	}
 
+	public void addOrb(Actor mpPlayer) {
+		orbs.add(new Orb(mpPlayer, this));
+	}
+
 	public void removeEnemy(Enemy enemy) {
         enemies.remove(enemy);
     }
@@ -111,7 +118,8 @@ public class World {
 	 */
 	private void initializeWorld() {
 		player = new Player(new Vector2(100, 200));
-		orb = new Orb(player);
+		orb = new Orb(player, this);
+		orbs.add(orb);
 
 		for (MapObject obj : tiledMap.getLayers().get("collisions").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
@@ -156,7 +164,7 @@ public class World {
 	}
 
 	private void initializeNetwork() {
-		clientProgram = new ClientProgram(player);
+		clientProgram = new ClientProgram(this);
 	}
 	//#endregion
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.EnemyProcessor;
-import org.knalpot.knalpot.actors.orb.OrbProcessor;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.actors.player.PlayerProcessor;
 import org.knalpot.knalpot.networking.ClientProgram;
@@ -22,7 +21,6 @@ public class WorldProcessor {
 	private World world;
 	private Player player;
 	private PlayerProcessor playerProcessor;
-	private OrbProcessor orbProcessor;
 
 	private List<EnemyProcessor> enemyProcessors;
 
@@ -39,7 +37,6 @@ public class WorldProcessor {
 		this.world = world;
 		this.player = (Player) this.world.getPlayer();
 		playerProcessor = new PlayerProcessor(this.world);
-		orbProcessor = new OrbProcessor(this.world);
 
 		enemyProcessors = new ArrayList<>();
 		this.world.getEnemies().forEach(e -> {
@@ -65,9 +62,8 @@ public class WorldProcessor {
 	 */
 	public void update(float dt) {
 		playerProcessor.update(dt);
-		orbProcessor.update(dt);
-		world.getOrb().update(dt);
 
+		world.getOrbs().forEach(e -> e.update(dt));
 		enemyProcessors.forEach(e -> e.update(dt));
 
 		ArrayList<Enemy> removedEnemies = new ArrayList<>(); // Create a new list to store removed enemies

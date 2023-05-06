@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.EnemyBullet;
 
+import java.util.List;
+
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.actors.player.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
-import org.knalpot.knalpot.networking.MPPlayer;
+import org.knalpot.knalpot.networking.MPActor;
 import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -59,7 +61,7 @@ public class Renderer {
 
     private World world;
     private Player player;
-    private Actor orb;
+    private List<Orb> orbs;
     private Teleport teleport;
 
     // ==== MOUSE MANIPULATION ==== //
@@ -111,9 +113,9 @@ public class Renderer {
         // Initialize spritebatch.
         batch = new SpriteBatch();
         player = this.world.getPlayer();
-        orb = this.world.getOrb();
+        orbs = this.world.getOrbs();
         networking = this.world.getClientProgram();
-        ((Orb) orb).setMousePos(mousePos);
+        ((Orb) orbs.get(0)).setMousePos(mousePos);
 
         // Load other objects' textures.
         loadTextures();
@@ -189,7 +191,7 @@ public class Renderer {
         batch.begin();
         teleport.render();
         world.getChest().forEach(e -> e.render(batch));
-        orb.render(batch);
+        orbs.forEach(e -> e.render(batch));
     	batch.end();
 
         // Draw player
@@ -301,18 +303,19 @@ public class Renderer {
             batch.draw(playerTexture, positionX, player.getPosition().y, Math.signum(player.direction) * player.getWidth(), player.getHeight());
         }
 
-        for (MPPlayer mpPlayer : networking.getPlayers().values()) {
+        for (Actor mpPlayer : networking.getPlayers().values()) {
             float mpPositionX = 0;
-            if (mpPlayer.direction == 1) mpPositionX = mpPlayer.x;
-            if (mpPlayer.direction == -1) mpPositionX = mpPlayer.x + player.getWidth() / player.getScale();
-
+            if (mpPlayer.direction == 1) mpPositionX = mpPlayer.getPosition().x;
+            if (mpPlayer.direction == -1) mpPositionX = mpPlayer.getPosition().x + player.getWidth() / player.getScale();
+            
             if (mpPlayer.state != State.IDLE) {
-                batch.draw(playerTextureRun, mpPositionX, mpPlayer.y,
-                    Math.signum(mpPlayer.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
+                batch.draw(playerTextureRun, mpPositionX, mpPlayer.getPosition().y,
+                Math.signum(mpPlayer.direction) * (frameWidth * player.getScale()), (frameHeight * player.getScale()), offsetX, 0, frameWidth, frameHeight, false, false);
             } else {
-                batch.draw(playerTexture, mpPositionX, mpPlayer.y, Math.signum(mpPlayer.direction) * player.getWidth(), player.getHeight());
+                batch.draw(playerTexture, mpPositionX, mpPlayer.getPosition().y, Math.signum(mpPlayer.direction) * player.getWidth(), player.getHeight());
             }
         }
+        
     }
     
     private void drawBackground(float targetX) {

@@ -1,6 +1,6 @@
-package org.knalpot.knalpot.networking;
+package org.knalpot.server.general;
 
-import org.knalpot.knalpot.actors.player.Player.State;
+import org.knalpot.server.actors.State;
 
 public class PacketUpdateState {
     public int id;

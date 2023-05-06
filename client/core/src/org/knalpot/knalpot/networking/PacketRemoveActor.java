@@ -1,6 +1,5 @@
 package org.knalpot.knalpot.networking;
 
-public class PacketUpdateX {
+public class PacketRemoveActor {
     public int id;
-    public float x;
 }

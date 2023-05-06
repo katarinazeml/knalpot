@@ -11,9 +11,15 @@ import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.networking.*;
 
 public class Network extends Listener {
-    String ip = "193.40.156.27";
+    String ip = "localhost";
     public static int port = 8084;
     private Client client = new Client();
+
+    private ClientProgram clientProg;
+
+    public Network(ClientProgram clientProg) {
+        this.clientProg = clientProg;
+    }
 
     public Client getClient() {
         return client;
@@ -35,38 +41,34 @@ public class Network extends Listener {
     }
 
     private void register(Client client) {
-        client.getKryo().register(PacketUpdateX.class);
-        client.getKryo().register(PacketUpdateY.class);
-        client.getKryo().register(PacketAddPlayer.class);
-        client.getKryo().register(PacketRemovePlayer.class);
+        client.getKryo().register(PacketAddActor.class);
+        client.getKryo().register(PacketRemoveActor.class);
+        client.getKryo().register(PacketUpdatePosition.class);
         client.getKryo().register(PacketUpdateDirection.class);
         client.getKryo().register(PacketUpdateState.class);
+        client.getKryo().register(PacketType.class);
         client.getKryo().register(Player.State.class);
     }
     
     public void received(Connection c, Object o){
-        if (o instanceof PacketAddPlayer) {
-            PacketAddPlayer packet = (PacketAddPlayer) o;
-            MPPlayer newPlayer = new MPPlayer();
-            newPlayer.id = packet.id;
-            ClientProgram.players.put(packet.id, newPlayer);
+        if (o instanceof PacketAddActor) {
+            PacketAddActor packet = (PacketAddActor) o;
+            MPActor temp = new MPActor();
+            Player newPlayer = new Player(temp);
 
+            ClientProgram.players.put(packet.id, newPlayer);
+            clientProg.addOrbToWorld(newPlayer);
         }
 
-        if(o instanceof PacketRemovePlayer){
-            PacketRemovePlayer packet = (PacketRemovePlayer) o;
+        if (o instanceof PacketRemoveActor){
+            PacketRemoveActor packet = (PacketRemoveActor) o;
             ClientProgram.players.remove(packet.id);
         }
 
-        if(o instanceof PacketUpdateX) {
-            PacketUpdateX packet = (PacketUpdateX) o;
-            ClientProgram.players.get(packet.id).x = packet.x;
-
-        }
-
-        if(o instanceof PacketUpdateY) {
-            PacketUpdateY packet = (PacketUpdateY) o;
-            ClientProgram.players.get(packet.id).y = packet.y;
+        if (o instanceof PacketUpdatePosition) {
+            PacketUpdatePosition packet = (PacketUpdatePosition) o;
+            ClientProgram.players.get(packet.id).getPosition().x = packet.x;
+            ClientProgram.players.get(packet.id).getPosition().y = packet.y;
         }
 
         if (o instanceof PacketUpdateDirection) {
