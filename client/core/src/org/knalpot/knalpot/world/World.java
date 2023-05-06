@@ -107,6 +107,7 @@ public class World {
 
 	public void addOrb(Actor mpPlayer) {
 		orbs.add(new Orb(mpPlayer, this));
+		orbs.get(orbs.size() - 1).setIsMP(true);;
 	}
 
 	public void removeEnemy(Enemy enemy) {

@@ -3,6 +3,7 @@ package org.knalpot.knalpot.world;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -57,7 +58,12 @@ public class Network extends Listener {
             Player newPlayer = new Player(temp);
 
             ClientProgram.players.put(packet.id, newPlayer);
-            clientProg.addOrbToWorld(newPlayer);
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    clientProg.addOrbToWorld(newPlayer);
+                }
+            });
         }
 
         if (o instanceof PacketRemoveActor){

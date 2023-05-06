@@ -68,6 +68,7 @@ public class Orb extends Actor {
     private float rotation;
 
     private boolean mustFloat;
+    private boolean isMP;
 
     private float previousX;
 
@@ -95,6 +96,8 @@ public class Orb extends Actor {
         position.x = ownerPosition.x;
         position.y = ownerPosition.y + this.owner.getHeight();
 
+        mousePos = new Vector3(0, 0, 0);
+
         osm = new OSM(Shape.CIRCLE, ShapeType.Filled, Color.WHITE, this.position, new float[] { WIDTH });
         osm.enableTransparency();
         osm.enableLayers(layerAmount);
@@ -106,6 +109,8 @@ public class Orb extends Actor {
         range = 3f;
 
         bullets = new ArrayList<>();
+
+        isMP = false;
     }
 
     public Actor getOwner() {
@@ -124,19 +129,38 @@ public class Orb extends Actor {
         this.mousePos = mousePos;
     }
 
+    public void setIsMP(boolean isMP) {
+        this.isMP = isMP;
+    }
+
     @Override
     public void update(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            state = OrbState.TRANSFORM_TO_WALL;
-            // particles.end();
+        if (!isMP) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+                state = OrbState.TRANSFORM_TO_WALL;
+                // particles.end();
+            }
+    
+            if (Gdx.input.isKeyJustPressed(Input.Keys.Z))
+                state = OrbState.TRANSFORM_TO_ORB;
+    
+            //Bullet stuff
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
+                state = OrbState.SHOOTING;
+            
+                timeSinceLastShot += dt;
+
+            if (timeSinceLastShot > 6f) {
+                activateForceMode = false;
+                timeSinceLastShot = 0f;
+            }
+                
+            updateBullets();
+        
+            for (Bullet bullet : bullets) {
+                bullet.update(dt);
+            }
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Z))
-            state = OrbState.TRANSFORM_TO_ORB;
-
-        //Bullet stuff
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
-            state = OrbState.SHOOTING;
 
         if (state == OrbState.ORB) {
             floating(dt);
@@ -183,19 +207,6 @@ public class Orb extends Actor {
             shoot(dt, rotation);
             activateForceMode = true;
         }
-
-        timeSinceLastShot += dt;
-
-        if (timeSinceLastShot > 6f) {
-            activateForceMode = false;
-            timeSinceLastShot = 0f;
-        }
-        
-        updateBullets();
-
-        for (Bullet bullet : bullets) {
-            bullet.update(dt);
-        }
     }
 
     public void render(SpriteBatch batch) {
@@ -204,17 +215,21 @@ public class Orb extends Actor {
         particles.draw(batch);
         osm.render(batch);
 
-        if (activateForceMode) {
-            activateForceMode();
-            if (animator.getLineWidth() != 0) drawPolyOverOrb();
-        } else {
-            deactivateForceMode();
-            if (animator.getLineWidth() != 0) drawPolyOverOrb();
+        if (!isMP) {
+            if (activateForceMode) {
+                activateForceMode();
+                if (animator.getLineWidth() != 0) drawPolyOverOrb();
+            } else {
+                deactivateForceMode();
+                if (animator.getLineWidth() != 0) drawPolyOverOrb();
+            }
+            batch.begin();
+            for (Bullet bullet : bullets) {
+                bullet.render(batch);
+            }
         }
-
-        batch.begin();
-        for (Bullet bullet : bullets) {
-            bullet.render(batch);
+        else {
+            batch.begin();
         }
     }
 

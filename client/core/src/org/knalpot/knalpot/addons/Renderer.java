@@ -207,7 +207,6 @@ public class Renderer {
 
         // Draw enemy
         batch.begin();
-        //drawEnemy();
         for (Enemy enemy : world.getEnemies()) {
             drawEnemy(enemy);
 
@@ -215,10 +214,7 @@ public class Renderer {
                 bullet.render(batch);
             }
         }
-
-
         batch.end();
-
 
         // Draw HUD
         ((Player) player).getHud().render();
