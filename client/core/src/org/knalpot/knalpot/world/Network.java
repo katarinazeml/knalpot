@@ -52,6 +52,8 @@ public class Network extends Listener {
         client.getKryo().register(PacketUpdateState.class);
         client.getKryo().register(PacketType.class);
         client.getKryo().register(Player.State.class);
+        client.getKryo().register(SpawnEnemyMessage.class);
+        client.getKryo().register(PacketUpdateHealth.class);
     }
     
     public void received(Connection c, Object o){
@@ -71,7 +73,9 @@ public class Network extends Listener {
 
         if (o instanceof PacketRemoveActor){
             PacketRemoveActor packet = (PacketRemoveActor) o;
-            ClientProgram.players.remove(packet.id);
+            if (packet.type == PacketType.PLAYER) {
+                ClientProgram.players.remove(packet.id);
+            }
         }
 
         if (o instanceof PacketUpdatePosition) {
@@ -94,5 +98,16 @@ public class Network extends Listener {
             SpawnEnemyMessage packet = (SpawnEnemyMessage) o;
             ClientProgram.enemies.put(packet.id, new Enemy(new Vector2(packet.x, packet.y)));
         }
+
+        if (o instanceof PacketUpdateHealth) {
+            PacketUpdateHealth packet = (PacketUpdateHealth) o;
+            if (packet.type == PacketType.PLAYER) {
+                ClientProgram.players.get(packet.id).health = packet.health;
+            }
+            if (packet.type == PacketType.ENEMY) {
+                ClientProgram.enemies.get(packet.id).health = packet.health;
+            }
+        }
+
     }
 }

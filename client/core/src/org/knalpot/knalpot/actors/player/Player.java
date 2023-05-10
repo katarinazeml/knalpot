@@ -41,6 +41,8 @@ public class Player extends Actor {
     // temporary
     public int chestIndex = 0;
     public boolean chestIsActive = false;
+
+    public int previousHealth;
     
     //#endregion
 
@@ -107,6 +109,7 @@ public class Player extends Actor {
     public void caughtByEnemy(int damage) {
         health -= damage;
         if (health < 0) health = 0;
+        previousHealth = health;
         //System.out.println("player`s health " + health);
     }
 

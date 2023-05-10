@@ -82,15 +82,30 @@ public class ClientProgram extends ApplicationAdapter {
         }
 
         if (player.state != player.previousState) {
-            System.out.println("Current and previous player state");
-            System.out.println(player.state);
-            System.out.println(player.previousState);
             // Send the player's state
             PacketUpdateState packet = new PacketUpdateState();
             packet.type = PacketType.PLAYER;
             packet.state = player.state;
             client.sendUDP(packet);
             System.out.println("sent state");
+        }
+
+        if (player.health != player.previousHealth) {
+            // Send the player's health
+            PacketUpdateHealth packet = new PacketUpdateHealth();
+            packet.type = PacketType.PLAYER;
+            packet.health = player.health;
+            client.sendUDP(packet);
+            System.out.println("sent player`s health");
+        }
+
+        if (enemy.health != enemy.previousHealth) {
+            // Send the enemy's health
+            PacketUpdateHealth packet = new PacketUpdateHealth();
+            packet.type = PacketType.ENEMY;
+            packet.health = enemy.health;
+            client.sendUDP(packet);
+            System.out.println("sent enemy`s health");
         }
     }
 

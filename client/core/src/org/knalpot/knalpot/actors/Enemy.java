@@ -32,6 +32,8 @@ public class Enemy extends Actor {
 
     private Sound oofSound;
 
+    public int previousHealth;
+
     public Enemy(Vector2 position) {
         this.position = position;
     
@@ -107,6 +109,7 @@ public class Enemy extends Actor {
         oofSound.play();
         EnemyHealth -= damage;
         if (health < 0) health = 0;
+        previousHealth = health;
         //System.out.println("enemy`s health: " + health);
     }
 }

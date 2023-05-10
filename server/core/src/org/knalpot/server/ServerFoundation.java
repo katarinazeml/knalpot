@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import org.knalpot.server.actors.Actor;
 import org.knalpot.server.actors.Enemy;
