@@ -21,6 +21,7 @@ public class GameOverScreen implements Screen {
     public GameOverScreen(Knalpot game) {
         this.game = game;
         font = new BitmapFont();
+        font.getData().setScale(2f); // Set font size to 2 times the default size
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         batch = new SpriteBatch();
         game.getMusic().pause();
