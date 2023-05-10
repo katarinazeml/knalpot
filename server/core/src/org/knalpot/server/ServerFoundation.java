@@ -85,35 +85,63 @@ public class ServerFoundation extends Listener {
 
             PacketUpdateDirection packet = (PacketUpdateDirection) o;
             packet.id = c.getID();
-            server.sendToAllExceptUDP(c.getID(), packet);
+            if (packet.type == PacketType.ENEMY) {
+                // Send enemy direction to all clients
+                server.sendToAllUDP(packet);
+            } else {
+                // Send player direction to all except the sender
+                server.sendToAllExceptUDP(c.getID(), packet);
+            }
             System.out.println("direction updated");
 
         } else if (o instanceof PacketUpdateState) {
 
             PacketUpdateState packet = (PacketUpdateState) o;
-            packet.id = c.getID();
-            server.sendToAllExceptUDP(c.getID(), packet);
+            if (packet.type == PacketType.ENEMY) {
+                // Send enemy direction to all clients
+                server.sendToAllUDP(packet);
+            } else {
+                // Send player direction to all except the sender
+                server.sendToAllExceptUDP(c.getID(), packet);
+            }
             System.out.println("state updated");
 
         } else if (o instanceof PacketUpdateHealth) {
 
             PacketUpdateHealth packet = (PacketUpdateHealth) o;
-            packet.id = c.getID();
-            server.sendToAllExceptUDP(c.getID(), packet);
+            if (packet.type == PacketType.ENEMY) {
+                // Send enemy direction to all clients
+                server.sendToAllUDP(packet);
+            } else {
+                // Send player direction to all except the sender
+                server.sendToAllExceptUDP(c.getID(), packet);
+            }
             System.out.println("health updated");
 
         } else if (o instanceof SpawnEnemyMessage) {
 
             SpawnEnemyMessage packet = (SpawnEnemyMessage) o;
-            Random random = new Random();
+
             // generate random id for the enemy
+            Random random = new Random();
             int n = 50 - 1 + 1; // maximum - minimum + 1
             int i = random.nextInt() % n;
-            int id =  1 + i; // minimum + i
+            int id = 1 + i; // minimum + i
             packet.id = id;
-            enemies.put(id, new Enemy(packet.x, packet.y));
-            server.sendToAllExceptUDP(c.getID(), packet);
-            
+
+            // Create and add the enemy to the server's enemy map
+            Enemy enemy = new Enemy(packet.x, packet.y);
+            enemy.id = id;
+            enemies.put(id, enemy);
+
+            // Send the spawn enemy message to all clients
+            server.sendToAllUDP(packet);
+
+            // Send the enemy data to the connecting client
+            PacketAddActor packet3 = new PacketAddActor();
+            packet3.id = id;
+            c.sendUDP(packet3);
+
         }
     }
 
