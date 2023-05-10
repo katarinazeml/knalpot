@@ -45,6 +45,9 @@ public class MainMenuScreen implements Screen {
         // create the start button
         createStartButton();
 
+        // create the lobby button
+        createLobbyButton();
+
         // create the exit button
         createExitButton();
 
@@ -182,5 +185,34 @@ public class MainMenuScreen implements Screen {
 
         // add background to the stage
         stage.addActor(background);
+    }
+
+    public void createLobbyButton() {
+        // create style
+        TextButton.TextButtonStyle lobbyStyle = new TextButton.TextButtonStyle();
+        lobbyStyle.font = font;
+        lobbyStyle.fontColor = Color.WHITE;
+        lobbyStyle.overFontColor = Color.GRAY;
+        lobbyStyle.downFontColor = Color.LIGHT_GRAY;
+        lobbyStyle.up = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/lobby_up.png")), 0, 0, 0, 0));
+        lobbyStyle.over = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/lobby_over.png")), 0, 0, 0, 0));
+        lobbyStyle.down = new NinePatchDrawable(new NinePatch(new TextureRegion(new Texture("buttons/lobby_down.png")), 0, 0, 0, 0));
+
+        // create lobby button
+        TextButton lobbyButton = new TextButton("", lobbyStyle);
+        float buttonSize = 118f;
+        lobbyButton.setSize(buttonSize, buttonSize);
+        lobbyButton.setPosition(Gdx.graphics.getWidth() - buttonSize - 350f, Gdx.graphics.getHeight() - buttonSize - 260f);
+        lobbyButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.audio.newSound(Gdx.files.internal("buttons/start_sound.mp3")).play(1.0f);
+                stage.dispose();
+                game.setScreen(new GameLobbyScreen(game));
+            }
+        });
+
+        // add start button to the stage
+        stage.addActor(lobbyButton);
     }
 }

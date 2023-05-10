@@ -21,15 +21,14 @@ public class GameOverScreen implements Screen {
     public GameOverScreen(Knalpot game) {
         this.game = game;
         font = new BitmapFont();
-        font.getData().setScale(2f); // Set font size to 2 times the default size
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         batch = new SpriteBatch();
-        Gdx.input.setInputProcessor(stage);
         game.getMusic().pause();
     }
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class GameOverScreen implements Screen {
         
         // Draw the remaining time
         String time = "Time Remaining: " + String.format("%.1f", timeRemaining);
-        String gameOver = "Game Over";
+        String gameOver = "GAME OVER";
         String message = "You will be taken to the menu";
         batch.begin();
         font.draw(batch, time, 500, 400);
