@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.knalpot.knalpot.actors.Actor;
-import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
+import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.world.Network;
 import org.knalpot.knalpot.world.World;
 
@@ -16,14 +16,16 @@ public class ClientProgram extends ApplicationAdapter {
     static Network network;
 
     public static Map<Integer, Actor> players = new HashMap<>();
+    public static Map<Integer, Enemy> enemies = new HashMap<>();
 
     private Client client;
     public static World world;
     private Player player;
+    private Enemy enemy;
 
     public ClientProgram(World world) {
         ClientProgram.world = world;
-        this.player = ClientProgram.world.getPlayer();
+        this.player = world.getPlayer();
 
         network = new Network(this);
         client = network.getClient();
@@ -37,8 +39,16 @@ public class ClientProgram extends ApplicationAdapter {
         return players;
     }
 
+    public Map<Integer, Enemy> getEnemies() {
+        return enemies;
+    }
+
     public void addOrbToWorld(Actor player) {
         world.addOrb(player);
+    }
+
+    public void addEnemyToWorld(Enemy enemy) {
+        world.addEnemy(enemy);
     }
 
     @Override

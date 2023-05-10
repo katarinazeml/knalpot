@@ -114,6 +114,10 @@ public class World {
         enemies.remove(enemy);
     }
 
+	public void addEnemy(Enemy enemy) {
+        enemies.add(enemy);
+    }
+
 	/**
 	 * Initializes all object needed for this 'world'.
 	 */

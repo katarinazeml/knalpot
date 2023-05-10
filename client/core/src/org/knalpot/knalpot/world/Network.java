@@ -2,12 +2,15 @@ package org.knalpot.knalpot.world;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.security.spec.ECFieldF2m;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
+import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.networking.*;
 
@@ -85,6 +88,11 @@ public class Network extends Listener {
         if (o instanceof PacketUpdateState) {
             PacketUpdateState packet = (PacketUpdateState) o;
             ClientProgram.players.get(packet.id).state = packet.state;
+        }
+
+        if (o instanceof SpawnEnemyMessage) {
+            SpawnEnemyMessage packet = (SpawnEnemyMessage) o;
+            ClientProgram.enemies.put(packet.id, new Enemy(new Vector2(packet.x, packet.y)));
         }
     }
 }

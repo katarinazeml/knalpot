@@ -6,23 +6,32 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import org.knalpot.server.actors.Actor;
+import org.knalpot.server.actors.Enemy;
 import org.knalpot.server.actors.State;
 import org.knalpot.server.general.PacketAddActor;
 import org.knalpot.server.general.PacketRemoveActor;
 import org.knalpot.server.general.PacketType;
 import org.knalpot.server.general.PacketUpdateDirection;
+import org.knalpot.server.general.PacketUpdateHealth;
 import org.knalpot.server.general.PacketUpdatePosition;
 import org.knalpot.server.general.PacketUpdateState;
+import org.knalpot.server.general.SpawnEnemyMessage;
 
 public class ServerFoundation extends Listener {
+
     private static Server server;
     private static final int port = 8084;
 
     private Map<Integer, Actor> players = new HashMap<>();
+    private Map<Integer, Enemy> enemies = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         server = new Server();
@@ -34,6 +43,8 @@ public class ServerFoundation extends Listener {
         server.getKryo().register(PacketUpdateState.class);
         server.getKryo().register(PacketType.class);
         server.getKryo().register(State.class);
+        server.getKryo().register(PacketUpdateHealth.class);
+        server.getKryo().register(SpawnEnemyMessage.class);
         try {
             server.bind(port, port);
             server.start();
@@ -60,26 +71,50 @@ public class ServerFoundation extends Listener {
         }
 
         players.put(connection.getID(), player);
-        System.out.println("Connection received.");
+        System.out.println("connection received");
     }
 
     public void received(Connection c, Object o) {
         if (o instanceof PacketUpdatePosition) {
+
             PacketUpdatePosition packet = (PacketUpdatePosition) o; 
-
             packet.id = c.getID();
             server.sendToAllExceptUDP(c.getID(), packet);
-            System.out.println("Sent and receiver a position packet.");
+            System.out.println("position updated");
+
         } else if (o instanceof PacketUpdateDirection) {
-            PacketUpdateDirection packet = (PacketUpdateDirection) o;
 
+            PacketUpdateDirection packet = (PacketUpdateDirection) o;
             packet.id = c.getID();
             server.sendToAllExceptUDP(c.getID(), packet);
+            System.out.println("direction updated");
+
         } else if (o instanceof PacketUpdateState) {
+
             PacketUpdateState packet = (PacketUpdateState) o;
             packet.id = c.getID();
             server.sendToAllExceptUDP(c.getID(), packet);
             System.out.println("state updated");
+
+        } else if (o instanceof PacketUpdateHealth) {
+
+            PacketUpdateHealth packet = (PacketUpdateHealth) o;
+            packet.id = c.getID();
+            server.sendToAllExceptUDP(c.getID(), packet);
+            System.out.println("health updated");
+
+        } else if (o instanceof SpawnEnemyMessage) {
+
+            SpawnEnemyMessage packet = (SpawnEnemyMessage) o;
+            Random random = new Random();
+            // generate random id for the enemy
+            int n = 50 - 1 + 1; // maximum - minimum + 1
+            int i = random.nextInt() % n;
+            int id =  1 + i; // minimum + i
+            packet.id = id;
+            enemies.put(id, new Enemy(packet.x, packet.y));
+            server.sendToAllExceptUDP(c.getID(), packet);
+            
         }
     }
 
@@ -88,6 +123,6 @@ public class ServerFoundation extends Listener {
         PacketRemoveActor packet = new PacketRemoveActor();
         packet.id = c.getID();
         server.sendToAllExceptTCP(c.getID(), packet);
-        System.out.println("Connection dropped.");
+        System.out.println("connection dropped");
     }
 }
