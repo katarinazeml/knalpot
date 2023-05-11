@@ -62,10 +62,10 @@ public class Game {
     }
 
     public void update() {
-        // // Updating each enemy.
-        // enemies.values().forEach(e -> {
-        //     e.update();
-        // });
+        // Updating each enemy.
+        enemies.values().forEach(e -> {
+            e.update();
+        });
 
         // Checking of somebody's health is lower than zero.
         Iterator<Map.Entry<Integer, Enemy>> iterator = enemies.entrySet().iterator();

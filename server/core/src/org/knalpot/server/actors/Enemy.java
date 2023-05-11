@@ -6,11 +6,11 @@ public class Enemy {
 
     public float x, y;
     public int id;
-    public int direction;
+    public int direction = 1;
     public int health;
     
     private double dt;
-    private double spd;
+    private double spd = 35;
 
     public Enemy(float x, float y) {
         this.x = x;
@@ -20,12 +20,13 @@ public class Enemy {
     
     public void update() {
         dt += 0.1;
-        if (dt >= 100) {
+        System.out.println(dt);
+        if (dt >= 10) {
             direction = ThreadLocalRandom.current().nextInt(-1, 2);
-            spd = ThreadLocalRandom.current().nextDouble(0, 1);
-            dt -= 100;
+            spd = ThreadLocalRandom.current().nextDouble(30, 40);
+            dt -= 10;
         }
 
-        x += spd * direction * 0.005;
+        x += spd * direction * 0.01;
     }
 }

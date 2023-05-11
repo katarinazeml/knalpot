@@ -6,6 +6,8 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,13 +31,15 @@ public class ServerFoundation extends Listener {
 
     private static Server server;
     private static Game game;
-    private static ExecutorService execute;
+    // private static ExecutorService execute;
+    private static Timer timer;
     private static final int port = 8084;
 
     public static void main(String[] args) throws IOException {
         server = new Server();
         game = new Game();
-        execute = Executors.newSingleThreadExecutor();
+        // execute = Executors.newSingleThreadExecutor();
+        timer = new Timer();
 
         server.start();
         server.getKryo().register(PacketAddActor.class);
@@ -56,6 +60,22 @@ public class ServerFoundation extends Listener {
             e.printStackTrace();
         }
         server.addListener(new ServerFoundation());
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                game.update();
+                for (Enemy en : game.getEnemies().values()) {
+                    PacketUpdatePosition pkg = new PacketUpdatePosition();
+                    pkg.id = en.id;
+                    pkg.type = PacketType.ENEMY;
+                    pkg.x = en.x;
+                    pkg.y = en.y;
+                    server.sendToAllTCP(pkg);
+                }
+                System.out.println("Sent enemy positions");
+            }
+        }, 100, 100);
     }
 
     public void connected(Connection connection) {
@@ -124,44 +144,14 @@ public class ServerFoundation extends Listener {
         }
     }
 
-    @Override
-    public void idle(Connection c) {
-        game.update();
-        // System.out.println(c.getReturnTripTime());
-        // if (execute.isShutdown()) {
-        //     try {
-        //         Runnable r = new Runnable() {
-        //             @Override
-        //             public void run() {
-        //                 game.update();
-        //                 for (Enemy en : game.getEnemies().values()) {
-        //                     PacketUpdatePosition pkg = new PacketUpdatePosition();
-        //                     pkg.id = en.id;
-        //                     pkg.type = PacketType.ENEMY;
-        //                     pkg.x = en.x;
-        //                     pkg.y = en.y;
-        //                     c.sendTCP(pkg);
-        //                 }
-        //                 System.out.println("Sent enemy positions");
-        //             }
-        //         };
-    
-        //         Future<?> f = execute.submit(r);
-        //         f.get(33, TimeUnit.MILLISECONDS);
-        //     } catch (final InterruptedException e) {
-        //         System.out.println("Thread was interrupted");
-        //         e.printStackTrace();
-        //     } catch (final TimeoutException e) {
-        //         System.out.println("Taking too long!");
-        //         e.printStackTrace();
-        //     } catch (final ExecutionException e) {
-        //         System.out.println("Exeption from run task");
-        //         e.printStackTrace();
-        //     } finally {
-        //         execute.shutdown();
-        //     }
-        // // }
-    }
+    // @Override
+    // public void idle(Connection c) {
+    //     game.update();
+    //     // System.out.println(c.getReturnTripTime());
+    //     // if (execute.isShutdown()) {
+    //     //    
+    //     // // }
+    // }
 
     public void disconnected(Connection c) {
         game.removePlayer(c.getID());
