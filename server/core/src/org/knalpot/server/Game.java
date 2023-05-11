@@ -1,6 +1,7 @@
 package org.knalpot.server;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -46,7 +47,13 @@ public class Game {
 
     public void generateEnemies() {
         // generate random id for the enemy
-        int id = ThreadLocalRandom.current().nextInt(0, 100);
-        enemies.put(id, new Enemy(240, 112));
+        Map<Integer, List<Integer>> values = LoadXMLData.getData("data/serverdata.xml", "enemy");
+
+        for (List<Integer> list : values.values()) {
+            int id = ThreadLocalRandom.current().nextInt(0, 10000);
+            if (!enemies.containsKey(id)) {
+                enemies.put(id, new Enemy(list.get(0), list.get(1)));
+            }
+        }
     }
 }

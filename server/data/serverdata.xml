@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<game>
+    <enemy id="0">
+        <x>496</x>
+        <y>48</y>
+    </enemy>
+    <enemy id="1"> 
+        <x>256</x>
+        <y>48</y>
+    </enemy>
+    <enemy id="2"> 
+        <x>240</x>
+        <y>112</y>
+    </enemy>
+</game>

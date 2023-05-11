@@ -10,6 +10,7 @@ import org.knalpot.knalpot.world.Network;
 import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Client;
 
 public class ClientProgram extends ApplicationAdapter {
@@ -42,11 +43,15 @@ public class ClientProgram extends ApplicationAdapter {
         return enemies;
     }
 
-    public void addOrbToWorld(Actor player) {
+    public void addOrbToWorld(MPActor data) {
+        Player player = new Player(data);
+        ClientProgram.players.put(data.id, player);
         world.addOrb(player);
     }
 
-    public void addEnemyToWorld(Enemy enemy) {
+    public void addEnemyToWorld(MPActor data) {
+        Enemy enemy = new Enemy(new Vector2(data.x, data.y));
+        ClientProgram.enemies.put(data.id, enemy);
         world.addEnemy(enemy);
     }
 
@@ -89,25 +94,25 @@ public class ClientProgram extends ApplicationAdapter {
             System.out.println("sent state");
         }
 
-        if (player.health != player.previousHealth) {
-            // Send the player's health
-            PacketUpdateHealth packet = new PacketUpdateHealth();
-            packet.type = PacketType.PLAYER;
-            packet.health = player.health;
-            client.sendUDP(packet);
-            System.out.println("sent player`s health");
-        }
+        // if (player.health != player.previousHealth) {
+        //     // Send the player's health
+        //     PacketUpdateHealth packet = new PacketUpdateHealth();
+        //     packet.type = PacketType.PLAYER;
+        //     packet.health = player.health;
+        //     client.sendUDP(packet);
+        //     System.out.println("sent player`s health");
+        // }
 
-        // enemies.values().forEach(enemy -> {
-        //     if (enemy.health != enemy.previousHealth) {
-        //         // Send the enemy's health
-        //         PacketUpdateHealth packet = new PacketUpdateHealth();
-        //         packet.type = PacketType.ENEMY;
-        //         packet.health = enemy.health;
-        //         client.sendUDP(packet);
-        //         System.out.println("sent enemy`s health");
-        //     }
-        // });
+        enemies.values().forEach(enemy -> {
+            if (enemy.health != enemy.previousHealth) {
+                // Send the enemy's health
+                PacketUpdateHealth packet = new PacketUpdateHealth();
+                packet.type = PacketType.ENEMY;
+                packet.health = enemy.health;
+                client.sendUDP(packet);
+                System.out.println("sent enemy`s health");
+            }
+        });
     }
 
     @Override

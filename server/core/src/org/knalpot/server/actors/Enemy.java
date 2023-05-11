@@ -14,4 +14,3 @@ public class Enemy {
         // Update the enemy's position etc.
     }
 }
-

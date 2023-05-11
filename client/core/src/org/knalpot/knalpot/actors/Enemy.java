@@ -3,6 +3,7 @@ package org.knalpot.knalpot.actors;
 import java.util.ArrayList;
 
 import org.knalpot.knalpot.addons.BBGenerator;
+import org.knalpot.knalpot.networking.MPActor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -56,6 +57,10 @@ public class Enemy extends Actor {
         Right = (int) (bounds.x + bounds.width);
         Bottom = (int) bounds.y;
         Top = (int) (bounds.y + bounds.height);
+    }
+
+    public Enemy(MPActor data) {
+        this.position = new Vector2(data.x, data.y);
     }
 
     @Override

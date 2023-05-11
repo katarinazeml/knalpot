@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
-import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.networking.*;
 
@@ -52,20 +50,19 @@ public class Network extends Listener {
         client.getKryo().register(PacketType.class);
         client.getKryo().register(Player.State.class);
         client.getKryo().register(SpawnEnemyMessage.class);
-        client.getKryo().register(PacketUpdateHealth.class);
+        client.getKryo().register(PacketUpdateHealth.class, 2);
     }
     
     public void received(Connection c, Object o){
         if (o instanceof PacketAddActor) {
             PacketAddActor packet = (PacketAddActor) o;
             MPActor temp = new MPActor();
-            Player newPlayer = new Player(temp);
-
-            ClientProgram.players.put(packet.id, newPlayer);
+            temp.id = packet.id;
+            
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                    clientProg.addOrbToWorld(newPlayer);
+                    clientProg.addOrbToWorld(temp);
                 }
             });
         }
@@ -94,8 +91,20 @@ public class Network extends Listener {
         }
 
         if (o instanceof SpawnEnemyMessage) {
+            System.out.println("Received enemy data");
             SpawnEnemyMessage packet = (SpawnEnemyMessage) o;
-            ClientProgram.enemies.put(packet.id, new Enemy(new Vector2(packet.x, packet.y)));
+            MPActor temp = new MPActor();
+            temp.id = packet.id;
+            temp.x = packet.x;
+            temp.y = packet.y;
+            
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    clientProg.addEnemyToWorld(temp);
+                }
+            });
+
             System.out.println("Added enemy to the world");
         }
 
@@ -108,6 +117,5 @@ public class Network extends Listener {
                 ClientProgram.enemies.get(packet.id).health = packet.health;
             }
         }
-
     }
 }

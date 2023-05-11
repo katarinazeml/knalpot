@@ -35,7 +35,7 @@ public class ServerFoundation extends Listener {
         server.getKryo().register(PacketUpdateState.class);
         server.getKryo().register(PacketType.class);
         server.getKryo().register(State.class);
-        server.getKryo().register(PacketUpdateHealth.class);
+        server.getKryo().register(PacketUpdateHealth.class, 2);
         server.getKryo().register(SpawnEnemyMessage.class);
         try {
             server.bind(port, port);
@@ -60,15 +60,18 @@ public class ServerFoundation extends Listener {
             PacketAddActor packet3 = new PacketAddActor();
             packet3.id = p.c.getID();
             connection.sendTCP(packet3);
-
-            game.getEnemies().values().forEach(e -> {
-                SpawnEnemyMessage msg = new SpawnEnemyMessage();
-                msg.id = e.id;
-                msg.x = e.x;
-                msg.y = e.y;
-                connection.sendTCP(msg);
-            });
         }
+        
+        System.out.println("Enemies amount");
+        System.out.println(game.getEnemies().values().size());
+        game.getEnemies().values().forEach(e -> {
+            SpawnEnemyMessage msg = new SpawnEnemyMessage();
+            msg.id = e.id;
+            msg.x = e.x;
+            msg.y = e.y;
+            connection.sendTCP(msg);
+            System.out.println("Sent enemy data");
+        });
 
         game.getPlayers().put(connection.getID(), player);
         System.out.println("connection received");
@@ -95,7 +98,6 @@ public class ServerFoundation extends Listener {
             packet.id = c.getID();
             server.sendToAllExceptUDP(c.getID(), packet);
             System.out.println("state updated");
-
         } else if (o instanceof PacketUpdateHealth) {
 
             PacketUpdateHealth packet = (PacketUpdateHealth) o;
