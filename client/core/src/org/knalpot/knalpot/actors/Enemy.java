@@ -3,7 +3,6 @@ package org.knalpot.knalpot.actors;
 import java.util.ArrayList;
 
 import org.knalpot.knalpot.addons.BBGenerator;
-import org.knalpot.knalpot.networking.MPActor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -29,8 +28,6 @@ public class Enemy extends Actor {
 
     public float timeSinceLastShot = 0f;
 
-    public int EnemyHealth = 100;
-
     private Sound oofSound;
 
     public int previousHealth;
@@ -44,6 +41,8 @@ public class Enemy extends Actor {
         scaleSize = 2; // Update scaleSize to 2
         direction = 1;
         previousDirection = 1;
+        health = 100;
+        previousHealth = health;
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 0);
         bullets = new ArrayList<>();
@@ -57,10 +56,6 @@ public class Enemy extends Actor {
         Right = (int) (bounds.x + bounds.width);
         Bottom = (int) bounds.y;
         Top = (int) (bounds.y + bounds.height);
-    }
-
-    public Enemy(MPActor data) {
-        this.position = new Vector2(data.x, data.y);
     }
 
     @Override
@@ -77,9 +72,16 @@ public class Enemy extends Actor {
         Bottom = (int) bounds.y;
         Top = (int) bounds.y + HEIGHT;
 
+        previousHealth = health;
+
         for (EnemyBullet bullet : bullets) {
             bullet.update(dt);
         }
+    }
+
+    public void updatePosition(float x, float y) {
+        position.x = x;
+        position.y = y;
     }
 
     public void shoot(Vector2 targetPos) {
@@ -112,9 +114,13 @@ public class Enemy extends Actor {
 
     public void gotShot(int damage) {
         oofSound.play();
-        EnemyHealth -= damage;
-        if (health < 0) health = 0;
+        System.out.println("Health before");
+        System.out.println(health);
         previousHealth = health;
-        //System.out.println("enemy`s health: " + health);
+        health -= damage;
+        System.out.println("Health after");
+        System.out.println(previousHealth);
+        System.out.println(health);
+        if (health < 0) health = 0;
     }
 }

@@ -239,7 +239,7 @@ public class Orb extends Actor {
             Bullet bullet = bulletIterator.next();
             world.getEnemies().forEach(e -> {
                 if (bullet.getBounds().overlaps(e.getBounds())) {
-                    if (e.EnemyHealth > 0) {
+                    if (e.getHealth() > 0) {
                         bulletIterator.remove();
                         e.gotShot(10);
                     }

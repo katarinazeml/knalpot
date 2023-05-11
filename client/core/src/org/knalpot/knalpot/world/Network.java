@@ -77,8 +77,20 @@ public class Network extends Listener {
 
         if (o instanceof PacketUpdatePosition) {
             PacketUpdatePosition packet = (PacketUpdatePosition) o;
-            ClientProgram.players.get(packet.id).getPosition().x = packet.x;
-            ClientProgram.players.get(packet.id).getPosition().y = packet.y;
+            if (packet.type == PacketType.PLAYER) {
+                System.out.println("Update player position");
+                ClientProgram.players.get(packet.id).getPosition().x = packet.x;
+                ClientProgram.players.get(packet.id).getPosition().y = packet.y;
+            }
+            if (packet.type == PacketType.ENEMY) {
+                System.out.println("Updating enemy position");
+                System.out.println(packet.id);
+                if (ClientProgram.enemies.containsKey(packet.id)) {
+                    System.out.println("Enemy exists on the server");
+                    ClientProgram.enemies.get(packet.id).getPosition().x = packet.x * 2;
+                    ClientProgram.enemies.get(packet.id).getPosition().y = packet.y * 2;
+                }
+            }
         }
 
         if (o instanceof PacketUpdateDirection) {
@@ -106,7 +118,6 @@ public class Network extends Listener {
                     System.out.println("Added enemy to the world");
                 }
             });
-
         }
 
         if (o instanceof PacketUpdateHealth) {

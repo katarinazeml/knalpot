@@ -2,14 +2,14 @@
 <game>
     <enemy id="0">
         <x>496</x>
-        <y>48</y>
+        <y>136</y>
     </enemy>
     <enemy id="1"> 
         <x>256</x>
-        <y>48</y>
+        <y>64</y>
     </enemy>
     <enemy id="2"> 
         <x>240</x>
-        <y>112</y>
+        <y>136</y>
     </enemy>
 </game>

@@ -110,7 +110,6 @@ public class Player extends Actor {
         health -= damage;
         if (health < 0) health = 0;
         previousHealth = health;
-        //System.out.println("player`s health " + health);
     }
 
     /**

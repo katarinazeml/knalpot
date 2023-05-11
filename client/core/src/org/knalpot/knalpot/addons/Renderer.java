@@ -14,7 +14,6 @@ import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.actors.player.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
-import org.knalpot.knalpot.networking.MPActor;
 import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -52,8 +51,6 @@ public class Renderer {
     private float animationTime = 0; // The time elapsed since the animation started
     private float frameDuration = 0.1f; // The duration of each frame in seconds
 
-    private TextureRegion enemyRegion;
-
     // ==== OBJECTS ==== //
     private SpriteBatch batch;
     private Texture playerTexture;
@@ -87,7 +84,6 @@ public class Renderer {
     private ParallaxLayer darkGrass;
     private ParallaxLayer lightGrass;
     private Texture enemyTexture;
-    private Texture enemySpriteSheet;
 
     private BitmapFont labelFont;
 

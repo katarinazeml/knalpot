@@ -14,7 +14,6 @@ import org.knalpot.knalpot.interactive.props.Consumable;
 import org.knalpot.knalpot.networking.ClientProgram;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g3d.particles.influencers.RegionInfluencer.Random;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;

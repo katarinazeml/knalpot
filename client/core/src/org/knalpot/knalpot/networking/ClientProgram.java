@@ -50,7 +50,7 @@ public class ClientProgram extends ApplicationAdapter {
     }
 
     public void addEnemyToWorld(MPActor data) {
-        Enemy enemy = new Enemy(new Vector2(data.x, data.y));
+        Enemy enemy = new Enemy(new Vector2(data.x * 2, data.y * 2));
         ClientProgram.enemies.put(data.id, enemy);
         world.addEnemy(enemy);
     }
@@ -107,8 +107,21 @@ public class ClientProgram extends ApplicationAdapter {
             if (enemy.health != enemy.previousHealth) {
                 // Send the enemy's health
                 PacketUpdateHealth packet = new PacketUpdateHealth();
+                
+                // Searching for a key through the whole map.
+                // Must be simplified.
+                packet.id = enemies.entrySet().stream()
+                    .filter(e -> e.getValue().equals(enemy))
+                    .findFirst().get()
+                    .getKey();
+
                 packet.type = PacketType.ENEMY;
                 packet.health = enemy.health;
+
+                // Updating enemy's previous health so this event
+                // is not triggered constantly (it seemed like the most
+                // rational choice to include this piece of code here)
+                enemy.previousHealth = enemy.health;
                 client.sendUDP(packet);
                 System.out.println("sent enemy`s health");
             }

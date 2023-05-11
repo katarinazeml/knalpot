@@ -6,8 +6,15 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.knalpot.server.actors.Actor;
+import org.knalpot.server.actors.Enemy;
 import org.knalpot.server.actors.State;
 import org.knalpot.server.general.PacketAddActor;
 import org.knalpot.server.general.PacketRemoveActor;
@@ -22,11 +29,14 @@ public class ServerFoundation extends Listener {
 
     private static Server server;
     private static Game game;
+    private static ExecutorService execute;
     private static final int port = 8084;
 
     public static void main(String[] args) throws IOException {
         server = new Server();
         game = new Game();
+        execute = Executors.newSingleThreadExecutor();
+
         server.start();
         server.getKryo().register(PacketAddActor.class);
         server.getKryo().register(PacketRemoveActor.class);
@@ -101,9 +111,56 @@ public class ServerFoundation extends Listener {
         } else if (o instanceof PacketUpdateHealth) {
 
             PacketUpdateHealth packet = (PacketUpdateHealth) o;
-            server.sendToAllExceptUDP(c.getID(), packet);
-            System.out.println("health updated");
+            if (packet.type == PacketType.ENEMY) {
+                System.out.println("Enemy ID in packet:");
+                System.out.println(packet.id);
+                if (game.getEnemies().containsKey(packet.id)) {
+                    game.getEnemies().get(packet.id).health = packet.health;
+                }
+                System.out.println(game.getEnemies().size());
+                server.sendToAllExceptUDP(c.getID(), packet);
+                System.out.println("health updated");
+            }
         }
+    }
+
+    @Override
+    public void idle(Connection c) {
+        game.update();
+        // System.out.println(c.getReturnTripTime());
+        // if (execute.isShutdown()) {
+        //     try {
+        //         Runnable r = new Runnable() {
+        //             @Override
+        //             public void run() {
+        //                 game.update();
+        //                 for (Enemy en : game.getEnemies().values()) {
+        //                     PacketUpdatePosition pkg = new PacketUpdatePosition();
+        //                     pkg.id = en.id;
+        //                     pkg.type = PacketType.ENEMY;
+        //                     pkg.x = en.x;
+        //                     pkg.y = en.y;
+        //                     c.sendTCP(pkg);
+        //                 }
+        //                 System.out.println("Sent enemy positions");
+        //             }
+        //         };
+    
+        //         Future<?> f = execute.submit(r);
+        //         f.get(33, TimeUnit.MILLISECONDS);
+        //     } catch (final InterruptedException e) {
+        //         System.out.println("Thread was interrupted");
+        //         e.printStackTrace();
+        //     } catch (final TimeoutException e) {
+        //         System.out.println("Taking too long!");
+        //         e.printStackTrace();
+        //     } catch (final ExecutionException e) {
+        //         System.out.println("Exeption from run task");
+        //         e.printStackTrace();
+        //     } finally {
+        //         execute.shutdown();
+        //     }
+        // // }
     }
 
     public void disconnected(Connection c) {

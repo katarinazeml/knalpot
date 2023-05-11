@@ -1,4 +1,4 @@
-package org.knalpot.server;
+package org.knalpot.server.addons;
 
 import java.io.File;
 import java.io.IOException;

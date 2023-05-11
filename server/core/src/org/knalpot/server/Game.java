@@ -1,12 +1,14 @@
 package org.knalpot.server;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.knalpot.server.actors.Actor;
 import org.knalpot.server.actors.Enemy;
+import org.knalpot.server.addons.LoadXMLData;
 
 public class Game {
     
@@ -52,7 +54,25 @@ public class Game {
         for (List<Integer> list : values.values()) {
             int id = ThreadLocalRandom.current().nextInt(0, 10000);
             if (!enemies.containsKey(id)) {
-                enemies.put(id, new Enemy(list.get(0), list.get(1)));
+                Enemy en = new Enemy(list.get(0), list.get(1));
+                en.id = id;
+                enemies.put(id, en);
+            }
+        }
+    }
+
+    public void update() {
+        // // Updating each enemy.
+        // enemies.values().forEach(e -> {
+        //     e.update();
+        // });
+
+        // Checking of somebody's health is lower than zero.
+        Iterator<Map.Entry<Integer, Enemy>> iterator = enemies.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Enemy value = iterator.next().getValue();
+            if (value.health <= 0) {
+                iterator.remove();
             }
         }
     }

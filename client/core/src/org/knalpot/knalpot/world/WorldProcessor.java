@@ -56,6 +56,10 @@ public class WorldProcessor {
 		return player.getHealth() <= 0;
 	}
 
+	public List<EnemyProcessor> enemyProcessors() {
+		return enemyProcessors;
+	}
+
 	/**
 	 * Updates every single 'processor' in the world.
 	 * @param dt
@@ -69,7 +73,7 @@ public class WorldProcessor {
 		ArrayList<Enemy> removedEnemies = new ArrayList<>(); // Create a new list to store removed enemies
 
 		for (Enemy enemy : world.getEnemies()) {
-			if (enemy.EnemyHealth <= 0) {
+			if (enemy.getHealth() <= 0) {
 				enemy.deleteAllBullets();
 				// world.removeEnemy(enemy); // Remove enemy from game world
 				System.out.println("enemy removed");
