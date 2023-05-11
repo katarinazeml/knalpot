@@ -21,7 +21,6 @@ public class ClientProgram extends ApplicationAdapter {
     private Client client;
     public static World world;
     private Player player;
-    private Enemy enemy;
 
     public ClientProgram(World world) {
         ClientProgram.world = world;
@@ -52,7 +51,7 @@ public class ClientProgram extends ApplicationAdapter {
     }
 
     @Override
-    public void create () {
+    public void create() {
         System.out.println("Connecting");
         try {
             network.connect();
@@ -99,14 +98,16 @@ public class ClientProgram extends ApplicationAdapter {
             System.out.println("sent player`s health");
         }
 
-        if (enemy.health != enemy.previousHealth) {
-            // Send the enemy's health
-            PacketUpdateHealth packet = new PacketUpdateHealth();
-            packet.type = PacketType.ENEMY;
-            packet.health = enemy.health;
-            client.sendUDP(packet);
-            System.out.println("sent enemy`s health");
-        }
+        // enemies.values().forEach(enemy -> {
+        //     if (enemy.health != enemy.previousHealth) {
+        //         // Send the enemy's health
+        //         PacketUpdateHealth packet = new PacketUpdateHealth();
+        //         packet.type = PacketType.ENEMY;
+        //         packet.health = enemy.health;
+        //         client.sendUDP(packet);
+        //         System.out.println("sent enemy`s health");
+        //     }
+        // });
     }
 
     @Override

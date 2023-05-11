@@ -2,7 +2,6 @@ package org.knalpot.knalpot.world;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.security.spec.ECFieldF2m;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
@@ -97,6 +96,7 @@ public class Network extends Listener {
         if (o instanceof SpawnEnemyMessage) {
             SpawnEnemyMessage packet = (SpawnEnemyMessage) o;
             ClientProgram.enemies.put(packet.id, new Enemy(new Vector2(packet.x, packet.y)));
+            System.out.println("Added enemy to the world");
         }
 
         if (o instanceof PacketUpdateHealth) {

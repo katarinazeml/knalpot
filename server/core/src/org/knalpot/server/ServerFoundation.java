@@ -6,14 +6,8 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 import org.knalpot.server.actors.Actor;
-import org.knalpot.server.actors.Enemy;
 import org.knalpot.server.actors.State;
 import org.knalpot.server.general.PacketAddActor;
 import org.knalpot.server.general.PacketRemoveActor;
@@ -27,13 +21,12 @@ import org.knalpot.server.general.SpawnEnemyMessage;
 public class ServerFoundation extends Listener {
 
     private static Server server;
+    private static Game game;
     private static final int port = 8084;
-
-    private Map<Integer, Actor> players = new HashMap<>();
-    private Map<Integer, Enemy> enemies = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         server = new Server();
+        game = new Game();
         server.start();
         server.getKryo().register(PacketAddActor.class);
         server.getKryo().register(PacketRemoveActor.class);
@@ -63,13 +56,21 @@ public class ServerFoundation extends Listener {
         packet.id = connection.getID();
         server.sendToAllExceptTCP(connection.getID(), packet);
 
-        for (Actor p : players.values()) {
+        for (Actor p : game.getPlayers().values()) {
             PacketAddActor packet3 = new PacketAddActor();
             packet3.id = p.c.getID();
             connection.sendTCP(packet3);
+
+            game.getEnemies().values().forEach(e -> {
+                SpawnEnemyMessage msg = new SpawnEnemyMessage();
+                msg.id = e.id;
+                msg.x = e.x;
+                msg.y = e.y;
+                connection.sendTCP(msg);
+            });
         }
 
-        players.put(connection.getID(), player);
+        game.getPlayers().put(connection.getID(), player);
         System.out.println("connection received");
     }
 
@@ -85,68 +86,26 @@ public class ServerFoundation extends Listener {
 
             PacketUpdateDirection packet = (PacketUpdateDirection) o;
             packet.id = c.getID();
-            if (packet.type == PacketType.ENEMY) {
-                // Send enemy direction to all clients
-                server.sendToAllUDP(packet);
-            } else {
-                // Send player direction to all except the sender
-                server.sendToAllExceptUDP(c.getID(), packet);
-            }
+            server.sendToAllExceptUDP(c.getID(), packet);
             System.out.println("direction updated");
 
         } else if (o instanceof PacketUpdateState) {
 
             PacketUpdateState packet = (PacketUpdateState) o;
-            if (packet.type == PacketType.ENEMY) {
-                // Send enemy direction to all clients
-                server.sendToAllUDP(packet);
-            } else {
-                // Send player direction to all except the sender
-                server.sendToAllExceptUDP(c.getID(), packet);
-            }
+            packet.id = c.getID();
+            server.sendToAllExceptUDP(c.getID(), packet);
             System.out.println("state updated");
 
         } else if (o instanceof PacketUpdateHealth) {
 
             PacketUpdateHealth packet = (PacketUpdateHealth) o;
-            if (packet.type == PacketType.ENEMY) {
-                // Send enemy direction to all clients
-                server.sendToAllUDP(packet);
-            } else {
-                // Send player direction to all except the sender
-                server.sendToAllExceptUDP(c.getID(), packet);
-            }
+            server.sendToAllExceptUDP(c.getID(), packet);
             System.out.println("health updated");
-
-        } else if (o instanceof SpawnEnemyMessage) {
-
-            SpawnEnemyMessage packet = (SpawnEnemyMessage) o;
-
-            // generate random id for the enemy
-            Random random = new Random();
-            int n = 50 - 1 + 1; // maximum - minimum + 1
-            int i = random.nextInt() % n;
-            int id = 1 + i; // minimum + i
-            packet.id = id;
-
-            // Create and add the enemy to the server's enemy map
-            Enemy enemy = new Enemy(packet.x, packet.y);
-            enemy.id = id;
-            enemies.put(id, enemy);
-
-            // Send the spawn enemy message to all clients
-            server.sendToAllUDP(packet);
-
-            // Send the enemy data to the connecting client
-            PacketAddActor packet3 = new PacketAddActor();
-            packet3.id = id;
-            c.sendUDP(packet3);
-
         }
     }
 
     public void disconnected(Connection c) {
-        players.remove(c.getID());
+        game.removePlayer(c.getID());
         PacketRemoveActor packet = new PacketRemoveActor();
         packet.id = c.getID();
         server.sendToAllExceptTCP(c.getID(), packet);

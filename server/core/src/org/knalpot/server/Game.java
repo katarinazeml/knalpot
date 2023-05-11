@@ -1,19 +1,19 @@
 package org.knalpot.server;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.knalpot.server.actors.Actor;
 import org.knalpot.server.actors.Enemy;
 
 public class Game {
     
-    private Map<Integer, Actor> players;
+    private static Map<Integer, Actor> players = new HashMap<>();
+    private static Map<Integer, Enemy> enemies = new HashMap<>();
 
     public Game() {
-        players = new HashMap<>();
+        generateEnemies();
     }
 
     public void addPlayer(int connectionID) {
@@ -26,5 +26,27 @@ public class Game {
 
     public Actor getPlayer(int connectionID) {
         return players.get(connectionID);
+    }
+
+    public Map<Integer, Actor> getPlayers() {
+        return players;
+    }
+
+    public Map<Integer, Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public void addEnemy(int id, Enemy enemy) {
+        enemies.put(id, enemy);
+    }
+
+    public void removeEnemy(int id) {
+        enemies.remove(id);
+    }
+
+    public void generateEnemies() {
+        // generate random id for the enemy
+        int id = ThreadLocalRandom.current().nextInt(0, 100);
+        enemies.put(id, new Enemy(240, 112));
     }
 }

@@ -137,11 +137,11 @@ public class World {
 			Rectangle rect = rectObj.getRectangle();
 			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
 		}
-    	for (MapObject obj : tiledMap.getLayers().get("enemies").getObjects()) {
-			RectangleMapObject rectObj = (RectangleMapObject) obj;
-			Rectangle rect = rectObj.getRectangle();
-			enemies.add(new Enemy(new Vector2(rect.getX() * 2, rect.getY() * 2)));
-    	}
+    	// for (MapObject obj : tiledMap.getLayers().get("enemies").getObjects()) {
+		// 	RectangleMapObject rectObj = (RectangleMapObject) obj;
+		// 	Rectangle rect = rectObj.getRectangle();
+		// 	enemies.add(new Enemy(new Vector2(rect.getX() * 2, rect.getY() * 2)));
+    	// }
 		for (MapObject obj : tiledMap.getLayers().get("enemies").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
