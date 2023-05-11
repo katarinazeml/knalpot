@@ -43,10 +43,10 @@ public class ClientProgram extends ApplicationAdapter {
         return enemies;
     }
 
-    public void addOrbToWorld(MPActor data) {
-        Player player = new Player(data);
-        ClientProgram.players.put(data.id, player);
-        world.addOrb(player);
+    public void addOrbToWorld(Actor actor) {
+        // Player player = new Player(data);
+        // ClientProgram.players.put(data.id, player);
+        world.addOrb(actor);
     }
 
     public void addEnemyToWorld(MPActor data) {

@@ -57,12 +57,13 @@ public class Network extends Listener {
         if (o instanceof PacketAddActor) {
             PacketAddActor packet = (PacketAddActor) o;
             MPActor temp = new MPActor();
-            temp.id = packet.id;
+            Player player = new Player(temp);
+            ClientProgram.players.put(packet.id, player);
             
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                    clientProg.addOrbToWorld(temp);
+                    clientProg.addOrbToWorld(player);
                 }
             });
         }
@@ -102,10 +103,10 @@ public class Network extends Listener {
                 @Override
                 public void run() {
                     clientProg.addEnemyToWorld(temp);
+                    System.out.println("Added enemy to the world");
                 }
             });
 
-            System.out.println("Added enemy to the world");
         }
 
         if (o instanceof PacketUpdateHealth) {
