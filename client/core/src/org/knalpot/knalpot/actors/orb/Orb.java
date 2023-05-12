@@ -1,8 +1,10 @@
 package org.knalpot.knalpot.actors.orb;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Bullet;
@@ -74,10 +76,7 @@ public class Orb extends Actor {
 
     // Bullets
     private List<Bullet> bullets;
-
-    public List<Bullet> getBullets() {
-        return bullets;
-    }
+    private Set<Integer> bulletHash;
 
     public Orb(Actor owner, World world) {
         this.owner = owner;
@@ -109,12 +108,25 @@ public class Orb extends Actor {
         range = 3f;
 
         bullets = new ArrayList<>();
+        bulletHash = new HashSet<Integer>();
 
         isMP = false;
     }
 
     public Actor getOwner() {
         return owner;
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public Set<Integer> getBulletsHash() {
+        return bulletHash;
+    }
+
+    public float getTimeSinceLastShot() {
+        return timeSinceLastShot;
     }
     
     public float getDeltaPosition() {
@@ -240,6 +252,7 @@ public class Orb extends Actor {
             world.getEnemies().forEach(e -> {
                 if (bullet.getBounds().overlaps(e.getBounds())) {
                     if (e.getHealth() > 0) {
+                        bulletHash.remove(bullet.hashCode());
                         bulletIterator.remove();
                         e.gotShot(10);
                     }
@@ -275,7 +288,10 @@ public class Orb extends Actor {
         float sine = (float) -Math.sin(Math.toRadians(angle));
         float cosine = (float) Math.cos(Math.toRadians(angle));
         position.add(-sine * shootKickback, -cosine * shootKickback);
-        bullets.add(new Bullet(this, angle));
+        
+        Bullet bullet = new Bullet(this, angle);
+        bullets.add(bullet);
+        bulletHash.add(bullet.hashCode());
 
         timeSinceLastShot = 0f;
         state = OrbState.ORB;

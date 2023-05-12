@@ -8,12 +8,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.knalpot.server.actors.Actor;
 import org.knalpot.server.actors.Enemy;
@@ -31,14 +25,12 @@ public class ServerFoundation extends Listener {
 
     private static Server server;
     private static Game game;
-    // private static ExecutorService execute;
     private static Timer timer;
     private static final int port = 8084;
 
     public static void main(String[] args) throws IOException {
         server = new Server();
         game = new Game();
-        // execute = Executors.newSingleThreadExecutor();
         timer = new Timer();
 
         server.start();
@@ -47,7 +39,7 @@ public class ServerFoundation extends Listener {
         server.getKryo().register(PacketUpdatePosition.class);
         server.getKryo().register(PacketUpdateDirection.class);
         server.getKryo().register(PacketUpdateState.class);
-        server.getKryo().register(PacketType.class);
+        server.getKryo().register(PacketType.class, 3);
         server.getKryo().register(State.class);
         server.getKryo().register(PacketUpdateHealth.class, 2);
         server.getKryo().register(SpawnEnemyMessage.class);
@@ -84,16 +76,18 @@ public class ServerFoundation extends Listener {
 
         PacketAddActor packet = new PacketAddActor();
         packet.id = connection.getID();
+        packet.type = PacketType.PLAYER;
         server.sendToAllExceptTCP(connection.getID(), packet);
+        System.out.println("Sent this player to everyone else");
 
         for (Actor p : game.getPlayers().values()) {
             PacketAddActor packet3 = new PacketAddActor();
             packet3.id = p.c.getID();
+            packet.type = PacketType.PLAYER;
+            System.out.println("Sent other players' data to current connection");
             connection.sendTCP(packet3);
         }
-        
-        System.out.println("Enemies amount");
-        System.out.println(game.getEnemies().values().size());
+
         game.getEnemies().values().forEach(e -> {
             SpawnEnemyMessage msg = new SpawnEnemyMessage();
             msg.id = e.id;
@@ -108,13 +102,34 @@ public class ServerFoundation extends Listener {
     }
 
     public void received(Connection c, Object o) {
+        if (o instanceof PacketAddActor) {
+            PacketAddActor packet = (PacketAddActor) o;
+            if (packet.type == PacketType.BULLET) {
+                server.sendToAllExceptUDP(c.getID(), packet);
+                System.out.println("Sent bullet add packet");
+            }
+        }
+
+        if (o instanceof PacketRemoveActor) {
+            PacketRemoveActor packet = (PacketRemoveActor) o;
+            if (packet.type == PacketType.BULLET) {
+                server.sendToAllExceptUDP(c.getID(), packet);
+                System.out.println("Sent bullet remove packet");
+            }
+        }
+
         if (o instanceof PacketUpdatePosition) {
 
-            PacketUpdatePosition packet = (PacketUpdatePosition) o; 
-            packet.id = c.getID();
-            server.sendToAllExceptUDP(c.getID(), packet);
-            System.out.println("position updated");
+            PacketUpdatePosition packet = (PacketUpdatePosition) o;
+            if (packet.type == PacketType.BULLET) {
+                server.sendToAllExceptUDP(c.getID(), packet);
+                System.out.println("Sent bullet position");
+            } else {
+                packet.id = c.getID();
+                server.sendToAllExceptUDP(c.getID(), packet);
+                System.out.println("position updated");
 
+            }
         } else if (o instanceof PacketUpdateDirection) {
 
             PacketUpdateDirection packet = (PacketUpdateDirection) o;
@@ -144,19 +159,11 @@ public class ServerFoundation extends Listener {
         }
     }
 
-    // @Override
-    // public void idle(Connection c) {
-    //     game.update();
-    //     // System.out.println(c.getReturnTripTime());
-    //     // if (execute.isShutdown()) {
-    //     //    
-    //     // // }
-    // }
-
     public void disconnected(Connection c) {
         game.removePlayer(c.getID());
         PacketRemoveActor packet = new PacketRemoveActor();
         packet.id = c.getID();
+        packet.type = PacketType.PLAYER;
         server.sendToAllExceptTCP(c.getID(), packet);
         System.out.println("connection dropped");
     }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.knalpot.server.actors.Actor;
+import org.knalpot.server.actors.Bullet;
 import org.knalpot.server.actors.Enemy;
 import org.knalpot.server.addons.LoadXMLData;
 
@@ -14,6 +15,7 @@ public class Game {
     
     private static Map<Integer, Actor> players = new HashMap<>();
     private static Map<Integer, Enemy> enemies = new HashMap<>();
+    private static Map<Integer, Bullet> bullets = new HashMap<>();
 
     public Game() {
         generateEnemies();
@@ -23,6 +25,7 @@ public class Game {
         players.put(connectionID, new Actor());
     }
 
+    
     public void removePlayer(int connectionID) {
         players.remove(connectionID);
     }
@@ -45,6 +48,33 @@ public class Game {
 
     public void removeEnemy(int id) {
         enemies.remove(id);
+    }
+
+    public Map<Integer, Bullet> getBullets() {
+        return bullets;
+    }
+
+    public void addBullet(int bulletID, float x, float y) {
+        if (!bullets.containsKey(bulletID)) {
+            Bullet bul = new Bullet();
+            bul.id = bulletID;
+            bul.x = x;
+            bul.y = y;
+            bullets.put(bulletID, bul);
+        }
+    }
+
+    public void updateBullet(int id, float x, float y) {
+        if (bullets.containsKey(id)) {
+            bullets.get(id).x = x;
+            bullets.get(id).y = y;
+        }
+    }
+
+    public void removeBullet(int id) {
+        if (bullets.containsKey(id)) {
+            bullets.remove(id);
+        }
     }
 
     public void generateEnemies() {

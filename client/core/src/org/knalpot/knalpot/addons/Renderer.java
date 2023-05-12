@@ -14,6 +14,7 @@ import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.actors.player.Player.State;
 import org.knalpot.knalpot.networking.ClientProgram;
+import org.knalpot.knalpot.networking.MPActor;
 import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -55,6 +56,7 @@ public class Renderer {
     private SpriteBatch batch;
     private Texture playerTexture;
     private Texture staticTexture;
+    private Texture bulletTexture;
 
     private World world;
     private Player player;
@@ -172,16 +174,6 @@ public class Renderer {
 
         tiledRender.setView(camera);
         tiledRender.render();
-
-        // // Create a new BitmapFont
-        // BitmapFont font = new BitmapFont();
-
-        // Player player = world.getPlayer();
-
-        // // Draw the player's health at the top-left corner of the screen
-        // batch.begin();
-        // font.draw(batch, "Health: " + player.getHealth(), 20, Gdx.graphics.getHeight() - 400);
-        // batch.end();
         
         // Draw teleport animation
         batch.begin();
@@ -197,8 +189,13 @@ public class Renderer {
 
         // Draw label
         batch.begin();
-        String labelText = "Your health: " + player.getHealth();
-        labelFont.draw(batch, labelText, player.getPosition().x - 35, player.getPosition().y + player.getHeight() + 10);
+        String labelText = player.getHealth() + " / 100";
+        labelFont.draw(batch, labelText, player.getPosition().x - player.getWidth() / 2, player.getPosition().y + player.getHeight() + 10);
+        batch.end();
+
+        // Draw MPBullets
+        batch.begin();
+        drawBullets();
         batch.end();
 
         // Draw enemy
@@ -249,6 +246,7 @@ public class Renderer {
         staticTexture = new Texture("collision.png");
         enemyTexture = new Texture("lavamonster.png");
         sky = new Texture("CloudsGrassWallpaperSky.png");
+        bulletTexture = new Texture("bullet.png");
 
         Texture cloudTexture = new Texture("CloudsGrassWallpaperCloud.png");
         Texture darkGrassTexture = new Texture("DarkGrass.png");
@@ -307,7 +305,12 @@ public class Renderer {
                 batch.draw(playerTexture, mpPositionX, mpPlayer.getPosition().y, Math.signum(mpPlayer.direction) * player.getWidth(), player.getHeight());
             }
         }
-        
+    }
+
+    public void drawBullets() {
+        for (MPActor mpBullet : ClientProgram.bullets.values()) {
+            batch.draw(bulletTexture, mpBullet.x, mpBullet.y, bulletTexture.getWidth(), bulletTexture.getHeight());
+        }
     }
     
     private void drawBackground(float targetX) {

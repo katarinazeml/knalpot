@@ -44,11 +44,10 @@ public class World {
 	public List<Static> collisionBlocks;
 	public List<Static> platforms;
 	private List<Chest> chests;
+	
+	// Multiplayer variables
 	private List<Enemy> enemies;
 	private List<Orb> orbs;
-
-	// testing purposes only
-	private Chest chest;
 
 	//#region -- FUNCTIONS --
 	/**
@@ -140,7 +139,7 @@ public class World {
 		for (MapObject obj : tiledMap.getLayers().get("enemies").getObjects()) {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
-			chest = new Chest(new Vector2(rect.getX() * 2, rect.getY() * 2), 32, 32, new Texture("chest.png"));
+			Chest chest = new Chest(new Vector2(rect.getX() * 2, rect.getY() * 2), 32, 32, new Texture("chest.png"));
 		
 			// Add elements randomly to the chest
 			for (int i = 0; i < 3; i++) {

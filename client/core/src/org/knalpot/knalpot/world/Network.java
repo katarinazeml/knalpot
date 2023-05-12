@@ -47,7 +47,7 @@ public class Network extends Listener {
         client.getKryo().register(PacketUpdatePosition.class);
         client.getKryo().register(PacketUpdateDirection.class);
         client.getKryo().register(PacketUpdateState.class);
-        client.getKryo().register(PacketType.class);
+        client.getKryo().register(PacketType.class, 3);
         client.getKryo().register(Player.State.class);
         client.getKryo().register(SpawnEnemyMessage.class);
         client.getKryo().register(PacketUpdateHealth.class, 2);
@@ -56,40 +56,74 @@ public class Network extends Listener {
     public void received(Connection c, Object o){
         if (o instanceof PacketAddActor) {
             PacketAddActor packet = (PacketAddActor) o;
-            MPActor temp = new MPActor();
-            Player player = new Player(temp);
-            ClientProgram.players.put(packet.id, player);
-            
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    clientProg.addOrbToWorld(player);
+            if (packet.type == null || packet.type == PacketType.PLAYER) {
+                MPActor temp = new MPActor();
+                Player player = new Player(temp);
+                ClientProgram.players.put(packet.id, player);
+                
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        clientProg.addOrbToWorld(player);
+                    }
+                });
+            } else {
+                switch (packet.type) {
+                    case BULLET:
+                        MPActor bullet = new MPActor();
+                        System.out.println("Packet ID aka hashcode");
+                        System.out.println(packet.id);
+                        ClientProgram.bullets.put(packet.id, bullet);
+                        break;
+                    default:
+                        break;
                 }
-            });
+            }
         }
 
         if (o instanceof PacketRemoveActor){
             PacketRemoveActor packet = (PacketRemoveActor) o;
-            if (packet.type == PacketType.PLAYER) {
-                ClientProgram.players.remove(packet.id);
+            switch (packet.type) {
+                case PLAYER:
+                    ClientProgram.players.remove(packet.id);
+                    break;
+                case BULLET:
+                    ClientProgram.bullets.remove(packet.id);
+                    break;
+                default:
+                    break;
             }
+            // if (packet.type == PacketType.PLAYER) {
+            //     ClientProgram.players.remove(packet.id);
+            // }
         }
 
         if (o instanceof PacketUpdatePosition) {
             PacketUpdatePosition packet = (PacketUpdatePosition) o;
-            if (packet.type == PacketType.PLAYER) {
-                System.out.println("Update player position");
-                ClientProgram.players.get(packet.id).getPosition().x = packet.x;
-                ClientProgram.players.get(packet.id).getPosition().y = packet.y;
-            }
-            if (packet.type == PacketType.ENEMY) {
-                System.out.println("Updating enemy position");
-                System.out.println(packet.id);
-                if (ClientProgram.enemies.containsKey(packet.id)) {
-                    System.out.println("Enemy exists on the server");
-                    ClientProgram.enemies.get(packet.id).getPosition().x = packet.x * 2;
-                    ClientProgram.enemies.get(packet.id).getPosition().y = packet.y * 2;
-                }
+            switch (packet.type) {
+                case PLAYER:
+                    System.out.println("Update player position");
+                    ClientProgram.players.get(packet.id).getPosition().x = packet.x;
+                    ClientProgram.players.get(packet.id).getPosition().y = packet.y;
+                    break;
+                case ENEMY:
+                    System.out.println("Updating enemy position");
+                    System.out.println(packet.id);
+                    if (ClientProgram.enemies.containsKey(packet.id)) {
+                        System.out.println("Enemy exists on the server");
+                        ClientProgram.enemies.get(packet.id).getPosition().x = packet.x * 2;
+                        ClientProgram.enemies.get(packet.id).getPosition().y = packet.y * 2;
+                    }
+                    break;
+                case BULLET:
+                    System.out.println("Updating bullet position.");
+                    if (ClientProgram.bullets.containsKey(packet.id)) {
+                        ClientProgram.bullets.get(packet.id).x = packet.x;
+                        ClientProgram.bullets.get(packet.id).y = packet.y;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

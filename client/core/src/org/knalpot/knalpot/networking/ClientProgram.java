@@ -1,9 +1,15 @@
 package org.knalpot.knalpot.networking;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Bullet;
 import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.world.Network;
@@ -18,6 +24,8 @@ public class ClientProgram extends ApplicationAdapter {
 
     public static Map<Integer, Actor> players = new HashMap<>();
     public static Map<Integer, Enemy> enemies = new HashMap<>();
+    public static Map<Integer, MPActor> bullets = new HashMap<>();
+    public static Set<Integer> bulletHash = new HashSet<Integer>();
 
     private Client client;
     public static World world;
@@ -44,8 +52,6 @@ public class ClientProgram extends ApplicationAdapter {
     }
 
     public void addOrbToWorld(Actor actor) {
-        // Player player = new Player(data);
-        // ClientProgram.players.put(data.id, player);
         world.addOrb(actor);
     }
 
@@ -93,6 +99,49 @@ public class ClientProgram extends ApplicationAdapter {
             client.sendUDP(packet);
             System.out.println("sent state");
         }
+
+        // Sending position of each bullet in orb's list.
+        // Issue of throttling must be resolved by adding
+        // TTL (time-to-live) to each bullet, so it's removed as fast as possible.
+        ClientProgram.world.getOrbs().forEach(e -> {
+            if (!e.getBullets().isEmpty()) {
+                if (e.getTimeSinceLastShot() == 0f) {
+                    PacketAddActor packet = new PacketAddActor();
+                    Bullet bullet = e.getBullets().get(e.getBullets().size() - 1);
+                    // Adding hash to the list
+                    bulletHash.add(bullet.hashCode());
+                    packet.id = bullet.hashCode();
+                    packet.type = PacketType.BULLET;
+                    client.sendUDP(packet);
+                    System.out.println("Sent bullet spawn");
+                }
+
+                // Checking whether to remove bullets of not.
+                Set<Integer> dummy = new HashSet<Integer>(bulletHash);
+                dummy.removeAll(e.getBulletsHash());
+                if (!dummy.isEmpty()) {
+                    dummy.stream().forEach(el -> {
+                        PacketRemoveActor pkg = new PacketRemoveActor();
+                        pkg.id = el;
+                        pkg.type = PacketType.BULLET;
+                        client.sendUDP(pkg);
+                        System.out.println("Sent bullet removal packet.");
+                    });
+                }
+                // Removing data from the original hash values list.
+                dummy.stream().forEach(hash -> bulletHash.remove(hash));
+
+                e.getBullets().forEach(el -> {
+                    PacketUpdatePosition packet = new PacketUpdatePosition();
+                    packet.id = el.hashCode();
+                    packet.type = PacketType.BULLET;
+                    packet.x = el.getPosition().x;
+                    packet.y = el.getPosition().y;
+                    client.sendUDP(packet);
+                    System.out.println("Sent bullet position");
+                });
+            }
+        });
 
         enemies.values().forEach(enemy -> {
             if (enemy.health != enemy.previousHealth) {
