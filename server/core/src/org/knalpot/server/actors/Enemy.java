@@ -10,7 +10,7 @@ public class Enemy {
     public int health;
     
     private double dt;
-    private double spd = 35;
+    private int spd = 35;
 
     public Enemy(float x, float y) {
         this.x = x;
@@ -23,7 +23,7 @@ public class Enemy {
         System.out.println(dt);
         if (dt >= 10) {
             direction = ThreadLocalRandom.current().nextInt(-1, 2);
-            spd = ThreadLocalRandom.current().nextDouble(30, 40);
+            spd = ThreadLocalRandom.current().nextInt(30, 40);
             dt -= 10;
         }
 
