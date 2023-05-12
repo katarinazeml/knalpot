@@ -148,7 +148,6 @@ public class GameLobbyScreen implements Screen {
         codeTextField.setMaxLength(6);
 
         codeTextField.addListener(new InputListener() {
-            private int cursorPosition; // to keep track of cursor position
 
             @Override
             public boolean keyTyped(InputEvent event, char character) {
@@ -158,7 +157,8 @@ public class GameLobbyScreen implements Screen {
                     }
                     return true;
                 } else if (Character.isLowerCase(character)) {
-                    cursorPosition = codeTextField.getCursorPosition(); // store cursor position
+                    // to keep track of cursor position
+                    int cursorPosition = codeTextField.getCursorPosition(); // store cursor position
                     String textBeforeCursor = codeTextField.getText().substring(0, cursorPosition);
                     String textAfterCursor = codeTextField.getText().substring(cursorPosition);
                     int letterPosition = textBeforeCursor.length() - textBeforeCursor.replaceAll("[a-z]", "").length();
