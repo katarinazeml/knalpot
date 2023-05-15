@@ -89,6 +89,9 @@ public class Player extends Actor {
      * @param data
      */
     public Player(MPActor data) {
+        texture = new Texture("player.png");
+        WIDTH = texture.getWidth() * scaleSize;
+        HEIGHT = texture.getHeight() * scaleSize;
         position = new Vector2(data.x, data.y);
         direction = data.direction;
         state = data.state;
