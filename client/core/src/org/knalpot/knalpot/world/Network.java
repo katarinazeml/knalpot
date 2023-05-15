@@ -14,12 +14,13 @@ import org.knalpot.knalpot.networking.*;
 public class Network extends Listener {
     String ip = "localhost";
     public static int port = 8084;
-    private Client client = new Client();
+    private Client client;
 
     private ClientProgram clientProg;
 
     public Network(ClientProgram clientProg) {
         this.clientProg = clientProg;
+        client = new Client();
     }
 
     public Client getClient() {
@@ -43,6 +44,7 @@ public class Network extends Listener {
 
     private void register(Client client) {
         client.getKryo().register(PacketAddActor.class);
+        client.getKryo().register(PacketAddRoom.class);
         client.getKryo().register(PacketRemoveActor.class);
         client.getKryo().register(PacketUpdatePosition.class);
         client.getKryo().register(PacketUpdateDirection.class);
@@ -54,6 +56,13 @@ public class Network extends Listener {
     }
     
     public void received(Connection c, Object o){
+        if (o instanceof PacketAddRoom) {
+            PacketAddRoom packet = (PacketAddRoom) o;
+            ClientProgram.world.roomID = packet.roomID;
+            System.out.println(ClientProgram.world.roomID);
+            System.out.println("Room is created.");
+        }
+
         if (o instanceof PacketAddActor) {
             PacketAddActor packet = (PacketAddActor) o;
             if (packet.type == null || packet.type == PacketType.PLAYER) {
@@ -93,9 +102,6 @@ public class Network extends Listener {
                 default:
                     break;
             }
-            // if (packet.type == PacketType.PLAYER) {
-            //     ClientProgram.players.remove(packet.id);
-            // }
         }
 
         if (o instanceof PacketUpdatePosition) {

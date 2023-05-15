@@ -49,6 +49,8 @@ public class World {
 	private List<Enemy> enemies;
 	private List<Orb> orbs;
 
+	public int roomID;
+
 	//#region -- FUNCTIONS --
 	/**
 	 * {@code World} constructor.
@@ -60,6 +62,7 @@ public class World {
 		chests = new ArrayList<>();
 		enemies = new ArrayList<>();
 		orbs = new ArrayList<>();
+		roomID = ThreadLocalRandom.current().nextInt(100, 1000);
 
 		initializeWorld();
 		initializeNetwork();

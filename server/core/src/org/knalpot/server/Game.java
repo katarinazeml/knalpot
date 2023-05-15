@@ -4,21 +4,61 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.knalpot.server.actors.Actor;
 import org.knalpot.server.actors.Bullet;
 import org.knalpot.server.actors.Enemy;
 import org.knalpot.server.addons.LoadXMLData;
+import org.knalpot.server.general.PacketType;
+import org.knalpot.server.general.PacketUpdatePosition;
+import org.knalpot.server.general.SpawnEnemyMessage;
+
+import com.esotericsoftware.kryonet.Connection;
 
 public class Game {
     
-    private static Map<Integer, Actor> players = new HashMap<>();
-    private static Map<Integer, Enemy> enemies = new HashMap<>();
-    private static Map<Integer, Bullet> bullets = new HashMap<>();
+    private Map<Integer, Actor> players = new HashMap<>();
+    private Map<Integer, Enemy> enemies = new HashMap<>();
+    private Map<Integer, Bullet> bullets = new HashMap<>();
+    private Timer timer;
 
     public Game() {
         generateEnemies();
+    }
+
+    public void sendFirstData(Connection c) {
+        // Scheduling a timer inside the game.
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                update();
+                for (Enemy en : getEnemies().values()) {
+                    PacketUpdatePosition pkg = new PacketUpdatePosition();
+                    pkg.id = en.id;
+                    pkg.type = PacketType.ENEMY;
+                    pkg.x = en.x;
+                    pkg.y = en.y;
+                    getPlayers().values().forEach(e -> {
+                        e.c.sendTCP(pkg);
+                    });
+                }
+            }
+        }, 100, 100);
+        sendEnemyData(c);
+    }
+
+    public void sendEnemyData(Connection c) {
+        getEnemies().values().forEach(e -> {
+            SpawnEnemyMessage msg = new SpawnEnemyMessage();
+            msg.id = e.id;
+            msg.x = e.x;
+            msg.y = e.y;
+            c.sendTCP(msg);
+        });
     }
 
     public void addPlayer(int connectionID) {
@@ -36,6 +76,10 @@ public class Game {
 
     public Map<Integer, Actor> getPlayers() {
         return players;
+    }
+
+    public boolean isFull() {
+        return players.size() == 2;
     }
 
     public Map<Integer, Enemy> getEnemies() {
@@ -75,6 +119,11 @@ public class Game {
         if (bullets.containsKey(id)) {
             bullets.remove(id);
         }
+    }
+
+    public void stopTimer() {
+        timer.cancel();
+        timer.purge();
     }
 
     public void generateEnemies() {

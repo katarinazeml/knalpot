@@ -1,12 +1,9 @@
 package org.knalpot.knalpot.networking;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Bullet;
@@ -77,6 +74,7 @@ public class ClientProgram extends ApplicationAdapter {
         if (player.getVelocity().x != 0 || player.getVelocity().y != 0) {
             // Send the player's Y value
             PacketUpdatePosition packet = new PacketUpdatePosition();
+            packet.room = ClientProgram.world.roomID;
             packet.type = PacketType.PLAYER;
             packet.x = player.getPosition().x;
             packet.y = player.getPosition().y;
@@ -86,6 +84,7 @@ public class ClientProgram extends ApplicationAdapter {
         if (player.direction != player.previousDirection) {
             // Send the player's direction
             PacketUpdateDirection packet = new PacketUpdateDirection();
+            packet.room = ClientProgram.world.roomID;
             packet.type = PacketType.PLAYER;
             packet.direction = player.direction;
             client.sendUDP(packet);
@@ -94,6 +93,7 @@ public class ClientProgram extends ApplicationAdapter {
         if (player.state != player.previousState) {
             // Send the player's state
             PacketUpdateState packet = new PacketUpdateState();
+            packet.room = ClientProgram.world.roomID;
             packet.type = PacketType.PLAYER;
             packet.state = player.state;
             client.sendUDP(packet);
@@ -111,6 +111,7 @@ public class ClientProgram extends ApplicationAdapter {
                     // Adding hash to the list
                     bulletHash.add(bullet.hashCode());
                     packet.id = bullet.hashCode();
+                    packet.room = ClientProgram.world.roomID;
                     packet.type = PacketType.BULLET;
                     client.sendUDP(packet);
                     System.out.println("Sent bullet spawn");
@@ -123,6 +124,7 @@ public class ClientProgram extends ApplicationAdapter {
                     dummy.stream().forEach(el -> {
                         PacketRemoveActor pkg = new PacketRemoveActor();
                         pkg.id = el;
+                        pkg.room = ClientProgram.world.roomID;
                         pkg.type = PacketType.BULLET;
                         client.sendUDP(pkg);
                         System.out.println("Sent bullet removal packet.");
@@ -134,6 +136,7 @@ public class ClientProgram extends ApplicationAdapter {
                 e.getBullets().forEach(el -> {
                     PacketUpdatePosition packet = new PacketUpdatePosition();
                     packet.id = el.hashCode();
+                    packet.room = ClientProgram.world.roomID;
                     packet.type = PacketType.BULLET;
                     packet.x = el.getPosition().x;
                     packet.y = el.getPosition().y;
@@ -155,6 +158,7 @@ public class ClientProgram extends ApplicationAdapter {
                     .findFirst().get()
                     .getKey();
 
+                packet.room = ClientProgram.world.roomID;
                 packet.type = PacketType.ENEMY;
                 packet.health = enemy.health;
 
