@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -36,6 +37,9 @@ public class GameLobbyScreen implements Screen {
     public void show() {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
+        // create background
+        createBackground();
 
         // create title label
         createTitleLabel();
@@ -175,15 +179,26 @@ public class GameLobbyScreen implements Screen {
                 if (keycode == Input.Keys.ENTER) {
                     String code = codeTextField.getText();
                     System.out.println("Entered code: " + code);
+                    stage.dispose();
+                    game.getMusic().dispose();
+                    game.setScreen(new GameScene(game));
                     return true;
                 }
                 return false;
             }
         });
 
-
-
         // add code text field to the stage
         stage.addActor(codeTextField);
+    }
+
+    public void createBackground() {
+        // create background
+        Texture backgroundTexture = new Texture(Gdx.files.internal("buttons/background.png"));
+        Image background = new Image(backgroundTexture);
+        background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // add background to the stage
+        stage.addActor(background);
     }
 }

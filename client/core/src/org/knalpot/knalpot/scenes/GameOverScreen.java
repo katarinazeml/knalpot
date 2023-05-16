@@ -4,8 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.knalpot.knalpot.Knalpot;
 
@@ -30,6 +32,9 @@ public class GameOverScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+
+        // create background
+        createBackground();
     }
 
     @Override
@@ -87,6 +92,16 @@ public class GameOverScreen implements Screen {
     public void dispose() {
         font.dispose();
         stage.dispose();
+    }
+
+    public void createBackground() {
+        // create background
+        Texture backgroundTexture = new Texture(Gdx.files.internal("buttons/background.png"));
+        Image background = new Image(backgroundTexture);
+        background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // add background to the stage
+        stage.addActor(background);
     }
 }
 
