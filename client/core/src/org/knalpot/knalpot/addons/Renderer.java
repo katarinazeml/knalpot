@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.EnemyBullet;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.orb.Orb;
@@ -320,8 +322,10 @@ public class Renderer {
     }
 
     public void drawBullets() {
-        for (MPActor mpBullet : ClientProgram.bullets.values()) {
-            batch.draw(bulletTexture, mpBullet.x, mpBullet.y, bulletTexture.getWidth(), bulletTexture.getHeight());
+        Iterator<Map.Entry<Integer, MPActor>> iterator = ClientProgram.bullets.entrySet().iterator();
+        while (iterator.hasNext()) {
+            MPActor value = iterator.next().getValue();
+            batch.draw(bulletTexture, value.x, value.y, bulletTexture.getWidth(), bulletTexture.getHeight());
         }
     }
 

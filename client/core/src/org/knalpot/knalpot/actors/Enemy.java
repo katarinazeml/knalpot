@@ -82,6 +82,14 @@ public class Enemy extends Actor {
     public void updatePosition(float x, float y) {
         position.x = x;
         position.y = y;
+
+        bounds.x = position.x;
+        bounds.y = position.y;
+
+        Left = (int) bounds.x;
+        Right = (int) bounds.x + WIDTH;
+        Bottom = (int) bounds.y;
+        Top = (int) bounds.y + HEIGHT;
     }
 
     public void shoot(Vector2 targetPos) {

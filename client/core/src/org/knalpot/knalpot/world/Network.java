@@ -135,8 +135,12 @@ public class Network extends Listener {
                     break;
                 case ENEMY:
                     if (ClientProgram.enemies.containsKey(packet.id)) {
-                        ClientProgram.enemies.get(packet.id).getPosition().x = packet.x * 2;
-                        ClientProgram.enemies.get(packet.id).getPosition().y = packet.y * 2;
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                ClientProgram.enemies.get(packet.id).updatePosition(packet.x * 2, packet.y * 2);
+                            }
+                        });
                     }
                     break;
                 case BULLET:

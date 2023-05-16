@@ -243,15 +243,11 @@ public class Game {
     }
 
     public void update() {
-        // Updating each enemy.
-        enemies.values().forEach(e -> {
-            e.update();
-        });
-
         // Checking of somebody's health is lower than zero.
         Iterator<Map.Entry<Integer, Enemy>> iterator = enemies.entrySet().iterator();
         while (iterator.hasNext()) {
             Enemy value = iterator.next().getValue();
+            value.update();
             if (value.health <= 0) {
                 iterator.remove();
             }
