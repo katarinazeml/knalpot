@@ -12,7 +12,7 @@ import org.knalpot.knalpot.actors.player.Player;
 import org.knalpot.knalpot.networking.*;
 
 public class Network extends Listener {
-    String ip = "localhost";
+    String ip = "193.40.156.27";
     public static int port = 8084;
     private Client client;
 
