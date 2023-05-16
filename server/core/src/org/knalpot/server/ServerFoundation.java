@@ -70,6 +70,8 @@ public class ServerFoundation extends Listener {
     }
 
     private void addToSession(Connection connection, Integer key) {
+        Game game = gameSessions.get(key);
+
         // Firstly we send a key to the recepient.
         PacketAddRoom pkt = new PacketAddRoom();
         pkt.id = connection.getID();
@@ -79,23 +81,21 @@ public class ServerFoundation extends Listener {
         // Initializing player and adding it to the list
         Actor player = new Actor();
         player.c = connection;
-        gameSessions.get(key).getPlayers().put(connection.getID(), player);
+        game.getPlayers().put(connection.getID(), player);
 
-        PacketAddActor packet = new PacketAddActor();
-        packet.id = connection.getID();
-        packet.type = PacketType.PLAYER;
-        server.sendToAllExceptTCP(connection.getID(), packet);
-        System.out.println("Sent this player to everyone else");
+        // PacketAddActor packet = new PacketAddActor();
+        // packet.id = connection.getID();
+        // packet.type = PacketType.PLAYER;
+        // server.sendToAllExceptTCP(connection.getID(), packet);
 
-        for (Actor p : gameSessions.get(key).getPlayers().values()) {
+        for (Actor p : game.getPlayers().values()) {
             PacketAddActor packet2 = new PacketAddActor();
             packet2.id = p.c.getID();
             packet2.type = PacketType.PLAYER;
-            System.out.println("Sent other players' data to current connection");
             connection.sendTCP(packet2);
         }
 
-        // gameSessions.get(key).sendEnemyData(connection);
+        game.startGame();
     }
 
     private void initializeGameSession(Connection connection) {
@@ -118,7 +118,8 @@ public class ServerFoundation extends Listener {
             
             gameSessions.put(roomID, game);
             gameSessions.get(roomID).sendFirstData();
-            System.out.println("connection received");
+            System.out.println("Room initialized");
+            System.out.println(roomID);
         }
     }
 
@@ -133,7 +134,6 @@ public class ServerFoundation extends Listener {
                         e.c.sendUDP(packet);
                     }
                 });
-                System.out.println("Sent bullet add packet");
             }
         }
 
@@ -147,7 +147,6 @@ public class ServerFoundation extends Listener {
                         e.c.sendUDP(packet);
                     }
                 });
-                System.out.println("Sent bullet remove packet");
             }
         }
 
@@ -162,7 +161,6 @@ public class ServerFoundation extends Listener {
                         e.c.sendUDP(packet);
                     }
                 });
-                System.out.println("Sent bullet position");
             } else {
                 game.getPlayers().values().forEach(e -> {
                     if (e.c.getID() != c.getID()) {
@@ -172,8 +170,6 @@ public class ServerFoundation extends Listener {
 
                 game.getPlayers().get(c.getID()).x = packet.x;
                 game.getPlayers().get(c.getID()).y = packet.y;
-
-                System.out.println("player position updated");
             }
         } else if (o instanceof PacketUpdateDirection) {
             PacketUpdateDirection packet = (PacketUpdateDirection) o;
@@ -186,7 +182,6 @@ public class ServerFoundation extends Listener {
                 }
             });
 
-            System.out.println("direction updated");
         } else if (o instanceof PacketUpdateState) {
             PacketUpdateState packet = (PacketUpdateState) o;
             packet.id = c.getID();
@@ -198,14 +193,11 @@ public class ServerFoundation extends Listener {
                 }
             });
 
-            System.out.println("state updated");
         } else if (o instanceof PacketUpdateHealth) {
             PacketUpdateHealth packet = (PacketUpdateHealth) o;
             Game game = gameSessions.get(packet.room);
 
             if (packet.type == PacketType.ENEMY) {
-                System.out.println("Enemy ID in packet:");
-                System.out.println(packet.id);
                 if (game.getEnemies().containsKey(packet.id)) {
                     game.getEnemies().get(packet.id).health = packet.health;
                 }
@@ -214,8 +206,6 @@ public class ServerFoundation extends Listener {
                         e.c.sendUDP(packet);
                     }
                 });
-                System.out.println(game.getEnemies().size());
-                System.out.println("health updated");
             }
         }
     }
@@ -235,7 +225,9 @@ public class ServerFoundation extends Listener {
                 e.c.sendUDP(packet); 
         });
 
-        game.stopTimer();
+        if (game.getPlayers().size() <= 0)
+            game.stopTimer();
+
         System.out.println("connection dropped");
     }
 }

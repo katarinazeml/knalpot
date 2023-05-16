@@ -15,7 +15,7 @@ public class Enemy {
     private int spd = 35;
 
     private boolean chasePlayer;
-    private int CHASE_RADIUS = 50;
+    private int CHASE_RADIUS = 150;
 
     public Game world;
 
@@ -29,7 +29,8 @@ public class Enemy {
         System.out.println(world.getPlayers().size());
         for (Actor player : world.getPlayers().values()) {
             // float distanceToPlayer = Math.abs(player.x - x);
-            chasePlayer = player.x > (this.x - CHASE_RADIUS) * 2 && player.x < (this.x + CHASE_RADIUS) * 2;
+            chasePlayer = (player.x > (this.x - CHASE_RADIUS) * 2 && player.x < (this.x + CHASE_RADIUS) * 2)
+                || player.y < (this.y - CHASE_RADIUS) * 2 && player.y > (this.y + CHASE_RADIUS) * 2;
 
             if (chasePlayer) {
                 System.out.println("Player is inside the radius");
@@ -39,8 +40,10 @@ public class Enemy {
                 System.out.println(chasePlayer);
 
                 // Player is within chase radius, move towards player
-                int moveTo = (player.x < this.x * 2) ? -1 : 1;
-                this.x += spd * 0.01 * moveTo;
+                int moveToX = (player.x < this.x * 2) ? -1 : 1;
+                int moveToY = (player.y < this.y * 2) ? -1 : 1;
+                this.x += spd * 0.01 * moveToX;
+                this.y += spd * 0.01 * moveToY;
             }
         }
 

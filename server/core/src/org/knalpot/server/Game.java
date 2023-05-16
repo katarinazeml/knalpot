@@ -26,7 +26,7 @@ public class Game {
     private boolean gameStarted;
 
     public Game() {
-        // generateEnemies();
+
     }
 
     public void sendFirstData() {
@@ -62,11 +62,13 @@ public class Game {
         });
     }
 
-    public void addPlayer(int connectionID) {
-        players.put(connectionID, new Actor());
+    public void startGame() {
+        generateEnemies();
+        sendEnemyData();
+        System.out.println("Game is started and enemy data is sent");
+        System.out.println("Players amount: " + players.size());
     }
 
-    
     public void removePlayer(int connectionID) {
         players.remove(connectionID);
     }
@@ -143,15 +145,6 @@ public class Game {
     }
 
     public void update() {
-        System.out.println("Player size");
-        System.out.println(players.size());
-
-        if (players.size() == 2 && gameStarted == false) {
-            generateEnemies();
-            sendEnemyData();
-            gameStarted = true;
-        }
-
         // Updating each enemy.
         enemies.values().forEach(e -> {
             e.update();
