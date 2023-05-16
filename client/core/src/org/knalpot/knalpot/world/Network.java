@@ -67,12 +67,12 @@ public class Network extends Listener {
             PacketAddActor packet = (PacketAddActor) o;
             if (packet.type == null || packet.type == PacketType.PLAYER) {
                 MPActor temp = new MPActor();
-                Player player = new Player(temp);
-                ClientProgram.players.put(packet.id, player);
                 
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
+                        Player player = new Player(temp);
+                        ClientProgram.players.put(packet.id, player);
                         clientProg.addOrbToWorld(player);
                     }
                 });
@@ -83,6 +83,8 @@ public class Network extends Listener {
                         System.out.println("Packet ID aka hashcode");
                         System.out.println(packet.id);
                         ClientProgram.bullets.put(packet.id, bullet);
+                        System.out.println("Bullets map size");
+                        System.out.println(ClientProgram.bullets.size());
                         break;
                     default:
                         break;

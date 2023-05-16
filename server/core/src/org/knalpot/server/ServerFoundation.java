@@ -95,7 +95,7 @@ public class ServerFoundation extends Listener {
             connection.sendTCP(packet2);
         }
 
-        gameSessions.get(key).sendEnemyData(connection);
+        // gameSessions.get(key).sendEnemyData(connection);
     }
 
     private void initializeGameSession(Connection connection) {
@@ -117,7 +117,7 @@ public class ServerFoundation extends Listener {
             game.getPlayers().put(connection.getID(), player);
             
             gameSessions.put(roomID, game);
-            gameSessions.get(roomID).sendFirstData(connection);
+            gameSessions.get(roomID).sendFirstData();
             System.out.println("connection received");
         }
     }

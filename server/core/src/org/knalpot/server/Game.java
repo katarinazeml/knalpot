@@ -16,8 +16,6 @@ import org.knalpot.server.general.PacketType;
 import org.knalpot.server.general.PacketUpdatePosition;
 import org.knalpot.server.general.SpawnEnemyMessage;
 
-import com.esotericsoftware.kryonet.Connection;
-
 public class Game {
     
     private Map<Integer, Actor> players = new HashMap<>();
@@ -25,11 +23,13 @@ public class Game {
     private Map<Integer, Bullet> bullets = new HashMap<>();
     private Timer timer;
 
+    private boolean gameStarted;
+
     public Game() {
-        generateEnemies();
+        // generateEnemies();
     }
 
-    public void sendFirstData(Connection c) {
+    public void sendFirstData() {
         // Scheduling a timer inside the game.
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -43,21 +43,22 @@ public class Game {
                     pkg.x = en.x;
                     pkg.y = en.y;
                     getPlayers().values().forEach(e -> {
-                        e.c.sendTCP(pkg);
+                        e.c.sendUDP(pkg);
                     });
                 }
             }
         }, 100, 100);
-        sendEnemyData(c);
     }
 
-    public void sendEnemyData(Connection c) {
+    public void sendEnemyData() {
         getEnemies().values().forEach(e -> {
             SpawnEnemyMessage msg = new SpawnEnemyMessage();
             msg.id = e.id;
             msg.x = e.x;
             msg.y = e.y;
-            c.sendTCP(msg);
+            getPlayers().values().forEach(el -> {
+                el.c.sendUDP(msg);
+            });
         });
     }
 
@@ -141,6 +142,15 @@ public class Game {
     }
 
     public void update() {
+        System.out.println("Player size");
+        System.out.println(players.size());
+
+        if (players.size() == 2 && gameStarted == false) {
+            generateEnemies();
+            sendEnemyData();
+            gameStarted = true;
+        }
+
         // Updating each enemy.
         enemies.values().forEach(e -> {
             e.update();

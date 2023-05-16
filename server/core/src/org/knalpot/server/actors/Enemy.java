@@ -12,6 +12,8 @@ public class Enemy {
     private double dt;
     private int spd = 35;
 
+    public Player target;
+
     public Enemy(float x, float y) {
         this.x = x;
         this.y = y;
@@ -20,7 +22,7 @@ public class Enemy {
     
     public void update() {
         dt += 0.1;
-        System.out.println(dt);
+
         if (dt >= 10) {
             direction = ThreadLocalRandom.current().nextInt(-1, 2);
             spd = ThreadLocalRandom.current().nextInt(30, 40);
