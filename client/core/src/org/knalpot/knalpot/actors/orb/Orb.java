@@ -249,6 +249,7 @@ public class Orb extends Actor {
         ListIterator<Bullet> bulletIterator = bullets.listIterator();
         while (bulletIterator.hasNext()) {
             Bullet bullet = bulletIterator.next();
+            // Check collision with enemies
             world.getEnemies().forEach(e -> {
                 if (bullet.getBounds().overlaps(e.getBounds())) {
                     if (e.getHealth() > 0) {
@@ -256,6 +257,13 @@ public class Orb extends Actor {
                         bulletIterator.remove();
                         e.gotShot(10);
                     }
+                }
+            });
+            // Check collision with ordinary blocks
+            world.getCollisionBlocks().forEach(e -> {
+                if (bullet.getBounds().overlaps(e.getBounds())) {
+                    bulletHash.remove(bullet.hashCode());
+                    bulletIterator.remove();
                 }
             });
         }
