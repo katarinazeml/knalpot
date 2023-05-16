@@ -89,7 +89,6 @@ public class MainMenuScreen implements Screen {
         // dispose assets
         batch.dispose();
         font.dispose();
-
     }
 
     public void createStartButton() {
