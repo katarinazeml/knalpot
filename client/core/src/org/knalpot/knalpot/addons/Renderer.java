@@ -235,6 +235,18 @@ public class Renderer {
         tiledMap = new TmxMapLoader().load(tiledSrc);
         tiledRender = new OrthogonalTiledMapRenderer(tiledMap, 2);
     }
+    
+    private void drawBackground(float targetX) {
+        // Calculate the positions of the backgrounds
+        float cameraX = camera.position.x - camera.viewportWidth / 2;
+        float cameraY = camera.position.y - camera.viewportHeight / 2;
+
+        // Draw the backgrounds
+        batch.draw(sky, cameraX, cameraY, camera.viewportWidth, camera.viewportHeight);
+        cloud.render(batch, targetX, 0);
+        darkGrass.render(batch, targetX, 0);
+        lightGrass.render(batch, targetX, 0);
+    }
 
     /**
      * Loads all required textures in this specific location.
@@ -312,18 +324,7 @@ public class Renderer {
             batch.draw(bulletTexture, mpBullet.x, mpBullet.y, bulletTexture.getWidth(), bulletTexture.getHeight());
         }
     }
-    
-    private void drawBackground(float targetX) {
-        // Calculate the positions of the backgrounds
-        float cameraX = camera.position.x - camera.viewportWidth / 2;
-        float cameraY = camera.position.y - camera.viewportHeight / 2;
 
-        // Draw the backgrounds
-        batch.draw(sky, cameraX, cameraY, camera.viewportWidth, camera.viewportHeight);
-        cloud.render(batch, targetX, 0);
-        darkGrass.render(batch, targetX, 0);
-        lightGrass.render(batch, targetX, 0);
-    }
 
     private void drawEnemy(Enemy enemy) {
          float enemyPositionX = enemy.getPosition().x;

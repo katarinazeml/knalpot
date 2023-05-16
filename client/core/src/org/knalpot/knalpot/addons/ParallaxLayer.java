@@ -29,23 +29,19 @@ public class ParallaxLayer {
 
     public void render(SpriteBatch batch, float targetX, float targetY) {
         float cameraX = camera.position.x - camera.viewportWidth / 2;
-        // float cameraY = camera.position.y - camera.viewportHeight / 2;
-
-        // NB! THIS IS A TEMPORARY SOLUTION, IT MIGHT LEAD TO EITHER
-        // MEMORY LEAK OR MEMORY OVERLOAD. COEFFICENT MUST BE
-        // FOUND MORE EFFICIENTLY.
-        float x = cameraX * FRACTION_2 + targetX * FRACTION_1;
+        float x = cameraX * FRACTION_1;
+    
         double randomFormula = (camera.position.x / camera.viewportWidth) * (camera.viewportWidth / texture.getWidth()) * (1.0 - Math.abs(DELTA_FR));
-        float cameraTextureCoefficent = camera.viewportWidth / texture.getWidth();
-        int timesToRepeat = (int) Math.round(randomFormula / cameraTextureCoefficent) + 1;
-
+        float cameraTextureCoefficient = camera.viewportWidth / texture.getWidth();
+        int timesToRepeat = (int) Math.round(randomFormula / cameraTextureCoefficient) + 1;
+    
         TextureRegion region = new TextureRegion(texture);
         region.setRegionX(0);
         region.setRegionY(0);
         region.setRegionWidth(texture.getWidth() * timesToRepeat);
         region.setRegionHeight(texture.getHeight());
-
+    
         batch.draw(region, x, 100, camera.viewportWidth * timesToRepeat, camera.viewportHeight);
-    }
+    }    
     //#endregion
 }
