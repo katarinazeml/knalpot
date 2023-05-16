@@ -172,6 +172,7 @@ public class ServerFoundation extends Listener {
 
                 game.getPlayers().get(c.getID()).x = packet.x;
                 game.getPlayers().get(c.getID()).y = packet.y;
+
                 System.out.println("player position updated");
             }
         } else if (o instanceof PacketUpdateDirection) {

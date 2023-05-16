@@ -67,12 +67,12 @@ public class Network extends Listener {
             PacketAddActor packet = (PacketAddActor) o;
             if (packet.type == null || packet.type == PacketType.PLAYER) {
                 MPActor temp = new MPActor();
+                Player player = new Player(temp);
+                ClientProgram.players.put(packet.id, player);
                 
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
-                        Player player = new Player(temp);
-                        ClientProgram.players.put(packet.id, player);
                         clientProg.addOrbToWorld(player);
                     }
                 });
@@ -111,6 +111,8 @@ public class Network extends Listener {
             switch (packet.type) {
                 case PLAYER:
                     System.out.println("Update player position");
+                    System.out.println(packet.id);
+                    System.out.println(ClientProgram.players.size());
                     ClientProgram.players.get(packet.id).getPosition().x = packet.x;
                     ClientProgram.players.get(packet.id).getPosition().y = packet.y;
                     break;
