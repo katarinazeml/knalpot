@@ -8,11 +8,13 @@ import java.util.Set;
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Bullet;
 import org.knalpot.knalpot.actors.player.Player;
+import org.knalpot.knalpot.interactive.props.Chest;
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.world.Network;
 import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Client;
 
@@ -22,6 +24,7 @@ public class ClientProgram extends ApplicationAdapter {
     public static Map<Integer, Actor> players = new HashMap<>();
     public static Map<Integer, Enemy> enemies = new HashMap<>();
     public static Map<Integer, MPActor> bullets = new HashMap<>();
+    public static Map<Integer, Chest> chests = new HashMap<>();
     public static Set<Integer> bulletHash = new HashSet<Integer>();
 
     private Client client;
@@ -56,6 +59,17 @@ public class ClientProgram extends ApplicationAdapter {
         Enemy enemy = new Enemy(new Vector2(data.x * 2, data.y * 2));
         ClientProgram.enemies.put(data.id, enemy);
         world.addEnemy(enemy);
+    }
+
+    public void addChestToWorld(MPActor data) {
+        Chest chest = new Chest(new Vector2(data.x * 2, data.y * 2), 32, 32, new Texture("chest.png"));
+        System.out.println("Chest data");
+        System.out.println(data.x);
+        System.out.println(data.y);
+        ClientProgram.chests.put(data.id, chest);
+        ClientProgram.world.addChest(chest);
+        System.out.println(ClientProgram.chests.size());
+        System.out.println(ClientProgram.world.getChest().size());
     }
 
     @Override

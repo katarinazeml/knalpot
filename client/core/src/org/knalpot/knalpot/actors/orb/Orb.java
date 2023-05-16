@@ -145,6 +145,10 @@ public class Orb extends Actor {
         this.isMP = isMP;
     }
 
+    public boolean getIsMP() {
+        return isMP;
+    }
+
     @Override
     public void update(float dt) {
         if (!isMP) {
@@ -253,8 +257,10 @@ public class Orb extends Actor {
             world.getEnemies().forEach(e -> {
                 if (bullet.getBounds().overlaps(e.getBounds())) {
                     if (e.getHealth() > 0) {
-                        bulletHash.remove(bullet.hashCode());
-                        bulletIterator.remove();
+                        if (bulletHash.contains(bullet.hashCode())) {
+                            bulletHash.remove(bullet.hashCode());
+                            bulletIterator.remove();
+                        }
                         e.gotShot(10);
                     }
                 }
@@ -262,8 +268,10 @@ public class Orb extends Actor {
             // Check collision with ordinary blocks
             world.getCollisionBlocks().forEach(e -> {
                 if (bullet.getBounds().overlaps(e.getBounds())) {
-                    bulletHash.remove(bullet.hashCode());
-                    bulletIterator.remove();
+                    if (bulletHash.contains(bullet.hashCode())) {
+                        bulletHash.remove(bullet.hashCode());
+                        bulletIterator.remove();
+                    }
                 }
             });
         }

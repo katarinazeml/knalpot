@@ -4,5 +4,6 @@ public enum PacketType {
     PLAYER,
     ORB,
     ENEMY,
+    CHEST,
     BULLET
 }

@@ -111,6 +111,13 @@ public class World {
 		orbs.get(orbs.size() - 1).setIsMP(true);;
 	}
 
+	public void removeMPOrb() {
+		// Dumb way to remvoe orb but it must work.
+		if (orbs.size() > 1) {
+			orbs.remove(1);
+		}
+	}
+
 	public void removeEnemy(Enemy enemy) {
         enemies.remove(enemy);
     }
@@ -118,6 +125,31 @@ public class World {
 	public void addEnemy(Enemy enemy) {
         enemies.add(enemy);
     }
+
+	public void addChest(Chest chest) {
+		// Add elements randomly to the chest
+		for (int i = 0; i < 3; i++) {
+			// Add consumables to the chest
+			List<Consumable> consumables = new ArrayList<>();
+			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Potion"));
+			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Apple"));
+			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Water"));
+			
+			consumables.get(0).setPower(10);
+			consumables.get(1).setPower(5);
+			consumables.get(2).setPower(-4);
+			int randomIndex = ThreadLocalRandom.current().nextInt(consumables.size());
+			Consumable randomConsumable = consumables.get(randomIndex);
+			chest.addConsumable(randomConsumable);
+			consumables.remove(randomConsumable);
+		}
+		chest.initializeChestHUD();
+		chests.add(chest);
+	}
+
+	public void removeChest(Chest chest) {
+		chests.remove(chest);
+	}
 
 	/**
 	 * Initializes all object needed for this 'world'.
@@ -137,31 +169,6 @@ public class World {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
 			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
-		}
-
-		for (MapObject obj : tiledMap.getLayers().get("enemies").getObjects()) {
-			RectangleMapObject rectObj = (RectangleMapObject) obj;
-			Rectangle rect = rectObj.getRectangle();
-			Chest chest = new Chest(new Vector2(rect.getX() * 2, rect.getY() * 2), 32, 32, new Texture("chest.png"));
-		
-			// Add elements randomly to the chest
-			for (int i = 0; i < 3; i++) {
-				// Add consumables to the chest
-				List<Consumable> consumables = new ArrayList<>();
-				consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Potion"));
-				consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Apple"));
-				consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Water"));
-				
-				consumables.get(0).setPower(10);
-				consumables.get(1).setPower(5);
-				consumables.get(2).setPower(-4);
-
-				int randomIndex = ThreadLocalRandom.current().nextInt(consumables.size());
-				Consumable randomConsumable = consumables.get(randomIndex);
-				chest.addConsumable(randomConsumable);
-				consumables.remove(randomConsumable);
-			}
-			chests.add(chest);
 		}
 	}
 

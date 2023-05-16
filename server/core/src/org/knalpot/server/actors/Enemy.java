@@ -26,19 +26,12 @@ public class Enemy {
     }
     
     public void update() {
-        System.out.println(world.getPlayers().size());
         for (Actor player : world.getPlayers().values()) {
             // float distanceToPlayer = Math.abs(player.x - x);
             chasePlayer = (player.x > (this.x - CHASE_RADIUS) * 2 && player.x < (this.x + CHASE_RADIUS) * 2)
                 || player.y < (this.y - CHASE_RADIUS) * 2 && player.y > (this.y + CHASE_RADIUS) * 2;
 
             if (chasePlayer) {
-                System.out.println("Player is inside the radius");
-                System.out.println("Collision data");
-                System.out.println(player.x);
-                System.out.println(this.x);
-                System.out.println(chasePlayer);
-
                 // Player is within chase radius, move towards player
                 int moveToX = (player.x < this.x * 2) ? -1 : 1;
                 int moveToY = (player.y < this.y * 2) ? -1 : 1;

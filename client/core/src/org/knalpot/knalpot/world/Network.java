@@ -9,10 +9,11 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import org.knalpot.knalpot.actors.player.Player;
+import org.knalpot.knalpot.interactive.props.Chest;
 import org.knalpot.knalpot.networking.*;
 
 public class Network extends Listener {
-    String ip = "193.40.156.27";
+    String ip = "localhost";
     public static int port = 8084;
     private Client client;
 
@@ -51,6 +52,7 @@ public class Network extends Listener {
         client.getKryo().register(PacketUpdateState.class);
         client.getKryo().register(PacketType.class, 3);
         client.getKryo().register(Player.State.class);
+        client.getKryo().register(SpawnChest.class, 5);
         client.getKryo().register(SpawnEnemyMessage.class);
         client.getKryo().register(PacketUpdateHealth.class, 2);
     }
@@ -97,9 +99,26 @@ public class Network extends Listener {
             switch (packet.type) {
                 case PLAYER:
                     ClientProgram.players.remove(packet.id);
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            ClientProgram.world.removeMPOrb();
+                        }
+                    });
                     break;
                 case BULLET:
                     ClientProgram.bullets.remove(packet.id);
+                    break;
+                case CHEST:
+                    Chest chest = ClientProgram.chests.get(packet.id);
+                    ClientProgram.chests.remove(packet.id);
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            ClientProgram.world.removeChest(chest);
+                            System.out.println("Chest is removed");
+                        }
+                    });
                     break;
                 default:
                     break;
@@ -110,23 +129,17 @@ public class Network extends Listener {
             PacketUpdatePosition packet = (PacketUpdatePosition) o;
             switch (packet.type) {
                 case PLAYER:
-                    System.out.println("Update player position");
-                    System.out.println(packet.id);
                     System.out.println(ClientProgram.players.size());
                     ClientProgram.players.get(packet.id).getPosition().x = packet.x;
                     ClientProgram.players.get(packet.id).getPosition().y = packet.y;
                     break;
                 case ENEMY:
-                    System.out.println("Updating enemy position");
-                    System.out.println(packet.id);
                     if (ClientProgram.enemies.containsKey(packet.id)) {
-                        System.out.println("Enemy exists on the server");
                         ClientProgram.enemies.get(packet.id).getPosition().x = packet.x * 2;
                         ClientProgram.enemies.get(packet.id).getPosition().y = packet.y * 2;
                     }
                     break;
                 case BULLET:
-                    System.out.println("Updating bullet position.");
                     if (ClientProgram.bullets.containsKey(packet.id)) {
                         ClientProgram.bullets.get(packet.id).x = packet.x;
                         ClientProgram.bullets.get(packet.id).y = packet.y;
@@ -160,6 +173,23 @@ public class Network extends Listener {
                 public void run() {
                     clientProg.addEnemyToWorld(temp);
                     System.out.println("Added enemy to the world");
+                }
+            });
+        }
+
+        if (o instanceof SpawnChest) {
+            System.out.println("Received chest data");
+            SpawnChest packet = (SpawnChest) o;
+            MPActor temp = new MPActor();
+            temp.id = packet.id;
+            temp.x = packet.x;
+            temp.y = packet.y;
+
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    clientProg.addChestToWorld(temp);
+                    System.out.println("Added chest to the world");
                 }
             });
         }

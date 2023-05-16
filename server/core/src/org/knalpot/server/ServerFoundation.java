@@ -21,6 +21,7 @@ import org.knalpot.server.general.PacketUpdateDirection;
 import org.knalpot.server.general.PacketUpdateHealth;
 import org.knalpot.server.general.PacketUpdatePosition;
 import org.knalpot.server.general.PacketUpdateState;
+import org.knalpot.server.general.SpawnChest;
 import org.knalpot.server.general.SpawnEnemyMessage;
 
 public class ServerFoundation extends Listener {
@@ -43,6 +44,7 @@ public class ServerFoundation extends Listener {
         server.getKryo().register(State.class);
         server.getKryo().register(PacketUpdateHealth.class, 2);
         server.getKryo().register(SpawnEnemyMessage.class);
+        server.getKryo().register(SpawnChest.class, 5);
         try {
             server.bind(port, port);
             server.start();
@@ -83,16 +85,20 @@ public class ServerFoundation extends Listener {
         player.c = connection;
         game.getPlayers().put(connection.getID(), player);
 
-        // PacketAddActor packet = new PacketAddActor();
-        // packet.id = connection.getID();
-        // packet.type = PacketType.PLAYER;
-        // server.sendToAllExceptTCP(connection.getID(), packet);
-
         for (Actor p : game.getPlayers().values()) {
-            PacketAddActor packet2 = new PacketAddActor();
-            packet2.id = p.c.getID();
-            packet2.type = PacketType.PLAYER;
-            connection.sendTCP(packet2);
+            if (p.c != connection) {
+                // Sending mine position to another player
+                PacketAddActor mine = new PacketAddActor();
+                mine.id = connection.getID();
+                mine.type = PacketType.PLAYER;
+                p.c.sendTCP(mine);
+
+                // Sending other player's position to the current connection
+                PacketAddActor packet2 = new PacketAddActor();
+                packet2.id = p.c.getID();
+                packet2.type = PacketType.PLAYER;
+                connection.sendTCP(packet2);
+            }
         }
 
         game.startGame();
@@ -109,6 +115,7 @@ public class ServerFoundation extends Listener {
 
             // Creating a game session with a timer
             Game game = new Game();
+            game.id = roomID;
 
             // Initializing player and adding it to the list
             Actor player = new Actor();
@@ -225,8 +232,10 @@ public class ServerFoundation extends Listener {
                 e.c.sendUDP(packet); 
         });
 
-        if (game.getPlayers().size() <= 0)
+        if (game.getPlayers().size() <= 0) {
             game.stopTimer();
+            gameSessions.remove(game.id);
+        }
 
         System.out.println("connection dropped");
     }

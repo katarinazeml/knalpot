@@ -142,13 +142,15 @@ public class PlayerProcessor {
     }
 
     private void takeConsumableFromChest() {
-        Chest chest = world.getChest().get(((Player) player).chestIndex);
-        if (chest.getHUD().getIsActive()) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-                Consumable consumable = chest.getConsumableOfIndex(chest.getHUD().getCurrentConsum());
-                chest.getHUD().decreaseCurrentConsum();
-                ((Player) player).addConsumable(consumable);
-                chest.removeConsumable(consumable);
+        if (world.getChest().size() != 0) {
+            Chest chest = world.getChest().get(((Player) player).chestIndex);
+            if (chest.getHUD().getIsActive()) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+                    Consumable consumable = chest.getConsumableOfIndex(chest.getHUD().getCurrentConsum());
+                    chest.getHUD().decreaseCurrentConsum();
+                    ((Player) player).addConsumable(consumable);
+                    chest.removeConsumable(consumable);
+                }
             }
         }
     }

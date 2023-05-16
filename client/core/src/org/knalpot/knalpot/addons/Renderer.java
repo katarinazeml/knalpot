@@ -211,8 +211,8 @@ public class Renderer {
 
         // Draw HUD
         ((Player) player).getHud().render();
-        // world.getChest().get(((Player) player).chestIndex).renderHUD(batch, ((Player) player).chestIsActive);
-        world.getChest().get(((Player) player).chestIndex).getHUD().render();
+        if (world.getChest().size() != 0)
+            world.getChest().get(((Player) player).chestIndex).getHUD().render();
     }
 
     /**
