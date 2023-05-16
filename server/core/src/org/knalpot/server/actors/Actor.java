@@ -7,4 +7,6 @@ import com.esotericsoftware.kryonet.Connection;
 public class Actor {
     public Connection c;
     public PacketType type;
+    public float x;
+    public float y;
 }

@@ -136,6 +136,7 @@ public class Game {
             if (!enemies.containsKey(id)) {
                 Enemy en = new Enemy(list.get(0), list.get(1));
                 en.id = id;
+                en.world = this;
                 enemies.put(id, en);
             }
         }
