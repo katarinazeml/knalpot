@@ -150,7 +150,6 @@ public class GameLobbyScreen implements Screen {
 
         // set maximum length of the text field to 6 characters
         codeTextField.setMaxLength(6);
-
         codeTextField.addListener(new InputListener() {
 
             @Override

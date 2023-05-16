@@ -65,7 +65,6 @@ public class GameOverScreen implements Screen {
             dispose();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(this.game));
         }
-
     }
 
     @Override
