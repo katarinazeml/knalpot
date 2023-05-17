@@ -102,6 +102,16 @@ public class EnemyProcessor {
             }
         }
 
+        for (int i = 0; i < world.getEnemies().size(); i++) {
+            Enemy enemy1 = world.getEnemies().get(i);
+            for (int j = i+1; j < world.getEnemies().size(); j++) {
+                Enemy enemy2 = world.getEnemies().get(j);
+                if (enemy1.getBounds().overlaps(enemy2.getBounds())) {
+                    enemy.getVelocity().x = 0;
+                }
+            }
+        }
+
         enemy.update(dt);
     }
 	/**

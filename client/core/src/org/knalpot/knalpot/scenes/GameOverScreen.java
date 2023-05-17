@@ -4,8 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.knalpot.knalpot.Knalpot;
 
@@ -24,12 +26,15 @@ public class GameOverScreen implements Screen {
         font.getData().setScale(2f); // Set font size to 2 times the default size
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         batch = new SpriteBatch();
-        Gdx.input.setInputProcessor(stage);
         game.getMusic().pause();
     }
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
+
+        // create background
+        createBackground();
     }
 
     @Override
@@ -46,7 +51,7 @@ public class GameOverScreen implements Screen {
         
         // Draw the remaining time
         String time = "Time Remaining: " + String.format("%.1f", timeRemaining);
-        String gameOver = "Game Over";
+        String gameOver = "GAME OVER";
         String message = "You will be taken to the menu";
         batch.begin();
         font.draw(batch, time, 500, 400);
@@ -60,7 +65,6 @@ public class GameOverScreen implements Screen {
             dispose();
             ((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(this.game));
         }
-
     }
 
     @Override
@@ -87,6 +91,16 @@ public class GameOverScreen implements Screen {
     public void dispose() {
         font.dispose();
         stage.dispose();
+    }
+
+    public void createBackground() {
+        // create background
+        Texture backgroundTexture = new Texture(Gdx.files.internal("buttons/background.png"));
+        Image background = new Image(backgroundTexture);
+        background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // add background to the stage
+        stage.addActor(background);
     }
 }
 
