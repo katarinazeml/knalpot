@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import org.knalpot.knalpot.actors.Enemy;
-import org.knalpot.knalpot.actors.EnemyBullet;
 
 import java.util.Iterator;
 import java.util.List;
@@ -194,20 +193,16 @@ public class Renderer {
         labelFont.draw(batch, labelText, player.getPosition().x - player.getWidth() / 2, player.getPosition().y + player.getHeight() + 10);
         batch.end();
 
-        // Draw MPBullets
-        batch.begin();
-        drawBullets();
-        batch.end();
-
         // Draw enemy
         batch.begin();
         for (Enemy enemy : world.getEnemies()) {
             drawEnemy(enemy);
-
-            for (EnemyBullet bullet : enemy.getEnemyBullets()) {
-                bullet.render(batch);
-            }
         }
+        batch.end();
+
+        // Draw MPBullets
+        batch.begin();
+        drawBullets();
         batch.end();
 
         // Draw HUD
@@ -321,10 +316,10 @@ public class Renderer {
     }
 
     public void drawBullets() {
-        Iterator<Map.Entry<Integer, MPActor>> iterator = ClientProgram.bullets.entrySet().iterator();
-        while (iterator.hasNext()) {
-            MPActor value = iterator.next().getValue();
-            batch.draw(bulletTexture, value.x, value.y, bulletTexture.getWidth(), bulletTexture.getHeight());
+        System.out.println("Client bullets size");
+        System.out.println(ClientProgram.bullets.size());
+        for (MPActor bullet : ClientProgram.bullets.values()) {
+            batch.draw(bulletTexture, bullet.x, bullet.y, bulletTexture.getWidth() * 2, bulletTexture.getHeight() * 2);
         }
     }
 

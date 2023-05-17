@@ -57,7 +57,7 @@ public class Player extends Actor {
      */
     public Player(Vector2 position) {
         this.position = position;
-        health = 1000;
+        health = 100;
 
         // Temporary solution
         texture = new Texture("player.png");
@@ -95,6 +95,7 @@ public class Player extends Actor {
         position = new Vector2(data.x, data.y);
         direction = data.direction;
         state = data.state;
+        HEIGHT = 48;
     }
 
     public void update(float dt) {

@@ -94,9 +94,7 @@ public class Teleport {
         // Render the current frame
         float frameWidth = currentFrame.getRegionWidth() * (2f * width / currentFrame.getRegionWidth());
         float frameHeight = currentFrame.getRegionHeight() * (2f * height / currentFrame.getRegionHeight());        
-        float frameX = x - (frameWidth / 2f);
-        float frameY = y - (frameHeight / 2f);
-        batch.draw(currentFrame, frameX, frameY, frameWidth, frameHeight);
+        batch.draw(currentFrame, this.x, this.y, frameWidth, frameHeight);
     
         if (Gdx.input.isKeyJustPressed(Keys.E)) {
             if (world.getPlayer().canUseTeleport && !isEKeyPressed) {

@@ -14,7 +14,6 @@ import java.util.ListIterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 // ===== ALL COMMENTED OUT CODE IS REQUIRED FOR DEBUGGING BUT USELESS AS FOR NOW. DON'T PAY ATTENTION TO IT ===== //
@@ -290,7 +289,7 @@ public class PlayerProcessor {
                 && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 Teleport nextTel = world.getTeleports().get((i + 1) % world.getTeleports().size());
                 player.getPosition().x = nextTel.getBounds().x;
-                player.getPosition().y = nextTel.getBounds().y;
+                player.getPosition().y = nextTel.getBounds().y + 5;
             }
         }
     }

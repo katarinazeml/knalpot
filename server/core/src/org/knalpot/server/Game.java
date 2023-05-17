@@ -65,7 +65,9 @@ public class Game {
     }
 
     public void sendEnemyData() {
-        for (Enemy en : getEnemies().values()) {
+        Iterator<Map.Entry<Integer, Enemy>> iterator = enemies.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Enemy en = iterator.next().getValue();
             PacketUpdatePosition pkg = new PacketUpdatePosition();
             pkg.id = en.id;
             pkg.type = PacketType.ENEMY;

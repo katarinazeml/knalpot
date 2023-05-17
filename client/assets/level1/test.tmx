@@ -262,10 +262,10 @@
 </data>
  </layer>
  <objectgroup id="7" name="teleports">
-  <object id="31" x="400" y="544"/>
-  <object id="39" x="720" y="192"/>
-  <object id="40" x="432" y="160"/>
-  <object id="41" x="768" y="400"/>
+  <object id="31" x="400" y="560"/>
+  <object id="39" x="720" y="208"/>
+  <object id="40" x="432" y="176"/>
+  <object id="41" x="768" y="416"/>
  </objectgroup>
  <objectgroup id="9" name="frogs">
   <object id="38" x="544" y="480" width="16" height="16"/>
@@ -378,13 +378,13 @@
   <object id="32" x="560" y="672"/>
  </objectgroup>
  <objectgroup id="13" name="platforms">
-  <object id="5" x="288" y="592" width="64" height="16"/>
-  <object id="6" x="352" y="656" width="112" height="16"/>
-  <object id="7" x="272" y="624" width="64" height="16"/>
-  <object id="28" x="352" y="560" width="96" height="16"/>
-  <object id="47" x="656" y="176" width="64" height="16"/>
-  <object id="48" x="720" y="128" width="96" height="16"/>
-  <object id="49" x="720" y="160" width="48" height="16"/>
-  <object id="50" x="704" y="656" width="96" height="16"/>
+  <object id="5" x="288" y="592" width="64" height="2"/>
+  <object id="6" x="352" y="656" width="112" height="2"/>
+  <object id="7" x="272" y="624" width="64" height="2"/>
+  <object id="28" x="352" y="560" width="96" height="2"/>
+  <object id="47" x="656" y="176" width="64" height="2"/>
+  <object id="48" x="720" y="128" width="96" height="2"/>
+  <object id="49" x="720" y="160" width="48" height="2"/>
+  <object id="50" x="704" y="656" width="96" height="2"/>
  </objectgroup>
 </map>
