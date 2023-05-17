@@ -62,7 +62,7 @@ public class ClientProgram extends ApplicationAdapter {
     }
 
     public void addChestToWorld(MPActor data) {
-        Chest chest = new Chest(new Vector2(data.x * 2, data.y * 2), 32, 32, new Texture("chest.png"));
+        Chest chest = new Chest(new Vector2(data.x * 2, data.y * 2), 25, 16, new Texture("chest.png"));
         System.out.println("Chest data");
         System.out.println(data.x);
         System.out.println(data.y);

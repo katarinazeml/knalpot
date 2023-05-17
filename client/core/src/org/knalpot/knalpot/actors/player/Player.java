@@ -44,6 +44,9 @@ public class Player extends Actor {
 
     public int previousHealth;
     
+    // ==== TELEPORT ==== //
+    public boolean canUseTeleport;
+
     //#endregion
 
     //#region -- FUNCTIONS --

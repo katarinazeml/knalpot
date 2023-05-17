@@ -43,6 +43,7 @@ public class World {
 
 	public List<Static> collisionBlocks;
 	public List<Static> platforms;
+	private List<Static> frogs;
 	private List<Chest> chests;
 	
 	// Multiplayer variables
@@ -59,6 +60,7 @@ public class World {
 		tiledMap = new TmxMapLoader().load(tiledSrc);
 		collisionBlocks = new ArrayList<>();
 		platforms = new ArrayList<>();
+		frogs = new ArrayList<>(1);
 		chests = new ArrayList<>();
 		enemies = new ArrayList<>();
 		orbs = new ArrayList<>();
@@ -100,6 +102,10 @@ public class World {
 	 */
 	public List<Static> getCollisionBlocks() {
 		return collisionBlocks;
+	}
+
+	public List<Static> getFrogs() {
+		return frogs;
 	}
 
 	public List<Enemy> getEnemies() {
@@ -169,6 +175,13 @@ public class World {
 			RectangleMapObject rectObj = (RectangleMapObject) obj;
 			Rectangle rect = rectObj.getRectangle();
 			platforms.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
+		}
+
+		for (MapObject obj : tiledMap.getLayers().get("frogs").getObjects()) {
+			RectangleMapObject rObject = (RectangleMapObject) obj;
+			Rectangle rect = rObject.getRectangle();
+			frogs.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
+			System.out.println("frogs length");
 		}
 	}
 

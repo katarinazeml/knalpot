@@ -5,6 +5,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import org.knalpot.knalpot.world.World;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -13,6 +16,8 @@ public class Teleport {
     private static final int FRAME_ROWS = 1;
     private static final float FRAME_DURATION = 0.15f;
     private static final float FRAME_DURATION_FAST = 0.1f;
+
+    private World world;
 
     private Animation<TextureRegion> animation;
     private float stateTime;
@@ -28,11 +33,12 @@ public class Teleport {
 
     public Sound swooshSound;
 
-    public Teleport(float width, float height, float x, float y, SpriteBatch batch) {
+    public Teleport(float width, float height, float x, float y, World world, SpriteBatch batch) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
+        this.world = world;
         this.batch = batch;
 
         swooshSound = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
@@ -88,7 +94,7 @@ public class Teleport {
         batch.draw(currentFrame, frameX, frameY, frameWidth, frameHeight);
     
         if (Gdx.input.isKeyJustPressed(Keys.E)) {
-            if (!isEKeyPressed) {
+            if (world.getPlayer().canUseTeleport && !isEKeyPressed) {
                 isEKeyPressed = true;
                 stateTime = 0f;
                 swooshSound.play();

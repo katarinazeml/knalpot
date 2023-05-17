@@ -120,7 +120,7 @@ public class Renderer {
         // Load other objects' textures.
         loadTextures();
         loadTiledMap();
-        teleport = new Teleport(20, 48, 800, 303, batch);
+        teleport = new Teleport(20, 48, 800, 303, this.world, batch);
 
         labelFont = new BitmapFont();
     }

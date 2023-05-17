@@ -13,6 +13,7 @@ import java.util.ListIterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 
 // ===== ALL COMMENTED OUT CODE IS REQUIRED FOR DEBUGGING BUT USELESS AS FOR NOW. DON'T PAY ATTENTION TO IT ===== //
@@ -55,6 +56,9 @@ public class PlayerProcessor {
 
     // ==== ENEMY COLLISIONS ==== //
     private float attackTimer = 2f;
+
+    private Sound frogQuackSound;
+
     //#endregion
     
     //#region -- FUNCTIONS --
@@ -65,6 +69,7 @@ public class PlayerProcessor {
 	public PlayerProcessor(World world) {
 		this.world = world;
 		player = this.world.getPlayer();
+        frogQuackSound = Gdx.audio.newSound(Gdx.files.internal("frog.mp3"));
 	}
 
 	/**
@@ -85,6 +90,8 @@ public class PlayerProcessor {
         }
         changeState();
         isAttacked();
+        if (((Player) player).canUseTeleport == false)
+            activateSacredTeleport();
 
     	player.getAcceleration().scl(dt);
         // System.out.println("scalar Y accel:");
@@ -262,6 +269,14 @@ public class PlayerProcessor {
                     attackTimer = 2f;
                 }
             }
+        }
+    }
+
+    private void activateSacredTeleport() {
+        if (player.getBounds().overlaps(world.getFrogs().get(0).getBounds())
+            && Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            ((Player) player).canUseTeleport = true;
+            frogQuackSound.play();
         }
     }
 
