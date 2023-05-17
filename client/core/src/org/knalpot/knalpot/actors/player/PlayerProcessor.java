@@ -1,6 +1,7 @@
 package org.knalpot.knalpot.actors.player;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.addons.*;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.interactive.props.Chest;
@@ -8,6 +9,7 @@ import org.knalpot.knalpot.interactive.props.Consumable;
 import org.knalpot.knalpot.world.World;
 
 import java.lang.Math;
+import java.util.ListIterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -50,6 +52,9 @@ public class PlayerProcessor {
 
     // ==== HUD ==== //
     private boolean isHUDActive = false;
+
+    // ==== ENEMY COLLISIONS ==== //
+    private float attackTimer = 2f;
     //#endregion
     
     //#region -- FUNCTIONS --
@@ -79,6 +84,7 @@ public class PlayerProcessor {
             verticalMovement();
         }
         changeState();
+        isAttacked();
 
     	player.getAcceleration().scl(dt);
         // System.out.println("scalar Y accel:");
@@ -242,6 +248,20 @@ public class PlayerProcessor {
         if (player.getVelocity().y < 0) {
             updateState();
             player.state = Player.State.FALL;
+        }
+    }
+
+    private void isAttacked() {
+        ListIterator<Enemy> enemyIterator = world.getEnemies().listIterator();
+        while (enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
+            if (enemy.getBounds().overlaps(player.getBounds())) {
+                attackTimer -= Gdx.graphics.getDeltaTime();
+                if (attackTimer <= 0f) {
+                    ((Player) player).caughtByEnemy(10);
+                    attackTimer = 2f;
+                }
+            }
         }
     }
 
