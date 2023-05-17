@@ -1,15 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <game>
+    <!-- enemies -->
     <enemy id="0">
-        <x>496</x>
-        <y>136</y>
+        <x>208</x>
+        <y>176</y>
     </enemy>
     <enemy id="1"> 
-        <x>256</x>
-        <y>64</y>
+        <x>832</x>
+        <y>688</y>
     </enemy>
     <enemy id="2"> 
-        <x>240</x>
-        <y>136</y>
+        <x>336</x>
+        <y>592</y>
     </enemy>
+    <enemy id="3">
+        <x>672</x>
+        <y>208</y>
+    </enemy>
+    <!-- chests -->
+    <chest id="0">
+        <x>736</x>
+        <y>112</y>
+    </chest>
+    <chest id="1">
+        <x>752</x>
+        <y>640</y>
+    </chest>
+    <chest id="2">
+        <x>192</x>
+        <y>672</y>
+    </chest>
+    <chest id="3">
+        <x>336</x>
+        <y>192</y>
+    </chest>
+    <chest id="4">
+        <x>800</x>
+        <y>400</y>
+    </chest>
 </game>

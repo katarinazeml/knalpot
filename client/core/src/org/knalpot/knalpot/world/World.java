@@ -40,7 +40,7 @@ public class World {
 	//#endregion
 
 	// Tilemap temporary stuff
-	private String tiledSrc = "level1/tilemap.xml";
+	private String tiledSrc = "level1/test.tmx";
 	public TiledMap tiledMap;
 
 	public List<Static> collisionBlocks;
@@ -146,9 +146,9 @@ public class World {
 		for (int i = 0; i < 3; i++) {
 			// Add consumables to the chest
 			List<Consumable> consumables = new ArrayList<>();
-			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Potion"));
-			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Apple"));
-			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potion.png"), "Water"));
+			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potions/potion1.png"), "Potion"));
+			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potions/potion2.png"), "Apple"));
+			consumables.add(new Consumable(new Vector2(0, 0), 32, 32, new Texture("potions/potion3.png"), "Water"));
 			
 			consumables.get(0).setPower(10);
 			consumables.get(1).setPower(5);
@@ -170,7 +170,12 @@ public class World {
 	 * Initializes all object needed for this 'world'.
 	 */
 	private void initializeWorld() {
-		player = new Player(new Vector2(100, 200));
+		for (MapObject obj : tiledMap.getLayers().get("player").getObjects()) {
+			RectangleMapObject rectObj = (RectangleMapObject) obj;
+			Rectangle rect = rectObj.getRectangle();
+			player = new Player(new Vector2(rect.getX() * 2, rect.getY() * 2));
+		}
+
 		orb = new Orb(player, this);
 		orbs.add(orb);
 

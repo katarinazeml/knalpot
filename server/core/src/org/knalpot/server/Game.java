@@ -29,7 +29,7 @@ public class Game {
 
     // Enemy data from XML file
     private Map<Integer, List<Integer>> enemyValues = LoadXMLData.getData("data/serverdata.xml", "enemy");
-    private Map<Integer, List<Integer>> chestValues = LoadXMLData.getData("data/serverdata.xml", "enemy");
+    private Map<Integer, List<Integer>> chestValues = LoadXMLData.getData("data/serverdata.xml", "chest");
 
     // Timers
     private Timer sendEnemyDataTimer;

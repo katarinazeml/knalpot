@@ -84,7 +84,7 @@ public class PlayerProcessor {
 
         // System.out.println("-----");
 		gravity();
-        windowCollision(dt);
+        // windowCollision(dt);
         if (!isHUDActive) {
             horizontalMovement();
             verticalMovement();
@@ -300,14 +300,14 @@ public class PlayerProcessor {
      * Temporary collision for window borders. Will be removed in the nearest future.
      * @param dt
      */
-    private void windowCollision(float dt) {
-        if (player.Bottom + player.getScalarVelocity(dt).y <= 0) {
-            canJump = true;
-        	player.getPosition().y = 0f;
-            player.getVelocity().y -= player.getVelocity().y;
-        }
-        if (player.Top + player.getScalarVelocity(dt).y >= 480 - player.getHeight()) player.getVelocity().y -= player.getVelocity().y;
-    }
+    // private void windowCollision(float dt) {
+    //     if (player.Bottom + player.getScalarVelocity(dt).y <= 0) {
+    //         canJump = true;
+    //     	player.getPosition().y = 0f;
+    //         player.getVelocity().y -= player.getVelocity().y;
+    //     }
+    //     if (player.Top + player.getScalarVelocity(dt).y >= 480 - player.getHeight()) player.getVelocity().y -= player.getVelocity().y;
+    // }
 
     /**
      * Resolves AABB collision using {@code Actor}'s physics.
