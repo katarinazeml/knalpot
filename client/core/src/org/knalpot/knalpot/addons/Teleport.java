@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 import org.knalpot.knalpot.world.World;
 
@@ -28,6 +29,8 @@ public class Teleport {
     private float x;
     private float y;
 
+    private Rectangle bounds;
+
     private boolean isEKeyPressed;
     private boolean isAnimationPlayed;
 
@@ -49,6 +52,8 @@ public class Teleport {
         // Load the spritesheet
         Texture texture = new Texture("teleportExtended.png");
         TextureRegion[][] regions = TextureRegion.split(texture, 20, 48);
+
+        bounds = new Rectangle(this.x, this.y, this.width, this.height);
 
         // Create the animation
         TextureRegion[] frames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
@@ -100,5 +105,9 @@ public class Teleport {
                 swooshSound.play();
             }
         }
+    }
+
+    public Rectangle getBounds() {
+        return bounds;
     }
 }

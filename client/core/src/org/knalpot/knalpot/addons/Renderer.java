@@ -63,7 +63,6 @@ public class Renderer {
     private World world;
     private Player player;
     private List<Orb> orbs;
-    private Teleport teleport;
 
     // ==== MOUSE MANIPULATION ==== //
     private Vector3 mousePos;
@@ -120,7 +119,7 @@ public class Renderer {
         // Load other objects' textures.
         loadTextures();
         loadTiledMap();
-        teleport = new Teleport(20, 48, 800, 303, this.world, batch);
+        world.addTeleports(batch);
 
         labelFont = new BitmapFont();
     }
@@ -179,7 +178,7 @@ public class Renderer {
         
         // Draw teleport animation
         batch.begin();
-        teleport.render();
+        world.getTeleports().forEach(e -> e.render());
         world.getChest().forEach(e -> e.render(batch));
         orbs.forEach(e -> e.render(batch));
     	batch.end();
@@ -226,7 +225,7 @@ public class Renderer {
         networking.dispose();
     	batch.dispose();
         sky.dispose();
-        teleport.swooshSound.dispose();
+        world.getTeleports().forEach(e -> e.swooshSound.dispose());
         enemyTexture.dispose();
     }
 

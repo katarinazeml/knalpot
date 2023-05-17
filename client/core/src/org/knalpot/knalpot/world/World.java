@@ -8,12 +8,14 @@ import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.actors.orb.Orb;
 import org.knalpot.knalpot.actors.player.Player;
+import org.knalpot.knalpot.addons.Teleport;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.interactive.props.Chest;
 import org.knalpot.knalpot.interactive.props.Consumable;
 import org.knalpot.knalpot.networking.ClientProgram;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -44,7 +46,9 @@ public class World {
 	public List<Static> collisionBlocks;
 	public List<Static> platforms;
 	private List<Static> frogs;
+
 	private List<Chest> chests;
+	private List<Teleport> teleports;
 	
 	// Multiplayer variables
 	private List<Enemy> enemies;
@@ -62,6 +66,7 @@ public class World {
 		platforms = new ArrayList<>();
 		frogs = new ArrayList<>(1);
 		chests = new ArrayList<>();
+		teleports = new ArrayList<>();
 		enemies = new ArrayList<>();
 		orbs = new ArrayList<>();
 		roomID = ThreadLocalRandom.current().nextInt(100, 1000);
@@ -110,6 +115,10 @@ public class World {
 
 	public List<Enemy> getEnemies() {
 		return enemies;
+	}
+
+	public List<Teleport> getTeleports() {
+		return teleports;
 	}
 
 	public void addOrb(Actor mpPlayer) {
@@ -181,7 +190,14 @@ public class World {
 			RectangleMapObject rObject = (RectangleMapObject) obj;
 			Rectangle rect = rObject.getRectangle();
 			frogs.add(new Static(new Vector2(rect.getX() * 2, rect.getY() * 2), (int) rect.width * 2, (int) rect.height * 2));
-			System.out.println("frogs length");
+		}
+	}
+
+	public void addTeleports(SpriteBatch batch) {
+		for (MapObject obj : tiledMap.getLayers().get("teleports").getObjects()) {
+			RectangleMapObject rObject = (RectangleMapObject) obj;
+			Rectangle rect = rObject.getRectangle();
+			teleports.add(new Teleport(20, 48, rect.getX() * 2, rect.getY() * 2, this, batch));
 		}
 	}
 

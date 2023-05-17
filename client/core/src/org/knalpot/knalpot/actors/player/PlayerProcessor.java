@@ -14,6 +14,7 @@ import java.util.ListIterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 // ===== ALL COMMENTED OUT CODE IS REQUIRED FOR DEBUGGING BUT USELESS AS FOR NOW. DON'T PAY ATTENTION TO IT ===== //
@@ -92,6 +93,8 @@ public class PlayerProcessor {
         isAttacked();
         if (((Player) player).canUseTeleport == false)
             activateSacredTeleport();
+        if (((Player) player).canUseTeleport == true)
+            teleportation();
 
     	player.getAcceleration().scl(dt);
         // System.out.println("scalar Y accel:");
@@ -277,6 +280,18 @@ public class PlayerProcessor {
             && Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             ((Player) player).canUseTeleport = true;
             frogQuackSound.play();
+        }
+    }
+
+    public void teleportation() {
+        for (int i = 0; i < world.getTeleports().size(); i++) {
+            Teleport teleport = world.getTeleports().get(i);
+            if (player.getBounds().overlaps(teleport.getBounds())
+                && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                Teleport nextTel = world.getTeleports().get((i + 1) % world.getTeleports().size());
+                player.getPosition().x = nextTel.getBounds().x;
+                player.getPosition().y = nextTel.getBounds().y;
+            }
         }
     }
 
