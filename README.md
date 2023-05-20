@@ -15,17 +15,17 @@ Each character will have a list of abilities that can be chosen before the game 
 * TowerFall
 <img src="https://steamcdn-a.akamaihd.net/steam/apps/337840/ss_fff4286e94a506a1584e998dcae2c5eea433760b.1920x1080.jpg?t=1447365886" width="500px">
 
-* Hyper Light Drifter
+* Hyper Light Drifter.
 <img src="https://cdn.akamai.steamstatic.com/steam/apps/257850/ss_37ad0b207c867078e87cf8a185fe3c66b0bdd490.1920x1080.jpg?t=1649868127" width="500px">
 
 ## Project plan
 ### Sprint I
-* [ ] Finalize game theme
-* [ ] Develop basic physics engine (includes gravity, character movement, collisions etc)
-* [ ] Create basic server-side prototype (two clients = two players and etc)
-* [ ] Synching two players' movements using server prototype
-* [ ] Get the basic stuff working :')
-* [ ] Divide roles between team members (server/client)
+* [x] Finalize game theme
+* [x] Develop basic physics engine (includes gravity, character movement, collisions etc)
+* [x] Create basic server-side prototype (two clients = two players and etc)
+* [x] Synching two players' movements using server prototype
+* [x] Get the basic stuff working :')
+* [x] Divide roles between team members (server/client)
 
 ### Sprint II
 * [ ] In-depth study of LibGDX

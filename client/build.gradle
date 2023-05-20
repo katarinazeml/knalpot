@@ -21,7 +21,7 @@ allprojects {
     ext {
         appName = "Knalpot"
         gdxVersion = '1.11.0'
-        roboVMVersion = '2.3.16'
+        roboVMVersion = '2.3.19'
         box2DLightsVersion = '1.5'
         ashleyVersion = '1.7.4'
         aiVersion = '1.8.2'
@@ -45,9 +45,9 @@ project(":desktop") {
 
     dependencies {
         implementation project(":core")
+        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        
     }
 }
 
@@ -57,6 +57,7 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        
+        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        implementation 'com.esotericsoftware:kryonet:2.22.0-RC1'
     }
 }

@@ -10,6 +10,8 @@ xcode/native/
 .gradle/
 build/
 bin/
+/core/bin
+/desktop/bin
 target/
 obj/
 out/
@@ -89,3 +91,18 @@ natives.zip
 .classpath
 .project
 .settings
+
+<<<<<<< HEAD
+# Additional ignore for bullshit
+/core/caches
+/core/wrapper
+/core/native
+/core/daemon
+=======
+# Ignoring more useless folders
+/core/.tmp
+/core/caches
+/core/daemon
+/core/native/
+/core/wrapper
+>>>>>>> dev
