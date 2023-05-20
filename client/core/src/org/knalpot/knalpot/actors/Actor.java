@@ -61,7 +61,7 @@ public class Actor {
     public int enemyDirection;
 
     // ==== ACTOR PROPERTIES  ==== //
-    protected int health;
+    public int health;
 
     //#endregion
     //#region -- GET/SET --

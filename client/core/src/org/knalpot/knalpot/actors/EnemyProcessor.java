@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ListIterator;
 
 import org.knalpot.knalpot.actors.player.Player;
@@ -74,11 +73,6 @@ public class EnemyProcessor {
 	 */
     public void update(float dt) {
         gravity();
-        attack();
-        horizontalMovement();
-    
-        enemy.getAcceleration().scl(dt);
-        enemy.getVelocity().add(enemy.getAcceleration().x, enemy.getAcceleration().y);
     
         for (Static obj : world.collisionBlocks) {
             if (resolveCollision(enemy, obj, dt)) {
@@ -91,19 +85,11 @@ public class EnemyProcessor {
                 if (enemy.getVelocity().y == 0f) canJump = true;
             }
         }
-        float playerX = player.getPosition().x;
-        float enemyX = enemy.getPosition().x;
-        float distanceToPlayer = Math.abs(playerX - enemyX);
-        if ((distanceToPlayer <= STOP_RADIUS)) {
-            // Enemy collides with player, stop moving
-            enemy.getVelocity().x = 0f;
-            enemy.setState(EnemyState.IDLE);
-        }
 
         ListIterator<EnemyBullet> bulletIterator = bullets.listIterator();
         while (bulletIterator.hasNext()) {
             EnemyBullet bullet = bulletIterator.next();
-            if (bullet.getBounds().overlaps(player.getBounds()) && enemy.EnemyHealth > 0) {
+            if (bullet.getBounds().overlaps(player.getBounds()) && enemy.getHealth() > 0) {
                 bulletIterator.remove();
                 player.caughtByEnemy(10);
             } else {
@@ -183,13 +169,13 @@ public class EnemyProcessor {
                 }
                 // Set the target position to the predicted position
                 target = new Vector2(predictedX, predictedY);
-                if (enemy.EnemyHealth > 0) {
+                if (enemy.getHealth() > 0) {
                     enemy.shoot(target);
                 }
                 enemy.timeSinceLastShot = 0f;
             }
     
-            if (attackTimer <= 0f && enemy.EnemyHealth > 0) {
+            if (attackTimer <= 0f && enemy.getHealth() > 0) {
                 player.caughtByEnemy(10); // reduce player's health by 10
                 attackTimer = 2f; // reset timer
             }
@@ -258,7 +244,6 @@ public class EnemyProcessor {
             in.getVelocity().y -= cn.y * Math.abs(in.getVelocity().y) * (1 - contactTime);
         }
         if (enemy.getVelocity().x == 0 && collision) {
-            System.out.println("vertical collision occured");
             verticalCollisionOccurred = true;
         }
         return collision;

@@ -10,7 +10,7 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-project.ext.mainClassName = "ServerFoundation"
+project.ext.mainClassName = "org.knalpot.server.ServerFoundation"
 
 import org.gradle.internal.os.OperatingSystem
 
@@ -23,6 +23,16 @@ task run(dependsOn: classes, type: JavaExec) {
     if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
         // Required to run on macOS
         jvmArgs += "-XstartOnFirstThread"
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': project.ext.mainClassName
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

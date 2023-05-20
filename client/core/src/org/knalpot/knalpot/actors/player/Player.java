@@ -8,6 +8,7 @@ import org.knalpot.knalpot.addons.BBGenerator;
 import org.knalpot.knalpot.hud.HUDProcessor;
 import org.knalpot.knalpot.hud.HUD.HUDType;
 import org.knalpot.knalpot.interactive.props.Consumable;
+import org.knalpot.knalpot.networking.MPActor;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -40,7 +41,12 @@ public class Player extends Actor {
     // temporary
     public int chestIndex = 0;
     public boolean chestIsActive = false;
+
+    public int previousHealth;
     
+    // ==== TELEPORT ==== //
+    public boolean canUseTeleport;
+
     //#endregion
 
     //#region -- FUNCTIONS --
@@ -81,6 +87,17 @@ public class Player extends Actor {
         inventory = new ArrayList<>(5);
     }
 
+    /**
+     * Dummy constructor for multiplayer.
+     * @param data
+     */
+    public Player(MPActor data) {
+        position = new Vector2(data.x, data.y);
+        direction = data.direction;
+        state = data.state;
+        HEIGHT = 48;
+    }
+
     public void update(float dt) {
         //System.out.println("health: " + health);
         position.add(velocity.cpy().scl(dt));
@@ -96,7 +113,7 @@ public class Player extends Actor {
     public void caughtByEnemy(int damage) {
         health -= damage;
         if (health < 0) health = 0;
-        //System.out.println("player`s health " + health);
+        previousHealth = health;
     }
 
     /**

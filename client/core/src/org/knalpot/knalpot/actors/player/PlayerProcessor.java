@@ -1,6 +1,7 @@
 package org.knalpot.knalpot.actors.player;
 
 import org.knalpot.knalpot.actors.Actor;
+import org.knalpot.knalpot.actors.Enemy;
 import org.knalpot.knalpot.addons.*;
 import org.knalpot.knalpot.interactive.Static;
 import org.knalpot.knalpot.interactive.props.Chest;
@@ -8,9 +9,11 @@ import org.knalpot.knalpot.interactive.props.Consumable;
 import org.knalpot.knalpot.world.World;
 
 import java.lang.Math;
+import java.util.ListIterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 
 // ===== ALL COMMENTED OUT CODE IS REQUIRED FOR DEBUGGING BUT USELESS AS FOR NOW. DON'T PAY ATTENTION TO IT ===== //
@@ -50,6 +53,12 @@ public class PlayerProcessor {
 
     // ==== HUD ==== //
     private boolean isHUDActive = false;
+
+    // ==== ENEMY COLLISIONS ==== //
+    private float attackTimer = 2f;
+
+    private Sound frogQuackSound;
+
     //#endregion
     
     //#region -- FUNCTIONS --
@@ -60,6 +69,7 @@ public class PlayerProcessor {
 	public PlayerProcessor(World world) {
 		this.world = world;
 		player = this.world.getPlayer();
+        frogQuackSound = Gdx.audio.newSound(Gdx.files.internal("frog.mp3"));
 	}
 
 	/**
@@ -73,12 +83,17 @@ public class PlayerProcessor {
 
         // System.out.println("-----");
 		gravity();
-        windowCollision(dt);
+        // windowCollision(dt);
         if (!isHUDActive) {
             horizontalMovement();
             verticalMovement();
         }
         changeState();
+        isAttacked();
+        if (((Player) player).canUseTeleport == false)
+            activateSacredTeleport();
+        if (((Player) player).canUseTeleport == true)
+            teleportation();
 
     	player.getAcceleration().scl(dt);
         // System.out.println("scalar Y accel:");
@@ -142,13 +157,15 @@ public class PlayerProcessor {
     }
 
     private void takeConsumableFromChest() {
-        Chest chest = world.getChest().get(((Player) player).chestIndex);
-        if (chest.getHUD().getIsActive()) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-                Consumable consumable = chest.getConsumableOfIndex(chest.getHUD().getCurrentConsum());
-                chest.getHUD().decreaseCurrentConsum();
-                ((Player) player).addConsumable(consumable);
-                chest.removeConsumable(consumable);
+        if (world.getChest().size() != 0) {
+            Chest chest = world.getChest().get(((Player) player).chestIndex);
+            if (chest.getHUD().getIsActive()) {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+                    Consumable consumable = chest.getConsumableOfIndex(chest.getHUD().getCurrentConsum());
+                    chest.getHUD().decreaseCurrentConsum();
+                    ((Player) player).addConsumable(consumable);
+                    chest.removeConsumable(consumable);
+                }
             }
         }
     }
@@ -243,19 +260,53 @@ public class PlayerProcessor {
         }
     }
 
+    private void isAttacked() {
+        ListIterator<Enemy> enemyIterator = world.getEnemies().listIterator();
+        while (enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
+            if (enemy.getBounds().overlaps(player.getBounds())) {
+                attackTimer -= Gdx.graphics.getDeltaTime();
+                if (attackTimer <= 0f) {
+                    ((Player) player).caughtByEnemy(10);
+                    attackTimer = 2f;
+                }
+            }
+        }
+    }
+
+    private void activateSacredTeleport() {
+        if (player.getBounds().overlaps(world.getFrogs().get(0).getBounds())
+            && Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            ((Player) player).canUseTeleport = true;
+            frogQuackSound.play();
+        }
+    }
+
+    public void teleportation() {
+        for (int i = 0; i < world.getTeleports().size(); i++) {
+            Teleport teleport = world.getTeleports().get(i);
+            if (player.getBounds().overlaps(teleport.getBounds())
+                && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                Teleport nextTel = world.getTeleports().get((i + 1) % world.getTeleports().size());
+                player.getPosition().x = nextTel.getBounds().x;
+                player.getPosition().y = nextTel.getBounds().y + 5;
+            }
+        }
+    }
+
     //#region - COLLISIONS -
     /**
      * Temporary collision for window borders. Will be removed in the nearest future.
      * @param dt
      */
-    private void windowCollision(float dt) {
-        if (player.Bottom + player.getScalarVelocity(dt).y <= 0) {
-            canJump = true;
-        	player.getPosition().y = 0f;
-            player.getVelocity().y -= player.getVelocity().y;
-        }
-        if (player.Top + player.getScalarVelocity(dt).y >= 480 - player.getHeight()) player.getVelocity().y -= player.getVelocity().y;
-    }
+    // private void windowCollision(float dt) {
+    //     if (player.Bottom + player.getScalarVelocity(dt).y <= 0) {
+    //         canJump = true;
+    //     	player.getPosition().y = 0f;
+    //         player.getVelocity().y -= player.getVelocity().y;
+    //     }
+    //     if (player.Top + player.getScalarVelocity(dt).y >= 480 - player.getHeight()) player.getVelocity().y -= player.getVelocity().y;
+    // }
 
     /**
      * Resolves AABB collision using {@code Actor}'s physics.

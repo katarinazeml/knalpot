@@ -5,6 +5,10 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+
+import org.knalpot.knalpot.world.World;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -13,6 +17,8 @@ public class Teleport {
     private static final int FRAME_ROWS = 1;
     private static final float FRAME_DURATION = 0.15f;
     private static final float FRAME_DURATION_FAST = 0.1f;
+
+    private World world;
 
     private Animation<TextureRegion> animation;
     private float stateTime;
@@ -23,16 +29,19 @@ public class Teleport {
     private float x;
     private float y;
 
+    private Rectangle bounds;
+
     private boolean isEKeyPressed;
     private boolean isAnimationPlayed;
 
     public Sound swooshSound;
 
-    public Teleport(float width, float height, float x, float y, SpriteBatch batch) {
+    public Teleport(float width, float height, float x, float y, World world, SpriteBatch batch) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
+        this.world = world;
         this.batch = batch;
 
         swooshSound = Gdx.audio.newSound(Gdx.files.internal("teleport.mp3"));
@@ -43,6 +52,8 @@ public class Teleport {
         // Load the spritesheet
         Texture texture = new Texture("teleportExtended.png");
         TextureRegion[][] regions = TextureRegion.split(texture, 20, 48);
+
+        bounds = new Rectangle(this.x, this.y, this.width, this.height);
 
         // Create the animation
         TextureRegion[] frames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
@@ -83,16 +94,18 @@ public class Teleport {
         // Render the current frame
         float frameWidth = currentFrame.getRegionWidth() * (2f * width / currentFrame.getRegionWidth());
         float frameHeight = currentFrame.getRegionHeight() * (2f * height / currentFrame.getRegionHeight());        
-        float frameX = x - (frameWidth / 2f);
-        float frameY = y - (frameHeight / 2f);
-        batch.draw(currentFrame, frameX, frameY, frameWidth, frameHeight);
+        batch.draw(currentFrame, this.x, this.y, frameWidth, frameHeight);
     
         if (Gdx.input.isKeyJustPressed(Keys.E)) {
-            if (!isEKeyPressed) {
+            if (world.getPlayer().canUseTeleport && !isEKeyPressed) {
                 isEKeyPressed = true;
                 stateTime = 0f;
                 swooshSound.play();
             }
         }
+    }
+
+    public Rectangle getBounds() {
+        return bounds;
     }
 }

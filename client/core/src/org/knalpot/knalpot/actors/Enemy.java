@@ -28,9 +28,9 @@ public class Enemy extends Actor {
 
     public float timeSinceLastShot = 0f;
 
-    public int EnemyHealth = 100;
-
     private Sound oofSound;
+
+    public int previousHealth;
 
     public Enemy(Vector2 position) {
         this.position = position;
@@ -41,6 +41,8 @@ public class Enemy extends Actor {
         scaleSize = 2; // Update scaleSize to 2
         direction = 1;
         previousDirection = 1;
+        health = 100;
+        previousHealth = health;
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 0);
         bullets = new ArrayList<>();
@@ -70,9 +72,24 @@ public class Enemy extends Actor {
         Bottom = (int) bounds.y;
         Top = (int) bounds.y + HEIGHT;
 
+        previousHealth = health;
+
         for (EnemyBullet bullet : bullets) {
             bullet.update(dt);
         }
+    }
+
+    public void updatePosition(float x, float y) {
+        position.x = x;
+        position.y = y;
+
+        bounds.x = position.x;
+        bounds.y = position.y;
+
+        Left = (int) bounds.x;
+        Right = (int) bounds.x + WIDTH;
+        Bottom = (int) bounds.y;
+        Top = (int) bounds.y + HEIGHT;
     }
 
     public void shoot(Vector2 targetPos) {
@@ -105,8 +122,13 @@ public class Enemy extends Actor {
 
     public void gotShot(int damage) {
         oofSound.play();
-        EnemyHealth -= damage;
+        System.out.println("Health before");
+        System.out.println(health);
+        previousHealth = health;
+        health -= damage;
+        System.out.println("Health after");
+        System.out.println(previousHealth);
+        System.out.println(health);
         if (health < 0) health = 0;
-        //System.out.println("enemy`s health: " + health);
     }
 }

@@ -1,8 +1,10 @@
 package org.knalpot.knalpot.actors.orb;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import org.knalpot.knalpot.actors.Actor;
 import org.knalpot.knalpot.actors.Bullet;
@@ -11,7 +13,7 @@ import org.knalpot.knalpot.addons.ParticleGenerator;
 import org.knalpot.knalpot.addons.effects.OSM;
 import org.knalpot.knalpot.addons.effects.OSMAnimator;
 import org.knalpot.knalpot.addons.effects.OSM.Shape;
-import org.knalpot.knalpot.interactive.Static;
+import org.knalpot.knalpot.world.World;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -33,7 +35,6 @@ import com.badlogic.gdx.math.Vector3;
  * @version 0.2
  */
 public class Orb extends Actor {
-
     public enum OrbState {
         ORB,
         WALL,
@@ -42,12 +43,9 @@ public class Orb extends Actor {
         TRANSFORM_TO_WALL
     }
 
-    private OrbState state = OrbState.ORB;
+    private World world;
 
-    // ==== COLLISION-RELATED ==== //
-    private Vector2 cp;
-    private Vector2 cn;
-    private float t;
+    private OrbState state = OrbState.ORB;
 
     // Owner of the orb
     private Actor owner;
@@ -72,15 +70,21 @@ public class Orb extends Actor {
     private float rotation;
 
     private boolean mustFloat;
+    private boolean isMP;
 
+    private float previousX;
+
+    // Bullets
     private List<Bullet> bullets;
+    private Set<Integer> bulletHash;
 
-    public List<Bullet> getBullets() {
-        return bullets;
+    public Orb(Actor owner, World world) {
+        this.owner = owner;
+        initializeOrb(world);
     }
 
-    public Orb(Actor owner) {
-        this.owner = owner;
+    private void initializeOrb(World world) {
+        this.world = world;
 
         scaleSize = 2;
         
@@ -90,6 +94,8 @@ public class Orb extends Actor {
         position = new Vector2();
         position.x = ownerPosition.x;
         position.y = ownerPosition.y + this.owner.getHeight();
+
+        mousePos = new Vector3(0, 0, 0);
 
         osm = new OSM(Shape.CIRCLE, ShapeType.Filled, Color.WHITE, this.position, new float[] { WIDTH });
         osm.enableTransparency();
@@ -102,10 +108,29 @@ public class Orb extends Actor {
         range = 3f;
 
         bullets = new ArrayList<>();
+        bulletHash = new HashSet<Integer>();
+
+        isMP = false;
     }
 
     public Actor getOwner() {
         return owner;
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public Set<Integer> getBulletsHash() {
+        return bulletHash;
+    }
+
+    public float getTimeSinceLastShot() {
+        return timeSinceLastShot;
+    }
+    
+    public float getDeltaPosition() {
+        return position.x - previousX;
     }
 
     public void setOwner(Actor owner) {
@@ -116,24 +141,49 @@ public class Orb extends Actor {
         this.mousePos = mousePos;
     }
 
+    public void setIsMP(boolean isMP) {
+        this.isMP = isMP;
+    }
+
+    public boolean getIsMP() {
+        return isMP;
+    }
+
     @Override
     public void update(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            state = OrbState.TRANSFORM_TO_WALL;
-            // particles.end();
+        if (!isMP) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+                state = OrbState.TRANSFORM_TO_WALL;
+                // particles.end();
+            }
+    
+            if (Gdx.input.isKeyJustPressed(Input.Keys.Z))
+                state = OrbState.TRANSFORM_TO_ORB;
+    
+            //Bullet stuff
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
+                state = OrbState.SHOOTING;
+            
+                timeSinceLastShot += dt;
+
+            if (timeSinceLastShot > 6f) {
+                activateForceMode = false;
+                timeSinceLastShot = 0f;
+            }
+                
+            updateBullets();
+        
+            for (Bullet bullet : bullets) {
+                bullet.update(dt);
+            }
         }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Z))
-            state = OrbState.TRANSFORM_TO_ORB;
-
-        //Bullet stuff
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
-            state = OrbState.SHOOTING;
 
         if (state == OrbState.ORB) {
             floating(dt);
             particles.update(dt);
         }
+
+        previousX = position.cpy().x;
 
         if (state == OrbState.TRANSFORM_TO_WALL) {
             if (osm.getSize().length == 1)
@@ -173,17 +223,6 @@ public class Orb extends Actor {
             shoot(dt, rotation);
             activateForceMode = true;
         }
-
-        timeSinceLastShot += dt;
-
-        if (timeSinceLastShot > 6f) {
-            activateForceMode = false;
-            timeSinceLastShot = 0f;
-        }
-        
-        for (Bullet bullet : bullets) {
-            bullet.update(dt);
-        }
     }
 
     public void render(SpriteBatch batch) {
@@ -192,17 +231,49 @@ public class Orb extends Actor {
         particles.draw(batch);
         osm.render(batch);
 
-        if (activateForceMode) {
-            activateForceMode();
-            if (animator.getLineWidth() != 0) drawPolyOverOrb();
-        } else {
-            deactivateForceMode();
-            if (animator.getLineWidth() != 0) drawPolyOverOrb();
+        if (!isMP) {
+            if (activateForceMode) {
+                activateForceMode();
+                if (animator.getLineWidth() != 0) drawPolyOverOrb();
+            } else {
+                deactivateForceMode();
+                if (animator.getLineWidth() != 0) drawPolyOverOrb();
+            }
+            batch.begin();
+            for (Bullet bullet : bullets) {
+                bullet.render(batch);
+            }
         }
+        else {
+            batch.begin();
+        }
+    }
 
-        batch.begin();
-        for (Bullet bullet : bullets) {
-            bullet.render(batch);
+    private void updateBullets() {
+        ListIterator<Bullet> bulletIterator = bullets.listIterator();
+        while (bulletIterator.hasNext()) {
+            Bullet bullet = bulletIterator.next();
+            // Check collision with enemies
+            world.getEnemies().forEach(e -> {
+                if (bullet.getBounds().overlaps(e.getBounds())) {
+                    if (e.getHealth() > 0) {
+                        if (bulletHash.contains(bullet.hashCode())) {
+                            bulletHash.remove(bullet.hashCode());
+                            bulletIterator.remove();
+                        }
+                        e.gotShot(10);
+                    }
+                }
+            });
+            // Check collision with ordinary blocks
+            world.getCollisionBlocks().forEach(e -> {
+                if (bullet.getBounds().overlaps(e.getBounds())) {
+                    if (bulletHash.contains(bullet.hashCode())) {
+                        bulletHash.remove(bullet.hashCode());
+                        bulletIterator.remove();
+                    }
+                }
+            });
         }
     }
 
@@ -233,7 +304,10 @@ public class Orb extends Actor {
         float sine = (float) -Math.sin(Math.toRadians(angle));
         float cosine = (float) Math.cos(Math.toRadians(angle));
         position.add(-sine * shootKickback, -cosine * shootKickback);
-        bullets.add(new Bullet(this, angle));
+        
+        Bullet bullet = new Bullet(this, angle);
+        bullets.add(bullet);
+        bulletHash.add(bullet.hashCode());
 
         timeSinceLastShot = 0f;
         state = OrbState.ORB;

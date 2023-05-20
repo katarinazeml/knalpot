@@ -2,7 +2,6 @@ package org.knalpot.knalpot;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import org.knalpot.knalpot.scenes.GameOverScreen;
 import org.knalpot.knalpot.scenes.MainMenuScreen;
 
 import com.badlogic.gdx.Game;
